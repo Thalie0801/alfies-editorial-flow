@@ -1,0 +1,103 @@
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Check, Sparkles, Crown, Zap } from "lucide-react";
+
+interface PricingCardProps {
+  name: string;
+  price: string;
+  originalPrice?: string;
+  description: string;
+  features: string[];
+  isPopular?: boolean;
+  isPremium?: boolean;
+  ctaText: string;
+  badge?: string;
+  discount?: string;
+}
+
+export function PricingCard({
+  name,
+  price,
+  originalPrice,
+  description,
+  features,
+  isPopular,
+  isPremium,
+  ctaText,
+  badge,
+  discount
+}: PricingCardProps) {
+  const cardVariant = isPremium ? "premium" : isPopular ? "hero" : "outline";
+  const CardIcon = isPremium ? Crown : isPopular ? Zap : Sparkles;
+
+  return (
+    <div className={`relative bg-gradient-card rounded-2xl border p-8 transition-all duration-300 hover:scale-105 ${
+      isPopular ? 'border-primary shadow-primary' : isPremium ? 'border-accent shadow-accent' : 'border-border hover:border-primary/50'
+    }`}>
+      {/* Popular Badge */}
+      {isPopular && (
+        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+          <Badge className="bg-gradient-primary text-primary-foreground px-4 py-1">
+            Recommandé
+          </Badge>
+        </div>
+      )}
+
+      {/* Premium Badge */}
+      {isPremium && (
+        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+          <Badge className="bg-gradient-accent text-accent-foreground px-4 py-1">
+            <Crown className="w-4 h-4 mr-1" />
+            Premium
+          </Badge>
+        </div>
+      )}
+
+      <div className="text-center mb-8">
+        <div className="flex items-center justify-center mb-4">
+          <CardIcon className={`w-8 h-8 ${isPremium ? 'text-accent' : isPopular ? 'text-primary' : 'text-muted-foreground'}`} />
+        </div>
+        
+        <h3 className="text-2xl font-bold mb-2">{name}</h3>
+        <p className="text-muted-foreground mb-4">{description}</p>
+        
+        <div className="flex items-center justify-center gap-2 mb-2">
+          {originalPrice && (
+            <span className="text-2xl text-muted-foreground line-through">
+              {originalPrice}
+            </span>
+          )}
+          <span className="text-4xl font-bold">{price}</span>
+          <span className="text-muted-foreground">/ mois</span>
+        </div>
+        
+        {discount && (
+          <p className="text-sm text-accent font-medium">{discount}</p>
+        )}
+        
+        {badge && (
+          <Badge variant="secondary" className="mt-2">
+            {badge}
+          </Badge>
+        )}
+      </div>
+
+      <div className="space-y-4 mb-8">
+        {features.map((feature, index) => (
+          <div key={index} className="flex items-start gap-3">
+            <Check className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+            <span className="text-sm">{feature}</span>
+          </div>
+        ))}
+      </div>
+
+      <Button 
+        variant={cardVariant} 
+        size="lg" 
+        className="w-full"
+      >
+        {ctaText}
+      </Button>
+    </div>
+  );
+}
