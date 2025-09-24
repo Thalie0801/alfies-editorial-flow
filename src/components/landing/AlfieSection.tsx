@@ -17,10 +17,10 @@ export function AlfieSection() {
                   <span className="text-lg font-semibold text-primary">Rencontrez Alfie</span>
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                  Votre <span className="bg-gradient-accent bg-clip-text text-transparent">copilot éditorial</span> vous accompagne
+                  <span className="bg-gradient-accent bg-clip-text text-transparent">Alfie</span>, votre assistant qui ajoute de la valeur
                 </h2>
                 <p className="text-xl text-muted-foreground">
-                  Alfie ne se contente pas de générer du contenu. Il apprend votre style, guide votre stratégie et optimise vos performances.
+                  Au-delà de l'automatisation complète d'Æditus, Alfie vous accompagne avec des conseils personnalisés et un coaching intelligent.
                 </p>
               </div>
 

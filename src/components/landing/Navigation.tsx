@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import logoAeditus from "@/assets/logo-aeditus.jpg";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,8 +13,13 @@ export function Navigation() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            <div className="flex items-center space-x-3">
+              <img 
+                src={logoAeditus} 
+                alt="Logo Æditus" 
+                className="h-8 w-auto object-contain"
+              />
+              <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 Æditus
               </span>
             </div>

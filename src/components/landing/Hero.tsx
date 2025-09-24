@@ -34,9 +34,9 @@ export function Hero() {
               l'écosystème éditorial
             </span>
             <br />
-            <span className="text-foreground">qui publie pour vous</span>
+            <span className="text-foreground">automatique complet</span>
             <span className="bg-gradient-accent bg-clip-text text-transparent">
-              — et parle comme vous.
+              — avec validation humaine.
             </span>
           </h1>
 
@@ -49,15 +49,15 @@ export function Hero() {
           <div className="flex flex-wrap justify-center gap-4 mb-12 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <div className="flex items-center bg-card/50 backdrop-blur-sm border border-border/50 rounded-full px-4 py-2">
               <Sparkles className="w-4 h-4 text-primary mr-2" />
-              <span className="text-sm font-medium">+20h/mois de gagné</span>
+              <span className="text-sm font-medium">Génération automatique</span>
             </div>
             <div className="flex items-center bg-card/50 backdrop-blur-sm border border-border/50 rounded-full px-4 py-2">
               <Sparkles className="w-4 h-4 text-accent mr-2" />
-              <span className="text-sm font-medium">+30-60% de visibilité</span>
+              <span className="text-sm font-medium">Validation humaine</span>
             </div>
             <div className="flex items-center bg-card/50 backdrop-blur-sm border border-border/50 rounded-full px-4 py-2">
               <Sparkles className="w-4 h-4 text-primary mr-2" />
-              <span className="text-sm font-medium">Brand Kit personnalisé</span>
+              <span className="text-sm font-medium">+Alfie pour accompagner</span>
             </div>
           </div>
 
