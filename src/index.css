@@ -9,32 +9,32 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Core Colors - Æditus Brand */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 8%;
+    --background: 45 25% 96%;
+    --foreground: 240 15% 15%;
     
-    /* Æditus Primary - Deep Blue */
-    --primary: 230 70% 12%;
-    --primary-foreground: 0 0% 98%;
-    --primary-light: 230 60% 25%;
-    --primary-glow: 230 80% 60%;
+    /* Æditus Primary - Deep Forest Green */
+    --primary: 150 70% 20%;
+    --primary-foreground: 45 25% 96%;
+    --primary-light: 150 60% 35%;
+    --primary-glow: 150 80% 50%;
     
-    /* Accent - Premium Gold */
-    --accent: 42 90% 55%;
-    --accent-foreground: 240 10% 8%;
-    --accent-light: 42 85% 65%;
-    --accent-glow: 42 95% 70%;
+    /* Accent - Warm Gold */
+    --accent: 42 85% 50%;
+    --accent-foreground: 240 15% 15%;
+    --accent-light: 42 80% 60%;
+    --accent-glow: 42 90% 70%;
     
-    /* Secondary - Sophisticated Grays */
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 10% 8%;
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 4% 46%;
+    /* Secondary - Warm Cream */
+    --secondary: 45 20% 90%;
+    --secondary-foreground: 240 15% 15%;
+    --muted: 45 15% 92%;
+    --muted-foreground: 240 8% 50%;
     
     /* Cards & Surfaces */
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 8%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 8%;
+    --card: 45 25% 98%;
+    --card-foreground: 240 15% 15%;
+    --popover: 45 25% 98%;
+    --popover-foreground: 240 15% 15%;
     
     /* Interactive States */
     --border: 240 6% 90%;
@@ -50,10 +50,10 @@ All colors MUST be HSL.
     --warning-foreground: 240 10% 8%;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(230 70% 12%), hsl(230 60% 25%));
-    --gradient-accent: linear-gradient(135deg, hsl(42 90% 55%), hsl(42 85% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(230 70% 12%) 0%, hsl(240 60% 15%) 50%, hsl(42 90% 55%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(240 5% 98%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(150 70% 20%), hsl(150 60% 35%));
+    --gradient-accent: linear-gradient(135deg, hsl(42 85% 50%), hsl(42 80% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(150 70% 20%) 0%, hsl(150 60% 25%) 50%, hsl(42 85% 50%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(45 25% 98%) 0%, hsl(45 20% 95%) 100%);
     
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 hsl(240 10% 8% / 0.05);

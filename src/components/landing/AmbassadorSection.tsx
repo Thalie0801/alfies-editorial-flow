@@ -11,13 +11,13 @@ export function AmbassadorSection() {
           <div className="mb-12">
             <Badge className="bg-gradient-accent text-accent-foreground px-4 py-2 mb-4">
               <Crown className="w-4 h-4 mr-2" />
-              Programme Exclusif
+              Programme Exclusif • 49,90€
             </Badge>
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
               Devenez <span className="bg-gradient-accent bg-clip-text text-transparent">Ambassadeur</span> Æditus
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Rejoignez un cercle fermé de 50 entrepreneurs visionnaires et bénéficiez d'avantages exclusifs
+              10% de commission sur tous vos parrainages, puis 15% après 20 clients
             </p>
             
             {/* Counter */}
@@ -36,8 +36,8 @@ export function AmbassadorSection() {
               <div className="w-12 h-12 bg-gradient-accent rounded-xl flex items-center justify-center mx-auto mb-4">
                 <Percent className="w-6 h-6 text-accent-foreground" />
               </div>
-              <h3 className="font-bold mb-2">Jusqu'à 15%</h3>
-              <p className="text-sm text-muted-foreground">Commission d'affiliation vs 10% standard</p>
+              <h3 className="font-bold mb-2">10→15%</h3>
+              <p className="text-sm text-muted-foreground">Commission évolutive après 20 clients</p>
             </div>
 
             <div className="bg-gradient-card rounded-xl border border-border/50 p-6 text-center">
@@ -61,7 +61,7 @@ export function AmbassadorSection() {
                 <Crown className="w-6 h-6 text-primary-foreground" />
               </div>
               <h3 className="font-bold mb-2">Statut Elite</h3>
-              <p className="text-sm text-muted-foreground">15% garanti pendant 12 mois (option)</p>
+              <p className="text-sm text-muted-foreground">15% après 20 clients parrainés</p>
             </div>
           </div>
 

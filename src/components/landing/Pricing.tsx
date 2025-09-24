@@ -16,7 +16,7 @@ export function Pricing() {
         "1 visuel ou vidéo / semaine",
         "Bibliothèque tonale + briefs illimités",
         "KPI Lite (impressions, abonnés)",
-        "Affiliation 10% (Ambassadeurs jusqu'à 15%)",
+        "Affiliation 10%",
         "Options : articles & Fynk activables",
         "Essai 7 jours (sans publication)"
       ],
