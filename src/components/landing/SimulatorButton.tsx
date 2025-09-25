@@ -20,9 +20,11 @@ export function SimulatorButton() {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button variant="hero" size="lg" className="min-w-[200px]">
-            <TrendingUp className="w-5 h-5 mr-2" />
-            Simulateur de gains
+          <Button variant="hero" size="lg" className="min-w-[200px]" asChild>
+            <a href="/simulateur">
+              <TrendingUp className="w-5 h-5 mr-2" />
+              Simulateur de gains
+            </a>
           </Button>
           <div className="text-sm text-muted-foreground">
             Gratuit • Sans inscription
