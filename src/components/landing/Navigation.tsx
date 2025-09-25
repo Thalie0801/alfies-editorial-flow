@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import logoAeditus from "@/assets/logo-aeditus.jpg";
 
 export function Navigation() {
@@ -29,46 +28,38 @@ export function Navigation() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               <a
-                href="#about"
+                href="#features"
                 className="text-foreground/80 hover:text-foreground transition-colors"
               >
-                L'écosystème complet
+                Fonctionnalités
               </a>
               <a
                 href="#pricing"
                 className="text-foreground/80 hover:text-foreground transition-colors"
               >
-                Essai gratuit
+                Tarifs
               </a>
               <a
                 href="#ambassadeurs"
                 className="text-foreground/80 hover:text-foreground transition-colors"
               >
-                Programme Ambassadeur
-              </a>
-              <a
-                href="#faq"
-                className="text-foreground/80 hover:text-foreground transition-colors"
-              >
-                FAQ
+                Ambassadeurs
               </a>
             </div>
           </div>
 
           {/* CTA & Theme Toggle */}
           <div className="hidden md:flex items-center space-x-4">
-            <ThemeToggle />
             <Button variant="outline" size="sm">
               Se connecter
             </Button>
-            <Button variant="default" size="sm">
+            <Button variant="hero" size="sm">
               <a href="#pricing">Essai gratuit</a>
             </Button>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
-            <ThemeToggle />
             <Button
               variant="ghost"
               size="icon"
@@ -84,39 +75,32 @@ export function Navigation() {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-card border border-border rounded-lg mt-2 mb-4">
               <a
-                href="#about"
+                href="#features"
                 className="block px-3 py-2 text-base font-medium text-foreground/80 hover:text-foreground"
                 onClick={() => setIsOpen(false)}
               >
-                L'écosystème complet
+                Fonctionnalités
               </a>
               <a
                 href="#pricing"
                 className="block px-3 py-2 text-base font-medium text-foreground/80 hover:text-foreground"
                 onClick={() => setIsOpen(false)}
               >
-                Essai gratuit
+                Tarifs
               </a>
               <a
                 href="#ambassadeurs"
                 className="block px-3 py-2 text-base font-medium text-foreground/80 hover:text-foreground"
                 onClick={() => setIsOpen(false)}
               >
-                Programme Ambassadeur
-              </a>
-              <a
-                href="#faq"
-                className="block px-3 py-2 text-base font-medium text-foreground/80 hover:text-foreground"
-                onClick={() => setIsOpen(false)}
-              >
-                FAQ
+                Ambassadeurs
               </a>
               <div className="pt-4 border-t border-border">
                 <div className="flex flex-col space-y-2">
                   <Button variant="outline" size="sm">
                     Se connecter
                   </Button>
-                  <Button variant="default" size="sm">
+                  <Button variant="hero" size="sm">
                     <a href="#pricing">Essai gratuit</a>
                   </Button>
                 </div>

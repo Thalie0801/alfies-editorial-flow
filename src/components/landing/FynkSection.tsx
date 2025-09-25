@@ -120,36 +120,39 @@ export function FynkSection() {
                 </div>
               </div>
 
-              <div className="bg-gradient-accent/10 rounded-xl p-6 border border-accent/20">
-                <div className="flex items-center gap-3 mb-4">
-                  <Badge className="bg-gradient-accent text-accent-foreground">Produit</Badge>
-                  <span className="font-semibold">Fynk</span>
-                </div>
-                <div className="flex gap-4 mb-4">
-                  <div>
-                    <div className="text-2xl font-bold text-accent">29€</div>
-                    <div className="text-sm text-muted-foreground">Basic / mois</div>
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                <div className="bg-gradient-accent/10 rounded-xl p-6 border border-accent/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Badge className="bg-gradient-accent text-accent-foreground">Basic</Badge>
+                    <span className="font-semibold">Fynk Basic</span>
                   </div>
-                  <div>
-                    <div className="text-2xl font-bold text-accent">69€</div>
-                    <div className="text-sm text-muted-foreground">Pro / mois</div>
-                  </div>
+                  <div className="text-3xl font-bold text-accent mb-2">29€</div>
+                  <div className="text-sm text-muted-foreground mb-4">par mois</div>
+                  <Button variant="default" size="sm" className="w-full">
+                    Choisir Basic
+                  </Button>
                 </div>
+                
+                <div className="bg-gradient-accent/10 rounded-xl p-6 border border-accent/20">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Badge className="bg-gradient-primary text-primary-foreground">Pro</Badge>
+                    <span className="font-semibold">Fynk Pro</span>
+                  </div>
+                  <div className="text-3xl font-bold text-accent mb-2">69€</div>
+                  <div className="text-sm text-muted-foreground mb-4">par mois</div>
+                  <Button variant="default" size="sm" className="w-full">
+                    Choisir Pro
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="text-center">
                 <div className="text-lg font-bold text-accent mb-2">
                   Affiliation : 10%
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Recommandez Fynk et touchez 10% de commission récurrente
                 </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button variant="default" size="lg">
-                  Choisir Fynk
-                </Button>
-                <Button variant="outline" size="lg">
-                  En savoir plus
-                </Button>
               </div>
             </div>
           </div>
