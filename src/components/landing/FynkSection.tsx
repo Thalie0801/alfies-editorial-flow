@@ -122,13 +122,20 @@ export function FynkSection() {
 
               <div className="bg-gradient-accent/10 rounded-xl p-6 border border-accent/20">
                 <div className="flex items-center gap-3 mb-4">
-                  <Badge className="bg-gradient-accent text-accent-foreground">Bundle</Badge>
-                  <span className="font-semibold">Économisez avec Æditus</span>
+                  <Badge className="bg-gradient-accent text-accent-foreground">Produit</Badge>
+                  <span className="font-semibold">Fynk</span>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Activez Fynk avec votre plan Starter ou Pro et bénéficiez de <strong className="text-accent">10% de réduction</strong> sur Fynk.
-                </p>
-                <div className="text-2xl font-bold text-accent mb-2">
+                <div className="flex gap-4 mb-4">
+                  <div>
+                    <div className="text-2xl font-bold text-accent">29€</div>
+                    <div className="text-sm text-muted-foreground">Basic / mois</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-accent">69€</div>
+                    <div className="text-sm text-muted-foreground">Pro / mois</div>
+                  </div>
+                </div>
+                <div className="text-lg font-bold text-accent mb-2">
                   Affiliation : 10%
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -137,8 +144,8 @@ export function FynkSection() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button variant="accent" size="lg">
-                  Activer Fynk
+                <Button variant="default" size="lg">
+                  Choisir Fynk
                 </Button>
                 <Button variant="outline" size="lg">
                   En savoir plus

@@ -29,22 +29,22 @@ export function Navigation() {
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               <a
-                href="#features"
+                href="#about"
                 className="text-foreground/80 hover:text-foreground transition-colors"
               >
-                Fonctionnalités
+                L'écosystème complet
               </a>
               <a
                 href="#pricing"
                 className="text-foreground/80 hover:text-foreground transition-colors"
               >
-                Tarifs
+                Essai gratuit
               </a>
               <a
                 href="#ambassadeurs"
                 className="text-foreground/80 hover:text-foreground transition-colors"
               >
-                Ambassadeurs
+                Programme Ambassadeur
               </a>
               <a
                 href="#faq"
@@ -61,8 +61,8 @@ export function Navigation() {
             <Button variant="outline" size="sm">
               Se connecter
             </Button>
-            <Button variant="hero" size="sm">
-              Essai gratuit
+            <Button variant="default" size="sm">
+              <a href="#pricing">Essai gratuit</a>
             </Button>
           </div>
 
@@ -84,25 +84,25 @@ export function Navigation() {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-card border border-border rounded-lg mt-2 mb-4">
               <a
-                href="#features"
+                href="#about"
                 className="block px-3 py-2 text-base font-medium text-foreground/80 hover:text-foreground"
                 onClick={() => setIsOpen(false)}
               >
-                Fonctionnalités
+                L'écosystème complet
               </a>
               <a
                 href="#pricing"
                 className="block px-3 py-2 text-base font-medium text-foreground/80 hover:text-foreground"
                 onClick={() => setIsOpen(false)}
               >
-                Tarifs
+                Essai gratuit
               </a>
               <a
                 href="#ambassadeurs"
                 className="block px-3 py-2 text-base font-medium text-foreground/80 hover:text-foreground"
                 onClick={() => setIsOpen(false)}
               >
-                Ambassadeurs
+                Programme Ambassadeur
               </a>
               <a
                 href="#faq"
@@ -116,8 +116,8 @@ export function Navigation() {
                   <Button variant="outline" size="sm">
                     Se connecter
                   </Button>
-                  <Button variant="hero" size="sm">
-                    Essai gratuit
+                  <Button variant="default" size="sm">
+                    <a href="#pricing">Essai gratuit</a>
                   </Button>
                 </div>
               </div>

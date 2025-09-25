@@ -63,12 +63,12 @@ export function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-scale" style={{ animationDelay: '0.6s' }}>
-            <Button variant="premium" size="xl" className="min-w-[200px]">
+            <Button variant="default" size="xl" className="min-w-[200px]">
               <Sparkles className="w-5 h-5 mr-2" />
-              Essai Essential 7j
+              <a href="#pricing">Essai Essential 7j</a>
             </Button>
             <Button variant="outline" size="xl" className="min-w-[200px]">
-              Voir une démo
+              Voir la démo
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </div>
@@ -76,13 +76,14 @@ export function Hero() {
           {/* Trust Indicators */}
           <div className="mt-16 pt-8 border-t border-border/50 animate-fade-in" style={{ animationDelay: '0.8s' }}>
             <p className="text-sm text-muted-foreground mb-4">
-              Déjà adopté par des entrepreneurs visionnaires
+              Déjà adopté par <span className="font-semibold text-primary animate-pulse">15 marques</span> satisfaites
             </p>
             <div className="flex justify-center items-center space-x-8 opacity-60">
-              <div className="h-8 w-20 bg-muted rounded" />
-              <div className="h-8 w-16 bg-muted rounded" />
-              <div className="h-8 w-24 bg-muted rounded" />
-              <div className="h-8 w-18 bg-muted rounded" />
+              <div className="text-xs text-muted-foreground">TechFlow</div>
+              <div className="text-xs text-muted-foreground">NatureSync</div>
+              <div className="text-xs text-muted-foreground">UrbanDesign</div>
+              <div className="text-xs text-muted-foreground">FitnessPro</div>
+              <div className="text-xs text-muted-foreground">CreativeStudio</div>
             </div>
           </div>
         </div>

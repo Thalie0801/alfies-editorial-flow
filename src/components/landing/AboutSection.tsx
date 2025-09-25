@@ -3,7 +3,7 @@ import { CheckCircle } from "lucide-react";
 
 export function AboutSection() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-card">
+    <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-card">
       <div className="container mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Text Content */}

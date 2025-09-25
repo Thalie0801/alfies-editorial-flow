@@ -6,7 +6,7 @@ import { Pricing } from "@/components/landing/Pricing";
 import { FynkSection } from "@/components/landing/FynkSection";
 import { SimulatorButton } from "@/components/landing/SimulatorButton";
 import { AmbassadorSection } from "@/components/landing/AmbassadorSection";
-import { StickyBar } from "@/components/landing/StickyBar";
+
 import { AlfieChat } from "@/components/landing/AlfieChat";
 import { Footer } from "@/components/landing/Footer";
 
@@ -21,7 +21,7 @@ const Index = () => {
       <FynkSection />
       <SimulatorButton />
       <AmbassadorSection />
-      <StickyBar />
+      
       <AlfieChat />
       <Footer />
     </div>

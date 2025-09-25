@@ -65,20 +65,6 @@ export function AmbassadorSection() {
             </div>
           </div>
 
-          {/* Elite Option */}
-          <div className="bg-gradient-hero/10 rounded-2xl border border-accent/20 p-8 mb-8">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Crown className="w-6 h-6 text-accent" />
-              <h3 className="text-2xl font-bold">Option Elite</h3>
-            </div>
-            <p className="text-muted-foreground mb-4">
-              Engagement exclusif : <strong className="text-accent">15% de commission garantie pendant 12 mois</strong>, 
-              peu importe votre volume de ventes
-            </p>
-            <Badge className="bg-gradient-accent text-accent-foreground">
-              Disponible pour les 10 premiers Ambassadeurs
-            </Badge>
-          </div>
 
           {/* Requirements */}
           <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-xl p-6 mb-8">
@@ -92,13 +78,10 @@ export function AmbassadorSection() {
 
           {/* CTA */}
           <div className="space-y-4">
-            <Button variant="premium" size="xl" className="min-w-[250px]">
+            <Button variant="default" size="xl" className="min-w-[250px]">
               <Crown className="w-5 h-5 mr-2" />
               Candidater Ambassadeur
             </Button>
-            <p className="text-sm text-muted-foreground">
-              Formulaire en 2 étapes • Réponse sous 48h
-            </p>
           </div>
         </div>
       </div>
