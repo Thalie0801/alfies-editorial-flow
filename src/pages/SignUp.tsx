@@ -43,8 +43,8 @@ export default function SignUp() {
       const redirectQuery = redirectParams.toString();
       const baseUrl = window.location.origin;
       const redirectUrl = redirectQuery
-        ? `${baseUrl}/signin?${redirectQuery}`
-        : `${baseUrl}/signin`;
+        ? `${baseUrl}/auth/callback?${redirectQuery}`
+        : `${baseUrl}/auth/callback`;
       
       console.debug('[SignUp] Setting emailRedirectTo:', redirectUrl);
         

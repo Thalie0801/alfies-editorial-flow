@@ -10,6 +10,7 @@ import { Simulator } from "./pages/Simulator";
 import { AmbassadorApplication } from "./pages/AmbassadorApplication";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
+import AuthCallback from "./pages/AuthCallback";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -35,6 +36,7 @@ const App = () => {
               <Route path="/ambassador-application" element={<AmbassadorApplication />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/signin" element={<SignIn />} />
+              <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
