@@ -21,13 +21,27 @@ serve(async (req) => {
       global: { headers: { Authorization: req.headers.get('Authorization')! } },
     });
 
-    // Get user from auth token
+    // Get user from auth token (explicitly read the Bearer token)
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('Unauthorized: Missing or invalid Authorization header');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: missing Authorization header' }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 401,
+        }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
+      console.error('Unauthorized: invalid user token', authError);
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { 
