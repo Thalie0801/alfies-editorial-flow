@@ -8,6 +8,7 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/s
 import { ClientSidebar } from '@/components/dashboard/ClientSidebar';
 import { AlfieChat } from '@/components/dashboard/AlfieChat';
 import { useToast } from '@/hooks/use-toast';
+import { useUserRole } from '@/hooks/useUserRole';
 import { 
   BarChart3, 
   FileText, 
@@ -16,7 +17,8 @@ import {
   LogOut,
   Crown,
   Zap,
-  ExternalLink
+  ExternalLink,
+  Shield
 } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 
@@ -25,6 +27,7 @@ export default function Dashboard() {
   const [isAlfieOpen, setIsAlfieOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { role, loading: roleLoading } = useUserRole(user);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -70,6 +73,12 @@ export default function Dashboard() {
                 <span className="text-sm text-muted-foreground">
                   {user?.email}
                 </span>
+                {role === 'admin' && (
+                  <Button variant="secondary" size="sm" onClick={() => navigate('/admin')}>
+                    <Shield className="w-4 h-4 mr-2" />
+                    Admin
+                  </Button>
+                )}
                 <Button variant="outline" size="sm" onClick={handleSignOut}>
                   <LogOut className="w-4 h-4 mr-2" />
                   Déconnexion
