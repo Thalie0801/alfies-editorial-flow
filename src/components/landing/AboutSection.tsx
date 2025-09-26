@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle } from "lucide-react";
+import dashboardMockup from "@/assets/dashboard-mockup.png";
 
 export function AboutSection() {
   return (
@@ -48,18 +49,12 @@ export function AboutSection() {
           {/* Dashboard Preview */}
           <div className="relative">
             <div className="bg-card rounded-2xl border shadow-lg p-6">
-              <div className="aspect-[4/3] bg-gradient-to-br from-secondary to-muted rounded-xl flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-24 h-24 bg-primary/10 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-primary">📊</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Aperçu du dashboard Æditus
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    Interface intuitive de gestion<br />de vos contenus et KPIs
-                  </p>
-                </div>
+              <div className="aspect-[4/3] rounded-xl overflow-hidden">
+                <img 
+                  src={dashboardMockup} 
+                  alt="Dashboard Æditus - Interface de gestion complète avec métriques, engagement et outils d'automatisation" 
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
             
