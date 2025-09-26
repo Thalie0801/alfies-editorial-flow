@@ -16,11 +16,16 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY')!;
+    const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: req.headers.get('Authorization')! } },
     });
 
+    // Separate client with service role for secure auth.getUser(token)
+    const supabaseService = createClient(supabaseUrl, supabaseServiceRoleKey, {
+      auth: { persistSession: false },
+    });
     // Get user from auth token (explicitly read the Bearer token)
     const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -38,7 +43,7 @@ serve(async (req) => {
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser(token);
+    } = await supabaseService.auth.getUser(token);
 
     if (authError || !user) {
       console.error('Unauthorized: invalid user token', authError);
