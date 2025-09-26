@@ -1,8 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, ArrowRight, Users } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function Hero() {
+  const words = ["intelligent", "rapide", "fiable"];
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWordIndex((prev) => (prev + 1) % words.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Gradients */}
@@ -36,7 +47,12 @@ export function Hero() {
             <br />
             <span className="text-foreground">automatique complet</span>
             <span className="bg-gradient-accent bg-clip-text text-transparent">
-              — avec validation humaine.
+              — <span 
+                  key={currentWordIndex}
+                  className="inline-block animate-fade-in-scale"
+                >
+                  {words[currentWordIndex]}
+                </span>.
             </span>
           </h1>
 

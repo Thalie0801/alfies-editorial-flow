@@ -113,6 +113,12 @@ export default {
         "gradient-shift": {
           "0%, 100%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" }
+        },
+        "fadeInOut": {
+          "0%": { opacity: "0" },
+          "33%": { opacity: "1" },
+          "66%": { opacity: "1" },
+          "100%": { opacity: "0" }
         }
       },
       animation: {
