@@ -89,6 +89,11 @@ serve(async (req) => {
     });
 
     console.log('Found subscriptions:', subscriptions.data.length);
+    console.log('Subscriptions details:', subscriptions.data.map((sub: any) => ({
+      id: sub.id,
+      status: sub.status,
+      current_period_end: sub.current_period_end
+    })));
 
     // Find active or trialing subscription
     const activeSubscription = subscriptions.data.find((sub: any) => 
