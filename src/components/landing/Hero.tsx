@@ -46,13 +46,14 @@ export function Hero() {
             </span>
             <br />
             <span className="text-foreground">automatique complet</span>
-            <span className="bg-gradient-accent bg-clip-text text-transparent">
-              — <span 
-                  key={currentWordIndex}
-                  className="inline-block animate-fade-in-scale"
-                >
-                  {words[currentWordIndex]}
-                </span>.
+            <br />
+            <span className="bg-gradient-accent bg-clip-text text-transparent text-center">
+              <span 
+                key={currentWordIndex}
+                className="inline-block animate-fade-in-scale"
+              >
+                {words[currentWordIndex]}
+              </span>.
             </span>
           </h1>
 
