@@ -212,6 +212,32 @@ export default function SignIn() {
             </Button>
           </form>
           
+          {searchParams.get('plan') && (
+            <div className="mt-4">
+              <Button
+                className="w-full"
+                variant="secondary"
+                onClick={async () => {
+                  const plan = searchParams.get('plan')!;
+                  const promo = searchParams.get('promo') || undefined;
+                  const addons = searchParams.getAll('addon').filter((a) => a && a.trim().length > 0);
+                  await createCheckoutSession(
+                    plan,
+                    promo,
+                    `${window.location.origin}/dashboard?payment=success`,
+                    `${window.location.origin}/signin?payment=cancelled&plan=${plan}`,
+                    addons.length ? Array.from(new Set(addons)) : undefined
+                  );
+                }}
+              >
+                Poursuivre le paiement Stripe
+              </Button>
+              <p className="mt-2 text-xs text-muted-foreground text-center">
+                Si la redirection ne démarre pas automatiquement, cliquez ici.
+              </p>
+            </div>
+          )}
+
           <div className="mt-4 text-center">
             <p className="text-sm text-muted-foreground">
               Pas encore de compte ?{' '}
