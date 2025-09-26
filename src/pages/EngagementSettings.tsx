@@ -30,14 +30,14 @@ export function EngagementSettings() {
       setLoading(false);
       
       if (!session) {
-        navigate('/auth');
+        navigate('/signin');
       }
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' || !session) {
         setUser(null);
-        navigate('/auth');
+        navigate('/signin');
       } else {
         setUser(session.user);
       }

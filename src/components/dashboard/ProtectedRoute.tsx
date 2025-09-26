@@ -15,7 +15,7 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ 
   children, 
   requiredRole = 'client',
-  redirectTo = '/auth',
+  redirectTo = '/signin',
   requireSubscription = false
 }: ProtectedRouteProps) {
   const [user, setUser] = useState<User | null>(null);

@@ -24,7 +24,7 @@ export function useStripeCheckout() {
           title: "Connexion requise",
           description: "Veuillez vous connecter pour continuer le paiement.",
         });
-        const authUrl = `${window.location.origin}/auth?plan=${encodeURIComponent(lookupKey)}`;
+        const authUrl = `${window.location.origin}/signup?plan=${encodeURIComponent(lookupKey)}`;
         window.location.href = authUrl;
         return null;
       }

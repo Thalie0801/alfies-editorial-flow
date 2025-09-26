@@ -93,7 +93,7 @@ export function PricingCard({
           });
         }
 
-        const returnUrl = `${window.location.origin}/auth?${params.toString()}`;
+        const returnUrl = `${window.location.origin}/signup?${params.toString()}`;
         window.location.href = returnUrl;
         return;
       }

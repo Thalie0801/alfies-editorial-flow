@@ -51,7 +51,7 @@ export function Navigation() {
           {/* CTA & Theme Toggle */}
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="outline" size="sm" asChild>
-              <a href="/auth">Se connecter</a>
+              <a href="/signin">Se connecter</a>
             </Button>
             <Button variant="hero" size="sm">
               <a href="#pricing">Essai gratuit</a>
@@ -98,7 +98,7 @@ export function Navigation() {
               <div className="pt-4 border-t border-border">
                 <div className="flex flex-col space-y-2">
                   <Button variant="outline" size="sm" asChild>
-                    <a href="/auth">Se connecter</a>
+                    <a href="/signin">Se connecter</a>
                   </Button>
                   <Button variant="hero" size="sm">
                     <a href="#pricing">Essai gratuit</a>
