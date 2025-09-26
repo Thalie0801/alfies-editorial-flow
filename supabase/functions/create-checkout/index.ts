@@ -152,7 +152,7 @@ serve(async (req) => {
       }
     }
 
-    // Add trial for Essential plan
+    // Add trial for Essential plan (7 days - publication blocked)
     if (lookup_key === 'aeditus_essential_m') {
       sessionParams.subscription_data = {
         trial_period_days: 7,
@@ -163,11 +163,41 @@ serve(async (req) => {
       };
     }
 
-    // Add promotion code if provided
-    if (promotion_code) {
+    // Handle promotion codes based on plan
+    let finalPromotionCode = promotion_code;
+    
+    // Pre-fill AMBASSADEURS49 for Ambassadors plan
+    if (lookup_key === 'aeditus_amb_m' && !finalPromotionCode) {
+      finalPromotionCode = 'AMBASSADEURS49';
+    }
+    
+    // Validate promotion codes per plan
+    if (finalPromotionCode) {
+      // LAUNCH25 only for Starter & Pro
+      if (finalPromotionCode === 'LAUNCH25' && !['aeditus_starter_m', 'aeditus_pro_m'].includes(lookup_key)) {
+        return new Response(
+          JSON.stringify({ error: 'Le code LAUNCH25 est uniquement valide pour les plans Starter et Pro' }),
+          { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: 400 
+          }
+        );
+      }
+      
+      // AMBASSADEURS49 only for Ambassadors
+      if (finalPromotionCode === 'AMBASSADEURS49' && lookup_key !== 'aeditus_amb_m') {
+        return new Response(
+          JSON.stringify({ error: 'Le code AMBASSADEURS49 est uniquement valide pour le plan Ambassadeurs' }),
+          { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: 400 
+          }
+        );
+      }
+      
       // Find promotion code in Stripe
       const promoCodes = await stripe.promotionCodes.list({
-        code: promotion_code,
+        code: finalPromotionCode,
         active: true,
         limit: 1,
       });
