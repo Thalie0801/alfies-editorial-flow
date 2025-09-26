@@ -34,7 +34,7 @@ export function Footer() {
               <li><a href="#pricing" className="hover:text-foreground transition-colors">Tarifs</a></li>
               <li><a href="#fynk" className="hover:text-foreground transition-colors">Fynk</a></li>
               <li><a href="#ambassadeurs" className="hover:text-foreground transition-colors">Ambassadeurs</a></li>
-              <li><a href="/simulateur" className="hover:text-foreground transition-colors">Simulateur</a></li>
+              <li><a href="/simulator" className="hover:text-foreground transition-colors">Simulateur</a></li>
             </ul>
           </div>
 
