@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Sparkles, Crown, Zap } from "lucide-react";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { supabase } from "@/integrations/supabase/client";
 import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import type { User } from '@supabase/supabase-js';
 
 interface PricingCardProps {
   name: string;
@@ -45,13 +47,34 @@ export function PricingCard({
   supportsFynk = false
 }: PricingCardProps) {
   const { createCheckoutSession, loading } = useStripeCheckout();
+  const [user, setUser] = useState<User | null>(null);
   const cardVariant = isPremium ? "premium" : isPopular ? "hero" : "outline";
   const CardIcon = isPremium ? Crown : isPopular ? Zap : Sparkles;
 
   const [fynkEnabled, setFynkEnabled] = useState(false);
   const [fynkTier, setFynkTier] = useState<"basic" | "pro">("basic");
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
+
+    checkAuth();
+    return () => subscription.unsubscribe();
+  }, []);
+
   const handleSubscribe = async () => {
+    if (!user) {
+      // Redirect to auth if not logged in
+      window.location.href = '/auth';
+      return;
+    }
+
     if (lookupKey) {
       const finalPromoCode = prefilledPromo || promotionCode;
       const addons = fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined;
@@ -190,7 +213,9 @@ export function PricingCard({
         onClick={handleSubscribe}
         disabled={loading}
       >
-        {loading ? "Chargement..." : ctaText}
+        {loading ? "Chargement..." : 
+         !user ? "Se connecter pour continuer" :
+         ctaText}
       </Button>
       
       {promotionCode && !prefilledPromo && (
