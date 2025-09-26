@@ -124,11 +124,11 @@ serve(async (req) => {
 
             // Extract addon lookup keys from subscription items
             const addonLookupKeys = subscription.items.data
-              .map((item) => item.price?.lookup_key ?? null)
-              .filter((lookupKey): lookupKey is string => Boolean(lookupKey && lookupKey.includes('fynk_')));
+              .map((item: Stripe.SubscriptionItem) => item.price?.lookup_key ?? null)
+              .filter((lookupKey: string | null): lookupKey is string => Boolean(lookupKey && lookupKey.includes('fynk_')));
 
             const mainPrice = subscription.items.data.find(
-              (item) => item.price?.lookup_key && !item.price.lookup_key.includes('fynk_')
+              (item: Stripe.SubscriptionItem) => item.price?.lookup_key && !item.price.lookup_key.includes('fynk_')
             )?.price ?? null;
             
             const { error: subError } = await supabase
@@ -176,7 +176,7 @@ serve(async (req) => {
             .filter((lookupKey): lookupKey is string => Boolean(lookupKey && lookupKey.includes('fynk_')));
 
           const mainPrice = fullSubscription.items.data.find(
-            (item) => item.price?.lookup_key && !item.price.lookup_key.includes('fynk_')
+            (item: Stripe.SubscriptionItem) => item.price?.lookup_key && !item.price.lookup_key.includes('fynk_')
           )?.price ?? null;
           
           const { error } = await supabase

@@ -89,14 +89,14 @@ serve(async (req) => {
     });
 
     console.log('Found subscriptions:', subscriptions.data.length);
-    console.log('Subscriptions details:', subscriptions.data.map((sub) => ({
+    console.log('Subscriptions details:', subscriptions.data.map((sub: Stripe.Subscription) => ({
       id: sub.id,
       status: sub.status,
       current_period_end: sub.current_period_end
     })));
 
     // Find active or trialing subscription
-    const activeSubscription = subscriptions.data.find((sub) =>
+    const activeSubscription = subscriptions.data.find((sub: Stripe.Subscription) =>
       ['active', 'trialing'].includes(sub.status)
     );
 
@@ -106,7 +106,7 @@ serve(async (req) => {
         JSON.stringify({ 
           hasActiveSubscription: false,
           subscription: null,
-          allSubscriptions: subscriptions.data.map((sub) => ({
+          allSubscriptions: subscriptions.data.map((sub: Stripe.Subscription) => ({
             id: sub.id,
             status: sub.status,
             current_period_end: sub.current_period_end

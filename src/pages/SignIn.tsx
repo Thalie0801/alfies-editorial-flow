@@ -80,17 +80,28 @@ export default function SignIn() {
       // Si plan dans l'URL, créer checkout session
       try {
         console.debug('[SignIn] Calling createCheckoutSession');
-        await createCheckoutSession(
+        const url = await createCheckoutSession(
           planParam,
           promoParam,
           `${window.location.origin}/dashboard`,
           `${window.location.origin}/`,
           uniqueAddons
         );
-        console.debug('[SignIn] createCheckoutSession returned');
+        console.debug('[SignIn] createCheckoutSession returned', { hasUrl: !!url });
+        if (!url) {
+          toast({
+            title: "Paiement non démarré",
+            description: "Impossible d’ouvrir Stripe. Réessayez ou contactez le support.",
+            variant: "destructive",
+          });
+        }
       } catch (error) {
         console.error('[SignIn] Error creating checkout session:', error);
-        navigate('/dashboard');
+        toast({
+          title: "Erreur de paiement",
+          description: "La création de la session de paiement a échoué.",
+          variant: "destructive",
+        });
       }
     } else {
       // Sinon rediriger vers dashboard

@@ -30,7 +30,7 @@ export function useFynkQuota() {
         .single();
 
       const { data: subscription } = await supabase
-        .from<SubscriptionRow>('subscriptions')
+        .from('subscriptions')
         .select('addons')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
@@ -60,7 +60,7 @@ export function useFynkQuota() {
       }
 
       const { data: limits } = await supabase
-        .from<PlanLimitsRow>('plan_limits')
+        .from('plan_limits')
         .select('fynk_interactions_max')
         .eq('plan_key', fynkAddon)
         .single();
@@ -115,7 +115,7 @@ export function useFynkQuota() {
         .maybeSingle();
 
       const { data: subscription } = await supabase
-        .from<SubscriptionRow>('subscriptions')
+        .from('subscriptions')
         .select('addons')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
@@ -134,7 +134,7 @@ export function useFynkQuota() {
       }
 
       const { data: limits } = await supabase
-        .from<PlanLimitsRow>('plan_limits')
+        .from('plan_limits')
         .select('fynk_interactions_max')
         .eq('plan_key', fynkAddon)
         .single();
