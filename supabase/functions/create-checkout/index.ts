@@ -79,16 +79,21 @@ serve(async (req) => {
         .insert({ user_id: user.id, customer_id: customerId });
     }
 
-    // Find the price by lookup_key
-    const prices = await stripe.prices.list({
-      lookup_keys: [lookup_key],
-      expand: ['data.product'],
-    });
+    // Map lookup_keys to price_ids
+    const priceMapping: { [key: string]: string } = {
+      'aeditus_essential_m': 'price_1SBeW9JsCoQneASNUaKERe1V',
+      'aeditus_starter_m': 'price_1SBeWOJsCoQneASNQS5Nx5D5', 
+      'aeditus_pro_m': 'price_1SBeWiJsCoQneASNK3sNE2mZ',
+      'aeditus_amb_m': 'price_1SBeX0JsCoQneASNtGQ0LpIf',
+      'aeditus_boost_m': 'price_1SBeXIJsCoQneASNLkfZ7D80',
+      'fynk_basic_m': 'price_1SBeXYJsCoQneASNGAQ2F6lf',
+      'fynk_pro_m': 'price_1SBeXqJsCoQneASNOQzr6yja'
+    };
 
-    const price = prices.data[0];
-    if (!price) {
+    const priceId = priceMapping[lookup_key];
+    if (!priceId) {
       return new Response(
-        JSON.stringify({ error: 'Price not found' }),
+        JSON.stringify({ error: 'Price not found for lookup key: ' + lookup_key }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           status: 404 
@@ -101,7 +106,7 @@ serve(async (req) => {
       customer: customerId,
       client_reference_id: user.id,
       line_items: [{
-        price: price.id,
+        price: priceId,
         quantity: 1,
       }],
       mode: 'subscription',
@@ -128,14 +133,9 @@ serve(async (req) => {
       );
 
       for (const addonLookupKey of addonLookupKeys) {
-        const addonPrices = await stripe.prices.list({
-          lookup_keys: [addonLookupKey],
-          limit: 1,
-        });
+        const addonPriceId = priceMapping[addonLookupKey];
 
-        const addonPrice = addonPrices.data[0];
-
-        if (!addonPrice) {
+        if (!addonPriceId) {
           return new Response(
             JSON.stringify({ error: `Add-on price not found for ${addonLookupKey}` }),
             {
@@ -146,7 +146,7 @@ serve(async (req) => {
         }
 
         sessionParams.line_items.push({
-          price: addonPrice.id,
+          price: addonPriceId,
           quantity: 1,
         });
       }

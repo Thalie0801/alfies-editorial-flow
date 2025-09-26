@@ -6,7 +6,7 @@ export function Pricing() {
   const plans = [
     {
       name: "Essential",
-      price: "99 €",
+      price: "79 €",
       billing: "Facturé mensuellement",
       description: "Parfait pour débuter avec les outils IA",
       features: [
@@ -117,12 +117,12 @@ export function Pricing() {
               <div className="text-2xl font-bold mb-2">Fynk</div>
               <p className="text-muted-foreground mb-4">Amplifiez votre engagement automatisé</p>
               <div className="space-y-2 mb-4">
-                <div className="text-lg font-semibold text-primary">
-                  Basic: 29€/mois (~400 interactions)
-                </div>
-                <div className="text-lg font-semibold text-accent">
-                  Pro: 69€/mois (~1 500 interactions)
-                </div>
+                 <div className="text-lg font-semibold text-primary">
+                   Basic: 29€/mois (~400 interactions)
+                 </div>
+                 <div className="text-lg font-semibold text-accent">
+                   Pro: 69€/mois (~1 500 interactions)
+                 </div>
               </div>
               <ul className="text-sm space-y-2 mb-6">
                 <li>• Routines d'engagement automatisées</li>
@@ -135,18 +135,21 @@ export function Pricing() {
               </p>
             </div>
             
-            <div className="bg-gradient-card rounded-xl border p-6 text-center">
-              <div className="text-2xl font-bold mb-2">Crédits Vidéos</div>
-              <p className="text-muted-foreground mb-4">Plus de contenus vidéos</p>
-              <div className="text-lg font-semibold text-primary mb-4">
-                Packs 5 / 15 / 50 crédits
-              </div>
-              <ul className="text-sm space-y-2 mb-6">
-                <li>• Vidéos HÉRO supplémentaires</li>
-                <li>• Courts-métrages illimités</li>
-                <li>• Formats personnalisés</li>
-              </ul>
-            </div>
+             <div className="bg-gradient-card rounded-xl border p-6 text-center">
+               <div className="text-2xl font-bold mb-2">Boost</div>
+               <p className="text-muted-foreground mb-4">Plus de contenus vidéos</p>
+               <div className="text-lg font-semibold text-primary mb-4">
+                 79€/mois - +10 vidéos
+               </div>
+               <ul className="text-sm space-y-2 mb-6">
+                 <li>• Vidéos HÉRO supplémentaires</li>
+                 <li>• Courts-métrages illimités</li>
+                 <li>• Formats personnalisés</li>
+               </ul>
+               <p className="text-xs text-muted-foreground">
+                 Ajoutez Boost lors de la souscription
+               </p>
+             </div>
           </div>
         </div>
       </div>
