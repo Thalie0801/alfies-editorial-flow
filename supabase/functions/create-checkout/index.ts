@@ -8,8 +8,8 @@ const corsHeaders = {
 };
 
 // Helper logging function for enhanced debugging
-const logStep = (step: string, details?: any) => {
-  const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
+const logStep = (step: string, details?: unknown) => {
+  const detailsStr = details ? ` - ${JSON.stringify(details)}` : "";
   console.log(`[CREATE-CHECKOUT] ${step}${detailsStr}`);
 };
 
@@ -44,7 +44,13 @@ serve(async (req) => {
     logStep("User authenticated", { userId: user.id, email: user.email });
 
     // Parse request body
-    const body = await req.json();
+    const body = (await req.json()) as {
+      lookup_key: string;
+      promotion_code?: string;
+      success_url?: string;
+      cancel_url?: string;
+      addons?: string[];
+    };
     const { lookup_key, promotion_code, success_url, cancel_url, addons } = body;
     logStep("Request body parsed", { lookup_key, promotion_code, addons });
 
@@ -76,7 +82,9 @@ serve(async (req) => {
     logStep("Price ID mapped", { lookup_key, price_id });
 
     // Build line items
-    const line_items = [{ price: price_id, quantity: 1 }];
+    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
+      { price: price_id, quantity: 1 }
+    ];
 
     // Add addons if provided
     if (addons && Array.isArray(addons)) {
@@ -90,9 +98,7 @@ serve(async (req) => {
     }
 
     // Session parameters
-    const sessionParams: any = {
-      customer: customerId,
-      customer_email: customerId ? undefined : user.email,
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       line_items,
       mode: "subscription",
       success_url: success_url || `${req.headers.get("origin")}/dashboard`,
@@ -103,6 +109,12 @@ serve(async (req) => {
         lookup_key: lookup_key
       }
     };
+
+    if (customerId) {
+      sessionParams.customer = customerId;
+    } else {
+      sessionParams.customer_email = user.email;
+    }
 
     // Add trial for Essential plan
     if (lookup_key === 'aeditus_essential_m') {

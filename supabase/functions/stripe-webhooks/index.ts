@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import Stripe from "https://esm.sh/stripe@14.21.0?target=deno&dts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -79,13 +80,11 @@ serve(async (req) => {
       return new Response('No stripe signature', { status: 400 });
     }
 
-    // Import Stripe webhook verification
-    const { Stripe } = await import('https://esm.sh/stripe@14.21.0');
     const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
       apiVersion: '2023-10-16',
     });
 
-    let event;
+    let event: Stripe.Event;
     try {
       event = stripe.webhooks.constructEvent(body, signature, stripeWebhookSecret);
     } catch (err) {
@@ -97,17 +96,19 @@ serve(async (req) => {
 
     switch (event.type) {
       case 'checkout.session.completed': {
-        const session = event.data.object as any;
-        const customerId = session.customer;
-        const subscriptionId = session.subscription;
-        const clientReferenceId = session.client_reference_id; // user_id
+        const session = event.data.object as Stripe.Checkout.Session;
+        const customerId = typeof session.customer === 'string' ? session.customer : session.customer?.id;
+        const subscriptionId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id;
+        const clientReferenceId = session.client_reference_id ?? undefined; // user_id
+        const metadataUserId = session.metadata?.user_id;
+        const userId = clientReferenceId ?? metadataUserId;
 
-        if (clientReferenceId && customerId) {
+        if (userId && customerId) {
           // Create/update stripe customer
           const { error: customerError } = await supabase
             .from('stripe_customers')
             .upsert(
-              { user_id: clientReferenceId, customer_id: customerId },
+              { user_id: userId, customer_id: customerId },
               { onConflict: 'user_id' }
             );
 
@@ -120,27 +121,23 @@ serve(async (req) => {
             const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
               expand: ['items.data.price']
             });
-            
+
             // Extract addon lookup keys from subscription items
-            const addonLookupKeys: string[] = [];
-            subscription.items.data.forEach((item: any) => {
-              const lookupKey = item.price.lookup_key;
-              if (lookupKey && lookupKey.includes('fynk_')) {
-                addonLookupKeys.push(lookupKey);
-              }
-            });
-            
-            const mainPrice = subscription.items.data.find((item: any) => 
-              item.price.lookup_key && !item.price.lookup_key.includes('fynk_')
-            )?.price;
+            const addonLookupKeys = subscription.items.data
+              .map((item) => item.price?.lookup_key ?? null)
+              .filter((lookupKey): lookupKey is string => Boolean(lookupKey && lookupKey.includes('fynk_')));
+
+            const mainPrice = subscription.items.data.find(
+              (item) => item.price?.lookup_key && !item.price.lookup_key.includes('fynk_')
+            )?.price ?? null;
             
             const { error: subError } = await supabase
               .from('subscriptions')
               .upsert({
                 id: subscription.id,
-                user_id: clientReferenceId,
+                user_id: userId,
                 status: subscription.status,
-                price_lookup_key: mainPrice?.lookup_key || null,
+                price_lookup_key: mainPrice?.lookup_key ?? null,
                 period_start: new Date(subscription.current_period_start * 1000).toISOString(),
                 period_end: new Date(subscription.current_period_end * 1000).toISOString(),
                 cancel_at_period_end: subscription.cancel_at_period_end,
@@ -158,8 +155,8 @@ serve(async (req) => {
 
       case 'customer.subscription.created':
       case 'customer.subscription.updated': {
-        const subscription = event.data.object as any;
-        
+        const subscription = event.data.object as Stripe.Subscription;
+
         // Find user by customer ID
         const { data: customerData } = await supabase
           .from('stripe_customers')
@@ -172,19 +169,15 @@ serve(async (req) => {
           const fullSubscription = await stripe.subscriptions.retrieve(subscription.id, {
             expand: ['items.data.price']
           });
-          
+
           // Extract addon lookup keys
-          const addonLookupKeys: string[] = [];
-          fullSubscription.items.data.forEach((item: any) => {
-            const lookupKey = item.price.lookup_key;
-            if (lookupKey && lookupKey.includes('fynk_')) {
-              addonLookupKeys.push(lookupKey);
-            }
-          });
-          
-          const mainPrice = fullSubscription.items.data.find((item: any) => 
-            item.price.lookup_key && !item.price.lookup_key.includes('fynk_')
-          )?.price;
+          const addonLookupKeys = fullSubscription.items.data
+            .map((item) => item.price?.lookup_key ?? null)
+            .filter((lookupKey): lookupKey is string => Boolean(lookupKey && lookupKey.includes('fynk_')));
+
+          const mainPrice = fullSubscription.items.data.find(
+            (item) => item.price?.lookup_key && !item.price.lookup_key.includes('fynk_')
+          )?.price ?? null;
           
           const { error } = await supabase
             .from('subscriptions')
@@ -192,7 +185,7 @@ serve(async (req) => {
               id: subscription.id,
               user_id: customerData.user_id,
               status: subscription.status,
-              price_lookup_key: mainPrice?.lookup_key || null,
+              price_lookup_key: mainPrice?.lookup_key ?? null,
               period_start: new Date(subscription.current_period_start * 1000).toISOString(),
               period_end: new Date(subscription.current_period_end * 1000).toISOString(),
               cancel_at_period_end: subscription.cancel_at_period_end,
@@ -208,7 +201,7 @@ serve(async (req) => {
       }
 
       case 'customer.subscription.deleted': {
-        const subscription = event.data.object as any;
+        const subscription = event.data.object as Stripe.Subscription;
         
         const { error } = await supabase
           .from('subscriptions')
