@@ -53,6 +53,7 @@ export function PricingCard({
 
   const [fynkEnabled, setFynkEnabled] = useState(false);
   const [fynkTier, setFynkTier] = useState<"basic" | "pro">("basic");
+  const showMonthlySuffix = !billing || billing.toLowerCase().includes("mensuel");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -70,17 +71,31 @@ export function PricingCard({
 
   const handleSubscribe = async () => {
     if (lookupKey) {
+      const finalPromoCode = prefilledPromo || promotionCode;
+      const addons = fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined;
+
       if (!user) {
-        // Pour les utilisateurs non connectés, rediriger vers auth avec intention d'achat
-        const returnUrl = `${window.location.origin}/auth?plan=${lookupKey}`;
+        // Pour les utilisateurs non connectés, rediriger vers auth avec intention d'achat et options sélectionnées
+        const params = new URLSearchParams({ plan: lookupKey });
+
+        if (finalPromoCode) {
+          params.set('promo', finalPromoCode);
+        }
+
+        if (addons?.length) {
+          addons.forEach((addon) => {
+            if (addon) {
+              params.append('addon', addon);
+            }
+          });
+        }
+
+        const returnUrl = `${window.location.origin}/auth?${params.toString()}`;
         window.location.href = returnUrl;
         return;
       }
 
       // Utilisateur connecté, procéder directement au checkout
-      const finalPromoCode = prefilledPromo || promotionCode;
-      const addons = fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined;
-      
       await createCheckoutSession(
         lookupKey,
         finalPromoCode,
@@ -129,11 +144,11 @@ export function PricingCard({
             </span>
           )}
           <span className="text-4xl font-bold">{price}</span>
-          {billing && <span className="text-muted-foreground">/ mois</span>}
+          {showMonthlySuffix && <span className="text-muted-foreground">/ mois</span>}
         </div>
-        
-        {billing && !billing.includes('mois') && (
-          <p className="text-sm text-muted-foreground">{billing}</p>
+
+        {billing && (
+          <p className="text-sm text-muted-foreground mt-1">{billing}</p>
         )}
         
         {discount && (

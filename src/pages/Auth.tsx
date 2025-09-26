@@ -53,16 +53,19 @@ export default function Auth() {
     await ensureSession();
 
     const planParam = searchParams.get('plan');
-    
+    const promoParam = searchParams.get('promo') || undefined;
+    const addonParams = searchParams.getAll('addon').filter((addon) => addon && addon.trim().length > 0);
+    const uniqueAddons = addonParams.length ? Array.from(new Set(addonParams)) : undefined;
+
     if (planParam) {
       // Si plan dans l'URL, créer checkout session
       try {
         await createCheckoutSession(
           planParam,
-          undefined,
+          promoParam,
           `${window.location.origin}/dashboard`,
           `${window.location.origin}/`,
-          undefined
+          uniqueAddons
         );
       } catch (error) {
         console.error('Error creating checkout session:', error);
@@ -80,8 +83,27 @@ export default function Auth() {
 
     try {
       const planParam = searchParams.get('plan');
-      const redirectUrl = planParam
-        ? `${window.location.origin}/auth?plan=${encodeURIComponent(planParam)}`
+      const promoParam = searchParams.get('promo');
+      const addonParams = searchParams.getAll('addon');
+      const redirectParams = new URLSearchParams();
+
+      if (planParam) {
+        redirectParams.set('plan', planParam);
+      }
+
+      if (promoParam) {
+        redirectParams.set('promo', promoParam);
+      }
+
+      addonParams.forEach((addon) => {
+        if (addon) {
+          redirectParams.append('addon', addon);
+        }
+      });
+
+      const redirectQuery = redirectParams.toString();
+      const redirectUrl = redirectQuery
+        ? `${window.location.origin}/auth?${redirectQuery}`
         : `${window.location.origin}/auth`;
       const { error } = await supabase.auth.signUp({
         email,
