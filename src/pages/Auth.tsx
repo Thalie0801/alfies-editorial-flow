@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { useStripeCheckout } from '@/hooks/useStripeCheckout';
 import { Loader2 } from 'lucide-react';
 
 export default function Auth() {
@@ -14,18 +15,54 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const { createCheckoutSession } = useStripeCheckout();
 
   useEffect(() => {
     // Check if user is already logged in
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/dashboard');
+        await processPendingSubscription();
+        const returnTo = searchParams.get('returnTo');
+        navigate(returnTo || '/dashboard');
       }
     };
     checkAuth();
-  }, [navigate]);
+
+    // Set up auth state listener for post-signup flow
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        await processPendingSubscription();
+        const returnTo = searchParams.get('returnTo');
+        navigate(returnTo || '/dashboard');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate, searchParams]);
+
+  const processPendingSubscription = async () => {
+    const pendingSubscription = localStorage.getItem('pendingSubscription');
+    if (pendingSubscription) {
+      try {
+        const { lookupKey, promotionCode, addons, returnUrl } = JSON.parse(pendingSubscription);
+        localStorage.removeItem('pendingSubscription');
+        
+        await createCheckoutSession(
+          lookupKey,
+          promotionCode,
+          returnUrl,
+          `${window.location.origin}/pricing`,
+          addons
+        );
+      } catch (error) {
+        console.error('Error processing pending subscription:', error);
+        localStorage.removeItem('pendingSubscription');
+      }
+    }
+  };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +118,7 @@ export default function Auth() {
           variant: "destructive",
         });
       } else {
-        navigate('/dashboard');
+        // Auth state change will handle the navigation and subscription processing
       }
     } catch (error) {
       toast({

@@ -69,27 +69,31 @@ export function PricingCard({
   }, []);
 
   const handleSubscribe = async () => {
-    if (!user) {
-      // Redirect to auth if not logged in
-      window.location.href = '/auth';
-      return;
-    }
-
     if (lookupKey) {
+      if (!user) {
+        // Store subscription intent in localStorage for post-auth processing
+        localStorage.setItem('pendingSubscription', JSON.stringify({
+          lookupKey,
+          promotionCode: prefilledPromo || promotionCode,
+          addons: fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined,
+          returnUrl: `${window.location.origin}/dashboard`
+        }));
+        
+        // Redirect to auth with return URL
+        window.location.href = '/auth?returnTo=' + encodeURIComponent(window.location.pathname);
+        return;
+      }
+
       const finalPromoCode = prefilledPromo || promotionCode;
       const addons = fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined;
       
-      const { url } = await createCheckoutSession(
+      await createCheckoutSession(
         lookupKey,
         finalPromoCode,
         `${window.location.origin}/dashboard`,
         `${window.location.origin}/pricing`,
         addons
-      ) || {};
-      
-      if (url) {
-        window.location.href = url;
-      }
+      );
     }
   };
 
@@ -213,9 +217,7 @@ export function PricingCard({
         onClick={handleSubscribe}
         disabled={loading}
       >
-        {loading ? "Chargement..." : 
-         !user ? "Se connecter pour commencer" : 
-         ctaText}
+        {loading ? "Chargement..." : ctaText}
       </Button>
       
       {promotionCode && !prefilledPromo && (
