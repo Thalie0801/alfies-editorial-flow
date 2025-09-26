@@ -8,7 +8,8 @@ import Index from "./pages/Index";
 import Contact from "./pages/Contact";
 import { Simulator } from "./pages/Simulator";
 import { AmbassadorApplication } from "./pages/AmbassadorApplication";
-import Auth from "./pages/Auth";
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -32,7 +33,8 @@ const App = () => {
               <Route path="/contact" element={<Contact />} />
               <Route path="/simulator" element={<Simulator />} />
               <Route path="/ambassador-application" element={<AmbassadorApplication />} />
-              <Route path="/auth" element={<Auth />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/signin" element={<SignIn />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />

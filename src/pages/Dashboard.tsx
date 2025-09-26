@@ -60,39 +60,8 @@ export default function Dashboard() {
   }, []);
   
   const handlePostAuthCheckout = async () => {
-    const planParam = searchParams.get('plan');
-    const promoParam = searchParams.get('promo') || undefined;
-    const addonParams = searchParams.getAll('addon').filter((addon) => addon && addon.trim().length > 0);
-    const uniqueAddons = addonParams.length ? Array.from(new Set(addonParams)) : undefined;
-
-    if (planParam) {
-      try {
-        // Attendre un peu pour que la session soit bien établie
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        await createCheckoutSession(
-          planParam,
-          promoParam,
-          `${window.location.origin}/dashboard`,
-          `${window.location.origin}/dashboard`,
-          uniqueAddons
-        );
-        
-        // Nettoyer les paramètres de l'URL après le checkout
-        const newUrl = new URL(window.location.href);
-        newUrl.searchParams.delete('plan');
-        newUrl.searchParams.delete('promo');
-        newUrl.searchParams.delete('addon');
-        window.history.replaceState({}, '', newUrl.toString());
-      } catch (error) {
-        console.error('Error creating checkout session in dashboard:', error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de créer la session de paiement.",
-          variant: "destructive",
-        });
-      }
-    }
+    // Ne plus relancer le checkout automatiquement
+    // L'utilisateur est déjà passé par le paiement
   };
 
   const handleSignOut = async () => {
