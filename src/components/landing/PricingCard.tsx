@@ -98,32 +98,17 @@ export function PricingCard({
         return;
       }
 
-      // Utilisateur connecté, procéder directement au checkout avec fetch
+      // Utilisateur connecté, procéder directement au checkout via Supabase Functions
       try {
-        const response = await fetch(`https://itjvvjzfqgnixqbxqhgq.supabase.co/functions/v1/create-checkout`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`
-          },
-          body: JSON.stringify({
-            lookup_key: lookupKey,
-            promotion_code: finalPromoCode,
-            success_url: `${window.location.origin}/dashboard`,
-            cancel_url: `${window.location.origin}/`,
-            addons: addons
-          })
-        });
-
-        const data = await response.json();
-        
-        if (response.ok && data.url) {
-          window.location.href = data.url;
-        } else {
-          console.error('Checkout error:', data);
-        }
+        await createCheckoutSession(
+          lookupKey,
+          finalPromoCode,
+          `${window.location.origin}/dashboard`,
+          `${window.location.origin}/`,
+          addons
+        );
       } catch (error) {
-        console.error('Fetch error:', error);
+        console.error('Checkout error:', error);
       }
     }
   };
