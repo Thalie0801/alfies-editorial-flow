@@ -18,51 +18,10 @@ import { ProtectedRoute } from "./components/dashboard/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="light"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/simulateur" element={<Simulator />} />
-            <Route path="/ambassadeur" element={<AmbassadorApplication />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard/*" element={
-              <ProtectedRoute requiredRole="client" requireSubscription={true}>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/*" element={
-              <ProtectedRoute requiredRole="admin">
-                <AdminDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/settings/billing" element={
-              <ProtectedRoute requiredRole="client">
-                <BillingSettings />
-              </ProtectedRoute>
-            } />
-            <Route path="/settings/engagement" element={
-              <ProtectedRoute requiredRole="client">
-                <EngagementSettings />
-              </ProtectedRoute>
-            } />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Redirection vers aeditus.com
+  window.location.href = "https://aeditus.com";
+  return null;
+};
 
 export default App;
