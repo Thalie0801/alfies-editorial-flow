@@ -56,7 +56,7 @@ export function ProtectedRoute({
       
       // Check subscription requirement for dashboard routes
       if (requireSubscription && !subLoading && !hasActiveSubscription()) {
-        navigate('/pricing');
+        navigate('/#pricing');
       }
     }
   }, [authLoading, roleLoading, subLoading, user, role, requiredRole, hasActiveSubscription, requireSubscription, navigate]);
