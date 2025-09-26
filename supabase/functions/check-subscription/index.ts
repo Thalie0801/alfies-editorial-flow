@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import Stripe from "https://esm.sh/stripe@14.21.0?target=deno&dts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -50,7 +51,6 @@ serve(async (req) => {
       );
     }
 
-    const { Stripe } = await import('https://esm.sh/stripe@14.21.0');
     const stripe = new Stripe(stripeSecretKey, {
       apiVersion: '2023-10-16',
     });
@@ -89,14 +89,14 @@ serve(async (req) => {
     });
 
     console.log('Found subscriptions:', subscriptions.data.length);
-    console.log('Subscriptions details:', subscriptions.data.map((sub: any) => ({
+    console.log('Subscriptions details:', subscriptions.data.map((sub) => ({
       id: sub.id,
       status: sub.status,
       current_period_end: sub.current_period_end
     })));
 
     // Find active or trialing subscription
-    const activeSubscription = subscriptions.data.find((sub: any) => 
+    const activeSubscription = subscriptions.data.find((sub) =>
       ['active', 'trialing'].includes(sub.status)
     );
 
@@ -106,7 +106,7 @@ serve(async (req) => {
         JSON.stringify({ 
           hasActiveSubscription: false,
           subscription: null,
-          allSubscriptions: subscriptions.data.map((sub: any) => ({
+          allSubscriptions: subscriptions.data.map((sub) => ({
             id: sub.id,
             status: sub.status,
             current_period_end: sub.current_period_end

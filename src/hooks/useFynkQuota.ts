@@ -1,6 +1,9 @@
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+type SubscriptionRow = { addons: string[] | null };
+type PlanLimitsRow = { fynk_interactions_max: number | null };
+
 export function useFynkQuota() {
   const { toast } = useToast();
 
@@ -27,15 +30,15 @@ export function useFynkQuota() {
         .single();
 
       const { data: subscription } = await supabase
-        .from('subscriptions')
+        .from<SubscriptionRow>('subscriptions')
         .select('addons')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
 
-      const addons = subscription?.addons;
-      if (!addons || !Array.isArray(addons)) {
+      const addons = Array.isArray(subscription?.addons) ? subscription.addons : null;
+      if (!addons) {
         toast({
           title: "Fynk non activé",
           description: "Activez Fynk pour utiliser les interactions automatisées",
@@ -45,10 +48,8 @@ export function useFynkQuota() {
       }
 
       // Get Fynk addon and quota
-      const fynkAddon = addons.find((addon: any) => 
-        typeof addon === 'string' && addon.includes('fynk_')
-      ) as string;
-      
+      const fynkAddon = addons.find((addon) => addon.includes('fynk_'));
+
       if (!fynkAddon) {
         toast({
           title: "Fynk non activé",
@@ -59,7 +60,7 @@ export function useFynkQuota() {
       }
 
       const { data: limits } = await supabase
-        .from('plan_limits')
+        .from<PlanLimitsRow>('plan_limits')
         .select('fynk_interactions_max')
         .eq('plan_key', fynkAddon)
         .single();
@@ -114,28 +115,26 @@ export function useFynkQuota() {
         .maybeSingle();
 
       const { data: subscription } = await supabase
-        .from('subscriptions')
+        .from<SubscriptionRow>('subscriptions')
         .select('addons')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
 
-      const addons = subscription?.addons;
-      if (!addons || !Array.isArray(addons)) {
+      const addons = Array.isArray(subscription?.addons) ? subscription.addons : null;
+      if (!addons) {
         return { canUse: false, remaining: 0, quota: 0 };
       }
 
-      const fynkAddon = addons.find((addon: any) => 
-        typeof addon === 'string' && addon.includes('fynk_')
-      ) as string;
-      
+      const fynkAddon = addons.find((addon) => addon.includes('fynk_'));
+
       if (!fynkAddon) {
         return { canUse: false, remaining: 0, quota: 0 };
       }
 
       const { data: limits } = await supabase
-        .from('plan_limits')
+        .from<PlanLimitsRow>('plan_limits')
         .select('fynk_interactions_max')
         .eq('plan_key', fynkAddon)
         .single();
