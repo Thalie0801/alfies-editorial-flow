@@ -20,48 +20,42 @@ import { useEffect } from "react";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const url = "https://aeditus.com";
-
-  useEffect(() => {
-    const redirect = () => {
-      try {
-        if (window.top) {
-          window.top.location.href = url;
-        } else {
-          window.location.replace(url);
-        }
-      } catch (e) {
-        window.location.replace(url);
-      }
-    };
-
-    redirect();
-    const t = setTimeout(() => {
-      window.location.assign(url);
-    }, 1500);
-    return () => clearTimeout(t);
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <main className="min-h-screen grid place-items-center bg-background">
-            <section className="text-center space-y-4 p-6">
-              <h1 className="text-2xl font-semibold">Redirection vers aeditus.com…</h1>
-              <p className="text-muted-foreground">Si rien ne se passe, cliquez sur le bouton ci-dessous.</p>
-              <a
-                href={url}
-                target="_top"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-md px-4 py-2 bg-primary text-primary-foreground hover:opacity-90 transition"
-              >
-                Aller sur aeditus.com
-              </a>
-            </section>
-          </main>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/simulator" element={<Simulator />} />
+              <Route path="/ambassador-application" element={<AmbassadorApplication />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/billing" element={
+                <ProtectedRoute>
+                  <BillingSettings />
+                </ProtectedRoute>
+              } />
+              <Route path="/engagement" element={
+                <ProtectedRoute>
+                  <EngagementSettings />
+                </ProtectedRoute>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
