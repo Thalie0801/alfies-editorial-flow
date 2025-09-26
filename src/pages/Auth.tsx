@@ -20,19 +20,19 @@ export default function Auth() {
   const { createCheckoutSession } = useStripeCheckout();
 
   useEffect(() => {
-    // Check if user is already logged in
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        await handlePostAuthFlow();
-      }
-    };
-    checkAuth();
-
-    // Set up auth state listener for post-signup flow
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    // Set up auth state listener FIRST (sync callback, defer side-effects)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
-        await handlePostAuthFlow();
+        setTimeout(() => {
+          handlePostAuthFlow();
+        }, 0);
+      }
+    });
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        handlePostAuthFlow();
       }
     });
 
