@@ -19,6 +19,23 @@ export default function SignIn() {
   const { createCheckoutSession } = useStripeCheckout();
 
   useEffect(() => {
+    // Gérer les retours de paiement
+    const paymentStatus = searchParams.get('payment');
+    if (paymentStatus === 'success') {
+      toast({
+        title: "Paiement réussi",
+        description: "Votre abonnement a été activé. Connectez-vous pour accéder à votre dashboard.",
+      });
+    } else if (paymentStatus === 'cancelled') {
+      toast({
+        title: "Paiement annulé",
+        description: "Votre paiement a été annulé. Vous pouvez réessayer quand vous le souhaitez.",
+        variant: "destructive",
+      });
+    }
+  }, [searchParams, toast]);
+
+  useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
