@@ -37,10 +37,28 @@ serve(async (req) => {
 
     // Get user from token (pass JWT explicitly to avoid AuthSessionMissingError)
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    let user: any = null;
+    let authError: any = null;
+
+    try {
+      const res = await supabase.auth.getUser(token);
+      user = res.data.user;
+      authError = res.error ?? null;
+    } catch (e) {
+      authError = e;
+    }
+
+    // Fallback: try without passing token but relying on global Authorization header
+    if (!user) {
+      try {
+        const res2 = await supabase.auth.getUser();
+        user = res2.data.user;
+        authError = res2.error ?? authError;
+      } catch (_) {}
+    }
     
-    if (authError || !user) {
-      console.error('Unauthorized: invalid user token', authError);
+    if (!user) {
+      console.error('Unauthorized: could not resolve user from token', authError);
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { 
@@ -49,6 +67,8 @@ serve(async (req) => {
         }
       );
     }
+
+    console.log('Proceeding to checkout for user:', user.email, user.id);
 
     const { lookup_key, success_url, cancel_url, promotion_code, addons } = await req.json();
 
