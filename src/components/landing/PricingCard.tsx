@@ -71,19 +71,13 @@ export function PricingCard({
   const handleSubscribe = async () => {
     if (lookupKey) {
       if (!user) {
-        // Store subscription intent in localStorage for post-auth processing
-        localStorage.setItem('pendingSubscription', JSON.stringify({
-          lookupKey,
-          promotionCode: prefilledPromo || promotionCode,
-          addons: fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined,
-          returnUrl: `${window.location.origin}/dashboard`
-        }));
-        
-        // Redirect to auth with return URL
-        window.location.href = '/auth?returnTo=' + encodeURIComponent(window.location.pathname);
+        // Pour les utilisateurs non connectés, rediriger vers auth avec intention d'achat
+        const returnUrl = `${window.location.origin}/auth?plan=${lookupKey}`;
+        window.location.href = returnUrl;
         return;
       }
 
+      // Utilisateur connecté, procéder directement au checkout
       const finalPromoCode = prefilledPromo || promotionCode;
       const addons = fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined;
       
@@ -91,7 +85,7 @@ export function PricingCard({
         lookupKey,
         finalPromoCode,
         `${window.location.origin}/dashboard`,
-        `${window.location.origin}/pricing`,
+        `${window.location.origin}/`,
         addons
       );
     }

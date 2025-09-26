@@ -24,9 +24,7 @@ export default function Auth() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        await processPendingSubscription();
-        const returnTo = searchParams.get('returnTo');
-        navigate(returnTo || '/dashboard');
+        await handlePostAuthFlow();
       }
     };
     checkAuth();
@@ -34,33 +32,33 @@ export default function Auth() {
     // Set up auth state listener for post-signup flow
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
-        await processPendingSubscription();
-        const returnTo = searchParams.get('returnTo');
-        navigate(returnTo || '/dashboard');
+        await handlePostAuthFlow();
       }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate, searchParams]);
 
-  const processPendingSubscription = async () => {
-    const pendingSubscription = localStorage.getItem('pendingSubscription');
-    if (pendingSubscription) {
+  const handlePostAuthFlow = async () => {
+    const planParam = searchParams.get('plan');
+    
+    if (planParam) {
+      // Si plan dans l'URL, créer checkout session
       try {
-        const { lookupKey, promotionCode, addons, returnUrl } = JSON.parse(pendingSubscription);
-        localStorage.removeItem('pendingSubscription');
-        
         await createCheckoutSession(
-          lookupKey,
-          promotionCode,
-          returnUrl,
-          `${window.location.origin}/pricing`,
-          addons
+          planParam,
+          undefined,
+          `${window.location.origin}/dashboard`,
+          `${window.location.origin}/`,
+          undefined
         );
       } catch (error) {
-        console.error('Error processing pending subscription:', error);
-        localStorage.removeItem('pendingSubscription');
+        console.error('Error creating checkout session:', error);
+        navigate('/dashboard');
       }
+    } else {
+      // Sinon rediriger vers dashboard
+      navigate('/dashboard');
     }
   };
 

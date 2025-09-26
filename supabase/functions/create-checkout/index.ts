@@ -92,8 +92,8 @@ serve(async (req) => {
         quantity: 1,
       }],
       mode: 'subscription',
-      success_url: success_url || `${req.headers.get('origin')}/app/dashboard`,
-      cancel_url: cancel_url || `${req.headers.get('origin')}/pricing`,
+      success_url: success_url || `${req.headers.get('origin')}/dashboard`,
+      cancel_url: cancel_url || `${req.headers.get('origin')}/`,
       billing_address_collection: 'auto',
       customer_update: {
         address: 'auto',
