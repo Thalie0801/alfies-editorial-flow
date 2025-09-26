@@ -35,7 +35,7 @@ const App = () => (
             <Route path="/ambassadeur" element={<AmbassadorApplication />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard/*" element={
-              <ProtectedRoute requiredRole="client">
+              <ProtectedRoute requiredRole="client" requireSubscription={true}>
                 <Dashboard />
               </ProtectedRoute>
             } />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useSubscription } from '@/hooks/useSubscription';
 import { useUserRole, type UserRole } from '@/hooks/useUserRole';
 import type { User } from '@supabase/supabase-js';
 
@@ -8,16 +9,19 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
   requiredRole?: UserRole;
   redirectTo?: string;
+  requireSubscription?: boolean;
 }
 
 export function ProtectedRoute({ 
   children, 
   requiredRole = 'client',
-  redirectTo = '/auth' 
+  redirectTo = '/auth',
+  requireSubscription = false
 }: ProtectedRouteProps) {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const { role, loading: roleLoading } = useUserRole(user);
+  const { hasActiveSubscription, loading: subLoading } = useSubscription(user);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,10 +53,15 @@ export function ProtectedRoute({
       if (requiredRole === 'admin' && role !== 'admin') {
         navigate('/dashboard'); // Redirect non-admin to client dashboard
       }
+      
+      // Check subscription requirement for dashboard routes
+      if (requireSubscription && !subLoading && !hasActiveSubscription()) {
+        navigate('/pricing');
+      }
     }
-  }, [authLoading, roleLoading, user, role, requiredRole, navigate]);
+  }, [authLoading, roleLoading, subLoading, user, role, requiredRole, hasActiveSubscription, requireSubscription, navigate]);
 
-  if (authLoading || roleLoading) {
+  if (authLoading || roleLoading || (requireSubscription && subLoading)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
