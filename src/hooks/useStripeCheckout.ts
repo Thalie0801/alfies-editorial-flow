@@ -10,7 +10,8 @@ export function useStripeCheckout() {
     lookupKey: string,
     promotionCode?: string,
     successUrl?: string,
-    cancelUrl?: string
+    cancelUrl?: string,
+    addons?: string[]
   ) => {
     setLoading(true);
     try {
@@ -20,6 +21,7 @@ export function useStripeCheckout() {
           promotion_code: promotionCode,
           success_url: successUrl,
           cancel_url: cancelUrl,
+          addons: addons,
         },
       });
 

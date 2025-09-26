@@ -6,76 +6,80 @@ export function Pricing() {
   const plans = [
     {
       name: "Essential",
-      price: "79,00 €",
-      description: "Parfait pour débuter votre présence digitale",
+      price: "99 €",
+      billing: "Facturé mensuellement",
+      description: "Parfait pour débuter avec les outils IA",
       features: [
-        "1 réseau social au choix (12 posts/mois)",
-        "1 visuel ou vidéo / semaine",
-        "Bibliothèque tonale + briefs illimités",
-        "KPI Lite (impressions, abonnés)",
-        "Affiliation 10%",
-        "Options : articles & Fynk activables",
-        "Essai 7 jours (sans publication)"
+        "3 posts par mois",
+        "1 story par mois", 
+        "1 cover par mois",
+        "Templates de base",
+        "Support email",
+        "✨ Essai gratuit 7 jours"
       ],
-      ctaText: "Essayer 7 jours",
+      ctaText: "Commencer l'essai 7 jours",
       badge: "Essai — publication verrouillée",
-      lookupKey: "aeditus_essential_m"
+      lookupKey: "aeditus_essential_m",
+      trialNote: "Publication verrouillée pendant l'essai"
     },
     {
-      name: "Starter",
-      price: "179,00 €",
-      description: "La solution complète pour une présence pro",
+      name: "Starter", 
+      price: "179 €",
+      billing: "Facturé mensuellement",
+      description: "Pour les créateurs qui veulent plus de contenus",
       features: [
-        "Plan éditorial complet (jusqu'à 4 réseaux)",
-        "1 vidéo HÉRO + 10 snacks/mois",
-        "2 articles SEO (1 200–1 500 mots)",
-        "Carrousels + stories + visuels dédiés",
-        "KPI complet + Copilot Alfie",
-        "Support prioritaire",
-        "Formation incluse"
+        "10 posts par mois",
+        "5 stories par mois",
+        "3 covers par mois", 
+        "2 carousels par mois",
+        "Templates premium",
+        "Support prioritaire"
       ],
-      isPopular: true,
       ctaText: "Choisir Starter",
-      discount: "−25% le 1er mois → 134,25 €",
+      isPopular: true,
+      discount: "−25% le 1er mois avec LAUNCH25 → 134,25 €",
       lookupKey: "aeditus_starter_m",
       promotionCode: "LAUNCH25"
     },
     {
       name: "Pro",
-      price: "399,00 €",
-      description: "Pour les entrepreneurs ambitieux",
+      price: "399 €", 
+      billing: "Facturé mensuellement",
+      description: "Pour les professionnels exigeants",
       features: [
-        "Présence étendue (jusqu'à 7 réseaux)",
-        "3–4 vidéos HÉRO + snacks illimités",
-        "4 articles SEO (1 500–2 000 mots)",
-        "Bilans hebdo + recalibrage automatique",
-        "Accès prioritaire aux nouveautés",
-        "Account manager dédié",
-        "Intégrations avancées"
+        "Posts illimités",
+        "Stories illimitées",
+        "Covers illimitées",
+        "Carousels illimités",
+        "Snacks illimités",
+        "Templates exclusifs",
+        "Support VIP"
       ],
-      isPremium: true,
       ctaText: "Choisir Pro",
-      discount: "−25% le 1er mois → 299,25 €",
+      isPremium: true,
+      discount: "−25% le 1er mois avec LAUNCH25 → 299,25 €",
       lookupKey: "aeditus_pro_m",
       promotionCode: "LAUNCH25"
     },
     {
       name: "Ambassadeurs",
-      price: "149,00 €",
-      description: "Programme invité pour les créateurs",
+      price: "49,90 €",
+      originalPrice: "149 €",
+      billing: "pendant 3 mois, puis 149 €",
+      description: "Offre spéciale pour nos ambassadeurs",
       features: [
-        "Jusqu'à 3 réseaux sociaux",
-        "2 vidéos HÉRO + 8 snacks/mois",
-        "2 articles SEO/mois (≈1 500–2 000 mots)",
-        "3 carrousels, 4 stories, 2 covers / mois",
-        "Support prioritaire",
-        "Programme communauté exclusive"
+        "2 HÉRO par mois",
+        "8 snacks par mois",
+        "2 articles par mois",
+        "3 réseaux sociaux",
+        "Templates ambassadeurs",
+        "Support dédié"
       ],
-      ctaText: "Rejoindre le programme",
-      badge: "Programme invité (places limitées)",
-      discount: "49,90 € / 3 mois avec AMBASSADEURS49, puis 149 €",
+      ctaText: "Obtenir l'offre ambassadeur",
+      badge: "Programme ambassadeur",
+      discount: "Code AMBASSADEURS49 pré-appliqué",
       lookupKey: "aeditus_amb_m",
-      promotionCode: "AMBASSADEURS49"
+      prefilledPromo: "AMBASSADEURS49"
     }
   ];
 

@@ -7,6 +7,7 @@ interface PricingCardProps {
   name: string;
   price: string;
   originalPrice?: string;
+  billing?: string;
   description: string;
   features: string[];
   isPopular?: boolean;
@@ -16,12 +17,15 @@ interface PricingCardProps {
   discount?: string;
   lookupKey?: string;
   promotionCode?: string;
+  prefilledPromo?: string;
+  trialNote?: string;
 }
 
 export function PricingCard({
   name,
   price,
   originalPrice,
+  billing,
   description,
   features,
   isPopular,
@@ -30,20 +34,27 @@ export function PricingCard({
   badge,
   discount,
   lookupKey,
-  promotionCode
+  promotionCode,
+  prefilledPromo,
+  trialNote
 }: PricingCardProps) {
   const { createCheckoutSession, loading } = useStripeCheckout();
   const cardVariant = isPremium ? "premium" : isPopular ? "hero" : "outline";
   const CardIcon = isPremium ? Crown : isPopular ? Zap : Sparkles;
 
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
     if (lookupKey) {
-      createCheckoutSession(
+      const finalPromoCode = prefilledPromo || promotionCode;
+      const { url } = await createCheckoutSession(
         lookupKey,
-        promotionCode,
-        `${window.location.origin}/app/dashboard`,
+        finalPromoCode,
+        `${window.location.origin}/dashboard`,
         `${window.location.origin}/pricing`
-      );
+      ) || {};
+      
+      if (url) {
+        window.location.href = url;
+      }
     }
   };
 
@@ -85,11 +96,19 @@ export function PricingCard({
             </span>
           )}
           <span className="text-4xl font-bold">{price}</span>
-          <span className="text-muted-foreground">/ mois</span>
+          {billing && <span className="text-muted-foreground">/ mois</span>}
         </div>
         
+        {billing && !billing.includes('mois') && (
+          <p className="text-sm text-muted-foreground">{billing}</p>
+        )}
+        
         {discount && (
-          <p className="text-sm text-accent font-medium">{discount}</p>
+          <p className="text-sm text-accent font-medium mt-2">{discount}</p>
+        )}
+        
+        {trialNote && (
+          <p className="text-xs text-orange-600 font-medium mt-2">{trialNote}</p>
         )}
         
         {badge && (
@@ -117,6 +136,14 @@ export function PricingCard({
       >
         {loading ? "Chargement..." : ctaText}
       </Button>
+      
+      {promotionCode && !prefilledPromo && (
+        <div className="text-center mt-3">
+          <span className="text-xs text-muted-foreground">
+            Code promo disponible : <strong>{promotionCode}</strong>
+          </span>
+        </div>
+      )}
     </div>
   );
 }

@@ -145,7 +145,12 @@ export function BillingSettings() {
 
                 <div className="flex gap-3">
                   <Button 
-                    onClick={() => createPortalSession()}
+                    onClick={async () => {
+                      const { url } = await createPortalSession(`${window.location.origin}/settings/billing`) || {};
+                      if (url) {
+                        window.location.href = url;
+                      }
+                    }}
                     className="flex items-center gap-2"
                   >
                     <CreditCard className="w-4 h-4" />

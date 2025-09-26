@@ -37,7 +37,7 @@ serve(async (req) => {
       );
     }
 
-    const { lookup_key, success_url, cancel_url, promotion_code } = await req.json();
+    const { lookup_key, success_url, cancel_url, promotion_code, addons } = await req.json();
 
     const { Stripe } = await import('https://esm.sh/stripe@14.21.0');
     const stripe = new Stripe(stripeSecretKey, {
