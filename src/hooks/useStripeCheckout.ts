@@ -32,7 +32,7 @@ export function useStripeCheckout() {
         console.error('Checkout error:', error);
         toast({
           title: "Erreur",
-          description: "Impossible de créer la session de paiement",
+          description: `Impossible de créer la session de paiement${error?.message ? ` : ${error.message}` : ''}`,
           variant: "destructive",
         });
         return null;

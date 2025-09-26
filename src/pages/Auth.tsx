@@ -25,7 +25,7 @@ export default function Auth() {
       if (event === 'SIGNED_IN' && session) {
         setTimeout(() => {
           handlePostAuthFlow();
-        }, 0);
+        }, 400);
       }
     });
 
@@ -40,6 +40,18 @@ export default function Auth() {
   }, [navigate, searchParams]);
 
   const handlePostAuthFlow = async () => {
+    // S'assurer que la session (token) est bien disponible avant d'appeler Stripe
+    const ensureSession = async () => {
+      for (let i = 0; i < 10; i++) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.access_token) return session;
+        await new Promise((r) => setTimeout(r, 200));
+      }
+      return null;
+    };
+
+    await ensureSession();
+
     const planParam = searchParams.get('plan');
     
     if (planParam) {
