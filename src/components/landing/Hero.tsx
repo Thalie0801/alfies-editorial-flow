@@ -81,7 +81,7 @@ export function Hero() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-scale" style={{ animationDelay: '0.6s' }}>
             <Button variant="hero" size="xl" className="min-w-[200px]" asChild>
-              <a href="#pricing">
+              <a href="/#pricing">
                 <Sparkles className="w-5 h-5 mr-2" />
                 Essai Essential 7j
               </a>

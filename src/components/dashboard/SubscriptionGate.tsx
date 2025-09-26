@@ -46,7 +46,7 @@ export function SubscriptionGate({ user, children, requiredForContent = false }:
           </CardHeader>
           <CardContent className="space-y-4">
             <Button 
-              onClick={() => navigate('/pricing')} 
+              onClick={() => navigate('/#pricing')} 
               className="w-full"
             >
               Voir les plans

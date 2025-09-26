@@ -34,7 +34,7 @@ export function Navigation() {
                 Fonctionnalités
               </a>
               <a
-                href="#pricing"
+                href="/#pricing"
                 className="text-foreground/80 hover:text-foreground transition-colors"
               >
                 Tarifs
@@ -54,7 +54,7 @@ export function Navigation() {
               <a href="/signin">Se connecter</a>
             </Button>
             <Button variant="hero" size="sm">
-              <a href="#pricing">Essai gratuit</a>
+             <a href="/#pricing">Essai gratuit</a>
             </Button>
           </div>
 
@@ -82,7 +82,7 @@ export function Navigation() {
                 Fonctionnalités
               </a>
               <a
-                href="#pricing"
+                 href="/#pricing"
                 className="block px-3 py-2 text-base font-medium text-foreground/80 hover:text-foreground"
                 onClick={() => setIsOpen(false)}
               >
@@ -101,7 +101,7 @@ export function Navigation() {
                     <a href="/signin">Se connecter</a>
                   </Button>
                   <Button variant="hero" size="sm">
-                    <a href="#pricing">Essai gratuit</a>
+                    <a href="/#pricing">Essai gratuit</a>
                   </Button>
                 </div>
               </div>

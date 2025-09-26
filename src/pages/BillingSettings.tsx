@@ -168,7 +168,7 @@ export function BillingSettings() {
                     variant="outline" 
                     size="sm" 
                     className="w-full justify-start"
-                    onClick={() => navigate('/pricing')}
+                    onClick={() => navigate('/#pricing')}
                   >
                     <Package className="w-4 h-4 mr-2" />
                     Voir tous les plans
@@ -195,7 +195,7 @@ export function BillingSettings() {
               <p className="text-muted-foreground mb-4">
                 Souscrivez à un plan pour accéder à toutes les fonctionnalités d'Æditus
               </p>
-              <Button onClick={() => navigate('/pricing')}>
+              <Button onClick={() => navigate('/#pricing')}>
                 Voir les plans
               </Button>
             </div>
