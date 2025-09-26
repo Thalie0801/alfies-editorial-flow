@@ -25,33 +25,22 @@ import type { User } from '@supabase/supabase-js';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/auth');
-        return;
-      }
-      // TODO: Check if user is admin
-      setUser(session.user);
-      setLoading(false);
+      setUser(session?.user || null);
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT' || !session) {
-        navigate('/auth');
-      } else {
-        setUser(session.user);
-      }
+      setUser(session?.user || null);
     });
 
     checkAuth();
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -61,13 +50,6 @@ export default function AdminDashboard() {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
 
   return (
     <SidebarProvider>

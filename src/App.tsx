@@ -11,6 +11,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
+import { ProtectedRoute } from "./components/dashboard/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -31,8 +32,16 @@ const App = () => (
             <Route path="/simulateur" element={<Simulator />} />
             <Route path="/ambassadeur" element={<AmbassadorApplication />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/dashboard/*" element={
+              <ProtectedRoute requiredRole="client">
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/*" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
