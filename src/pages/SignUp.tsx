@@ -62,8 +62,11 @@ export default function SignUp() {
       } else {
         toast({
           title: "Inscription réussie",
-          description: "Vérifiez votre email pour confirmer votre compte.",
+          description: "Vérifiez votre email et cliquez sur le lien de confirmation, puis revenez ici pour vous connecter.",
         });
+        // Rediriger vers signin avec les paramètres après inscription
+        const currentParams = searchParams.toString();
+        navigate(`/signin${currentParams ? `?${currentParams}` : ''}`);
       }
     } catch (error) {
       toast({

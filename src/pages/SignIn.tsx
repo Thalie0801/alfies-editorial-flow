@@ -104,11 +104,20 @@ export default function SignIn() {
       });
 
       if (error) {
-        toast({
-          title: "Erreur de connexion",
-          description: error.message,
-          variant: "destructive",
-        });
+        // Gestion spéciale pour l'email non confirmé
+        if (error.message.includes('Email not confirmed') || error.message.includes('email_not_confirmed')) {
+          toast({
+            title: "Email non confirmé",
+            description: "Veuillez d'abord cliquer sur le lien de confirmation dans votre email avant de vous connecter.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Erreur de connexion",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
       } else {
         // Auth state change will handle the navigation and subscription processing
       }
@@ -130,6 +139,11 @@ export default function SignIn() {
           <CardTitle className="text-2xl text-center">Connexion</CardTitle>
           <CardDescription className="text-center">
             Accédez à votre espace client Æditus
+            {searchParams.get('plan') && (
+              <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-950 rounded-md text-sm">
+                ⚠️ N'oubliez pas de confirmer votre email avant de vous connecter !
+              </div>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
