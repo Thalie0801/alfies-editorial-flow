@@ -265,6 +265,42 @@ export type Database = {
           },
         ]
       }
+      plan_limits: {
+        Row: {
+          articles: number
+          carousels: number
+          covers: number
+          hero: number
+          networks: number
+          plan_key: string
+          posts: number
+          snacks: number
+          stories: number
+        }
+        Insert: {
+          articles?: number
+          carousels?: number
+          covers?: number
+          hero?: number
+          networks?: number
+          plan_key: string
+          posts?: number
+          snacks?: number
+          stories?: number
+        }
+        Update: {
+          articles?: number
+          carousels?: number
+          covers?: number
+          hero?: number
+          networks?: number
+          plan_key?: string
+          posts?: number
+          snacks?: number
+          stories?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company: string | null
@@ -273,6 +309,7 @@ export type Database = {
           id: string
           last_name: string | null
           phone: string | null
+          platform_role: Database["public"]["Enums"]["platform_role"]
           updated_at: string
           user_id: string
         }
@@ -283,6 +320,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           phone?: string | null
+          platform_role?: Database["public"]["Enums"]["platform_role"]
           updated_at?: string
           user_id: string
         }
@@ -293,6 +331,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           phone?: string | null
+          platform_role?: Database["public"]["Enums"]["platform_role"]
           updated_at?: string
           user_id?: string
         }
@@ -339,6 +378,108 @@ export type Database = {
           },
         ]
       }
+      stripe_customers: {
+        Row: {
+          created_at: string | null
+          customer_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          customer_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          customer_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean | null
+          created_at: string | null
+          id: string
+          period_end: string | null
+          period_start: string | null
+          price_lookup_key: string | null
+          status: string
+          trial_end: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          id: string
+          period_end?: string | null
+          period_start?: string | null
+          price_lookup_key?: string | null
+          status: string
+          trial_end?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          id?: string
+          period_end?: string | null
+          period_start?: string | null
+          price_lookup_key?: string | null
+          status?: string
+          trial_end?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      usage_tracking: {
+        Row: {
+          articles_used: number | null
+          carousels_used: number | null
+          covers_used: number | null
+          created_at: string | null
+          hero_used: number | null
+          id: string
+          month_year: string
+          posts_used: number | null
+          snacks_used: number | null
+          stories_used: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          articles_used?: number | null
+          carousels_used?: number | null
+          covers_used?: number | null
+          created_at?: string | null
+          hero_used?: number | null
+          id?: string
+          month_year: string
+          posts_used?: number | null
+          snacks_used?: number | null
+          stories_used?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          articles_used?: number | null
+          carousels_used?: number | null
+          covers_used?: number | null
+          created_at?: string | null
+          hero_used?: number | null
+          id?: string
+          month_year?: string
+          posts_used?: number | null
+          snacks_used?: number | null
+          stories_used?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -365,6 +506,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_current_month_year: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_or_create_usage_tracking: {
+        Args: { user_id_param: string }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["user_role"]
@@ -382,6 +531,7 @@ export type Database = {
       }
     }
     Enums: {
+      platform_role: "viewer" | "super_admin" | "ops" | "finance"
       user_role: "admin" | "client"
     }
     CompositeTypes: {
@@ -510,6 +660,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      platform_role: ["viewer", "super_admin", "ops", "finance"],
       user_role: ["admin", "client"],
     },
   },
