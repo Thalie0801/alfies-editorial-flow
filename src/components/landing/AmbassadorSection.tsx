@@ -11,7 +11,7 @@ export function AmbassadorSection() {
           <div className="mb-12">
             <Badge className="bg-gradient-accent text-accent-foreground px-4 py-2 mb-4">
               <Crown className="w-4 h-4 mr-2" />
-              Programme Exclusif • 49,90€
+              Programme Exclusif • 49,90€ (3 mois) → 149€
             </Badge>
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
               Devenez <span className="bg-gradient-accent bg-clip-text text-transparent">Ambassadeur</span> Æditus
@@ -78,9 +78,11 @@ export function AmbassadorSection() {
 
           {/* CTA */}
           <div className="space-y-4">
-            <Button variant="default" size="xl" className="min-w-[250px]">
-              <Crown className="w-5 h-5 mr-2" />
-              Candidater Ambassadeur
+            <Button variant="default" size="xl" className="min-w-[250px]" asChild>
+              <a href="/ambassadeur">
+                <Crown className="w-5 h-5 mr-2" />
+                Candidater Ambassadeur
+              </a>
             </Button>
           </div>
         </div>

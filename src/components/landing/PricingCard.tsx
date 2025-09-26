@@ -95,8 +95,9 @@ export function PricingCard({
         variant={cardVariant} 
         size="lg" 
         className="w-full"
+        asChild
       >
-        {ctaText}
+        <a href={name === "Pro" ? "https://calendar.app.google/sgbD2dYgxXXfJE9X6" : "#contact"}>{ctaText}</a>
       </Button>
     </div>
   );

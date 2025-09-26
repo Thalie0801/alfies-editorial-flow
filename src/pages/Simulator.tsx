@@ -60,10 +60,10 @@ export function Simulator() {
                 </a>
               </Button>
               <h1 className="text-3xl md:text-5xl font-bold mb-4">
-                Simulateur de <span className="bg-gradient-primary bg-clip-text text-transparent">gains</span>
+                Simulateur de <span className="bg-gradient-primary bg-clip-text text-transparent">plus-value</span>
               </h1>
               <p className="text-xl text-muted-foreground">
-                Estimez l'impact d'Æditus + Fynk sur votre business
+                Calculez la valeur ajoutée d'Æditus + Fynk pour votre entreprise
               </p>
             </div>
 
@@ -329,8 +329,8 @@ export function Simulator() {
                     Exporter PDF
                   </Button>
                   <Button variant="outline" asChild>
-                    <a href="#pricing">
-                      Commencer
+                    <a href="https://calendar.app.google/sgbD2dYgxXXfJE9X6">
+                      Réserver une démo
                     </a>
                   </Button>
                 </div>

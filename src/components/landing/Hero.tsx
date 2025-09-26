@@ -63,13 +63,17 @@ export function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-scale" style={{ animationDelay: '0.6s' }}>
-            <Button variant="default" size="xl" className="min-w-[200px]">
-              <Sparkles className="w-5 h-5 mr-2" />
-              <a href="#pricing">Essai Essential 7j</a>
+            <Button variant="hero" size="xl" className="min-w-[200px]" asChild>
+              <a href="#pricing">
+                <Sparkles className="w-5 h-5 mr-2" />
+                Essai Essential 7j
+              </a>
             </Button>
-            <Button variant="outline" size="xl" className="min-w-[200px]">
-              Voir la démo
-              <ArrowRight className="w-5 h-5 ml-2" />
+            <Button variant="outline" size="xl" className="min-w-[200px]" asChild>
+              <a href="https://calendar.app.google/sgbD2dYgxXXfJE9X6">
+                Réserver une démo
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </a>
             </Button>
           </div>
 
