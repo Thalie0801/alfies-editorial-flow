@@ -19,18 +19,27 @@ export default function SignIn() {
   const { createCheckoutSession } = useStripeCheckout();
 
   useEffect(() => {
-    // Gérer les retours de paiement
+    // Gérer les retours de paiement Stripe
     const paymentStatus = searchParams.get('payment');
     if (paymentStatus === 'success') {
       toast({
         title: "Paiement réussi",
-        description: "Votre abonnement a été activé. Connectez-vous pour accéder à votre dashboard.",
+        description: "Votre abonnement a été activé avec succès !",
       });
     } else if (paymentStatus === 'cancelled') {
       toast({
         title: "Paiement annulé",
         description: "Votre paiement a été annulé. Vous pouvez réessayer quand vous le souhaitez.",
         variant: "destructive",
+      });
+    }
+
+    // Gérer la confirmation d'email
+    const hash = window.location.hash;
+    if (hash.includes('type=signup') || hash.includes('type=email_change')) {
+      toast({
+        title: "Email confirmé",
+        description: "Votre email a été confirmé avec succès ! Connectez-vous maintenant.",
       });
     }
   }, [searchParams, toast]);
@@ -158,8 +167,13 @@ export default function SignIn() {
             Accédez à votre espace client Æditus
           </CardDescription>
           {searchParams.get('plan') && (
-            <div className="mx-6 -mt-2 mb-2 p-2 bg-blue-50 dark:bg-blue-950 rounded-md text-sm">
-              ⚠️ N'oubliez pas de confirmer votre email avant de vous connecter !
+            <div className="mx-6 -mt-2 mb-2 p-3 bg-blue-50 dark:bg-blue-950 rounded-lg text-sm border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center gap-2">
+                <span className="text-blue-600 dark:text-blue-400">ℹ️</span>
+                <span className="font-medium text-blue-800 dark:text-blue-200">
+                  Confirmez votre email avant de vous connecter pour activer votre abonnement {searchParams.get('plan')?.replace(/_/g, ' ').toUpperCase()}
+                </span>
+              </div>
             </div>
           )}
         </CardHeader>

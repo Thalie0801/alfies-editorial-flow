@@ -45,6 +45,8 @@ export default function SignUp() {
       const redirectUrl = redirectQuery
         ? `${baseUrl}/signin?${redirectQuery}`
         : `${baseUrl}/signin`;
+      
+      console.debug('[SignUp] Setting emailRedirectTo:', redirectUrl);
         
       const { error } = await supabase.auth.signUp({
         email,
@@ -63,7 +65,7 @@ export default function SignUp() {
       } else {
         toast({
           title: "Inscription réussie",
-          description: "Vérifiez votre email et cliquez sur le lien de confirmation, puis revenez ici pour vous connecter.",
+          description: "Vérifiez votre email et cliquez sur le lien de confirmation pour activer votre compte et procéder au paiement.",
         });
         // Rediriger vers signin avec les paramètres après inscription
         const currentParams = searchParams.toString();
