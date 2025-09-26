@@ -79,9 +79,9 @@ export function AmbassadorSection() {
           {/* CTA */}
           <div className="space-y-4">
             <Button variant="default" size="xl" className="min-w-[250px]" asChild>
-              <a href="/ambassadeur">
+              <a href="/contact">
                 <Crown className="w-5 h-5 mr-2" />
-                Candidater Ambassadeur
+                En savoir plus
               </a>
             </Button>
           </div>

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import Index from "./pages/Index";
+import Contact from "./pages/Contact";
 import { Simulator } from "./pages/Simulator";
 import { AmbassadorApplication } from "./pages/AmbassadorApplication";
 import Auth from "./pages/Auth";
@@ -31,6 +32,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/simulateur" element={<Simulator />} />
             <Route path="/ambassadeur" element={<AmbassadorApplication />} />
             <Route path="/auth" element={<Auth />} />
