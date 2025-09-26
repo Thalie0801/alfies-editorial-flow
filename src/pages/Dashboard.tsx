@@ -10,7 +10,6 @@ import { AlfieChat } from '@/components/dashboard/AlfieChat';
 import { useToast } from '@/hooks/use-toast';
 import { useUserRole } from '@/hooks/useUserRole';
 import { SubscriptionGate } from '@/components/dashboard/SubscriptionGate';
-import { SubscriptionGate } from '@/components/dashboard/SubscriptionGate';
 import { 
   BarChart3, 
   FileText, 
