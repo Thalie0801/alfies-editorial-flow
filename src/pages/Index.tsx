@@ -6,6 +6,7 @@ import { Pricing } from "@/components/landing/Pricing";
 import { FynkSection } from "@/components/landing/FynkSection";
 import { SimulatorButton } from "@/components/landing/SimulatorButton";
 import { AmbassadorSection } from "@/components/landing/AmbassadorSection";
+import { TestSubscriptionButton } from "@/components/TestSubscriptionButton";
 
 import { AlfieChat } from "@/components/landing/AlfieChat";
 import { FAQ } from "@/components/landing/FAQ";
@@ -16,6 +17,9 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <Hero />
+      <div className="container mx-auto px-4 py-8">
+        <TestSubscriptionButton />
+      </div>
       <AboutSection />
       <AlfieSection />
       <Pricing />
