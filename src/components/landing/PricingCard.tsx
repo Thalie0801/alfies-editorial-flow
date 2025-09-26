@@ -53,6 +53,7 @@ export function PricingCard({
 
   const [fynkEnabled, setFynkEnabled] = useState(false);
   const [fynkTier, setFynkTier] = useState<"basic" | "pro">("basic");
+  const showMonthlySuffix = !billing || billing.toLowerCase().includes("mensuel");
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -129,11 +130,11 @@ export function PricingCard({
             </span>
           )}
           <span className="text-4xl font-bold">{price}</span>
-          {billing && <span className="text-muted-foreground">/ mois</span>}
+          {showMonthlySuffix && <span className="text-muted-foreground">/ mois</span>}
         </div>
-        
-        {billing && !billing.includes('mois') && (
-          <p className="text-sm text-muted-foreground">{billing}</p>
+
+        {billing && (
+          <p className="text-sm text-muted-foreground mt-1">{billing}</p>
         )}
         
         {discount && (

@@ -124,6 +124,40 @@ serve(async (req) => {
       },
     };
 
+    if (Array.isArray(addons) && addons.length > 0) {
+      const addonLookupKeys = Array.from(
+        new Set(
+          addons.filter((addon): addon is string =>
+            typeof addon === 'string' && addon.trim().length > 0,
+          ),
+        ),
+      );
+
+      for (const addonLookupKey of addonLookupKeys) {
+        const addonPrices = await stripe.prices.list({
+          lookup_keys: [addonLookupKey],
+          limit: 1,
+        });
+
+        const addonPrice = addonPrices.data[0];
+
+        if (!addonPrice) {
+          return new Response(
+            JSON.stringify({ error: `Add-on price not found for ${addonLookupKey}` }),
+            {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              status: 404,
+            },
+          );
+        }
+
+        sessionParams.line_items.push({
+          price: addonPrice.id,
+          quantity: 1,
+        });
+      }
+    }
+
     // Add trial for Essential plan
     if (lookup_key === 'aeditus_essential_m') {
       sessionParams.subscription_data = {
