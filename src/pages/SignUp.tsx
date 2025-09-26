@@ -41,9 +41,10 @@ export default function SignUp() {
       });
 
       const redirectQuery = redirectParams.toString();
+      const baseUrl = window.location.origin;
       const redirectUrl = redirectQuery
-        ? `${window.location.origin}/signin?${redirectQuery}`
-        : `${window.location.origin}/signin`;
+        ? `${baseUrl}/signin?${redirectQuery}`
+        : `${baseUrl}/signin`;
         
       const { error } = await supabase.auth.signUp({
         email,
