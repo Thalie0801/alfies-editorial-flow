@@ -74,7 +74,10 @@ export function PricingCard({
       const finalPromoCode = prefilledPromo || promotionCode;
       const addons = fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined;
 
-      if (!user) {
+      // Vérifier la session utilisateur
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
         // Pour les utilisateurs non connectés, rediriger vers auth avec intention d'achat et options sélectionnées
         const params = new URLSearchParams({ plan: lookupKey });
 
@@ -95,14 +98,33 @@ export function PricingCard({
         return;
       }
 
-      // Utilisateur connecté, procéder directement au checkout
-      await createCheckoutSession(
-        lookupKey,
-        finalPromoCode,
-        `${window.location.origin}/dashboard`,
-        `${window.location.origin}/`,
-        addons
-      );
+      // Utilisateur connecté, procéder directement au checkout avec fetch
+      try {
+        const response = await fetch(`https://itjvvjzfqgnixqbxqhgq.supabase.co/functions/v1/create-checkout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: JSON.stringify({
+            lookup_key: lookupKey,
+            promotion_code: finalPromoCode,
+            success_url: `${window.location.origin}/dashboard`,
+            cancel_url: `${window.location.origin}/`,
+            addons: addons
+          })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok && data.url) {
+          window.location.href = data.url;
+        } else {
+          console.error('Checkout error:', data);
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
     }
   };
 
