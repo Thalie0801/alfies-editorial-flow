@@ -67,7 +67,10 @@ export default function Auth() {
     setLoading(true);
 
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      const planParam = searchParams.get('plan');
+      const redirectUrl = planParam
+        ? `${window.location.origin}/auth?plan=${encodeURIComponent(planParam)}`
+        : `${window.location.origin}/auth`;
       const { error } = await supabase.auth.signUp({
         email,
         password,
