@@ -20,7 +20,8 @@ export function Pricing() {
       ctaText: "Commencer l'essai 7 jours",
       badge: "Essai — publication verrouillée",
       lookupKey: "aeditus_essential_m",
-      trialNote: "Publication verrouillée pendant l'essai"
+      trialNote: "Publication verrouillée pendant l'essai",
+      supportsFynk: false // Pas de Fynk pendant l'essai
     },
     {
       name: "Starter", 
@@ -39,7 +40,8 @@ export function Pricing() {
       isPopular: true,
       discount: "−25% le 1er mois avec LAUNCH25 → 134,25 €",
       lookupKey: "aeditus_starter_m",
-      promotionCode: "LAUNCH25"
+      promotionCode: "LAUNCH25",
+      supportsFynk: true
     },
     {
       name: "Pro",
@@ -59,7 +61,8 @@ export function Pricing() {
       isPremium: true,
       discount: "−25% le 1er mois avec LAUNCH25 → 299,25 €",
       lookupKey: "aeditus_pro_m",
-      promotionCode: "LAUNCH25"
+      promotionCode: "LAUNCH25",
+      supportsFynk: true
     },
     {
       name: "Ambassadeurs",
@@ -79,7 +82,8 @@ export function Pricing() {
       badge: "Programme ambassadeur",
       discount: "Code AMBASSADEURS49 pré-appliqué",
       lookupKey: "aeditus_amb_m",
-      prefilledPromo: "AMBASSADEURS49"
+      prefilledPromo: "AMBASSADEURS49",
+      supportsFynk: true
     }
   ];
 
@@ -111,15 +115,24 @@ export function Pricing() {
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="bg-gradient-card rounded-xl border p-6 text-center">
               <div className="text-2xl font-bold mb-2">Fynk</div>
-              <p className="text-muted-foreground mb-4">Amplifiez votre engagement</p>
-              <div className="text-lg font-semibold text-accent mb-4">
-                −10% en bundle avec Starter/Pro
+              <p className="text-muted-foreground mb-4">Amplifiez votre engagement automatisé</p>
+              <div className="space-y-2 mb-4">
+                <div className="text-lg font-semibold text-primary">
+                  Basic: 29€/mois (~400 interactions)
+                </div>
+                <div className="text-lg font-semibold text-accent">
+                  Pro: 69€/mois (~1 500 interactions)
+                </div>
               </div>
               <ul className="text-sm space-y-2 mb-6">
                 <li>• Routines d'engagement automatisées</li>
                 <li>• Modèles de commentaires adaptatifs</li>
                 <li>• Analytics d'engagement avancés</li>
+                <li>• Disponible avec tous les plans (sauf essai)</li>
               </ul>
+              <p className="text-xs text-muted-foreground">
+                Ajoutez Fynk lors de la souscription ou depuis votre espace client
+              </p>
             </div>
             
             <div className="bg-gradient-card rounded-xl border p-6 text-center">

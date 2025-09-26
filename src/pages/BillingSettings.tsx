@@ -257,6 +257,13 @@ export function BillingSettings() {
                 used={0} // Will be calculated based on connected networks
                 limit={planLimits.networks}
               />
+              {subscription?.addons && subscription.addons.some(addon => addon.includes('fynk_')) && (
+                <UsageItem
+                  title="Interactions Fynk"
+                  used={usage.fynk_interactions_used}
+                  limit={planLimits.fynk_interactions_max}
+                />
+              )}
             </div>
           </CardContent>
         </Card>
@@ -273,6 +280,31 @@ export function BillingSettings() {
         <CardContent>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="border rounded-lg p-4">
+              <h3 className="font-semibold mb-2">Fynk - Engagement</h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                Automatisez vos interactions sociales
+              </p>
+              <div className="space-y-2 mb-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span>Basic - 29€/mois</span>
+                  <span className="text-muted-foreground">~400 interactions</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span>Pro - 69€/mois</span>
+                  <span className="text-muted-foreground">~1 500 interactions</span>
+                </div>
+              </div>
+              <Button 
+                size="sm"
+                variant="outline"
+                onClick={() => navigate('/settings/engagement')}
+                className="w-full"
+              >
+                Gérer Fynk
+              </Button>
+            </div>
+            
+            <div className="border rounded-lg p-4">
               <h3 className="font-semibold mb-2">Boost Vidéo</h3>
               <p className="text-sm text-muted-foreground mb-3">
                 +10 vidéos supplémentaires par mois
@@ -282,22 +314,6 @@ export function BillingSettings() {
                 <Button 
                   size="sm"
                   onClick={() => createCheckoutSession('aeditus_boost_m')}
-                >
-                  Ajouter
-                </Button>
-              </div>
-            </div>
-            
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold mb-2">Fynk Pro</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                ~1500 interactions d'engagement automatisées
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="font-semibold">69€/mois</span>
-                <Button 
-                  size="sm"
-                  onClick={() => createCheckoutSession('fynk_pro_m')}
                 >
                   Ajouter
                 </Button>

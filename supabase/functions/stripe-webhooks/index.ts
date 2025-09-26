@@ -25,6 +25,7 @@ interface Database {
           period_end: string | null;
           cancel_at_period_end: boolean;
           trial_end: string | null;
+          addons: string[] | null;
           created_at: string;
           updated_at: string;
         };
@@ -37,6 +38,7 @@ interface Database {
           period_end?: string | null;
           cancel_at_period_end?: boolean;
           trial_end?: string | null;
+          addons?: string[] | null;
         };
         Update: Partial<{
           status: string;
@@ -45,6 +47,7 @@ interface Database {
           period_end: string | null;
           cancel_at_period_end: boolean;
           trial_end: string | null;
+          addons: string[] | null;
         }>;
       };
     };
@@ -114,8 +117,22 @@ serve(async (req) => {
 
           // If there's a subscription, fetch and store it
           if (subscriptionId) {
-            const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-            const price = await stripe.prices.retrieve(subscription.items.data[0].price.id);
+            const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+              expand: ['items.data.price']
+            });
+            
+            // Extract addon lookup keys from subscription items
+            const addonLookupKeys: string[] = [];
+            subscription.items.data.forEach((item: any) => {
+              const lookupKey = item.price.lookup_key;
+              if (lookupKey && lookupKey.includes('fynk_')) {
+                addonLookupKeys.push(lookupKey);
+              }
+            });
+            
+            const mainPrice = subscription.items.data.find((item: any) => 
+              item.price.lookup_key && !item.price.lookup_key.includes('fynk_')
+            )?.price;
             
             const { error: subError } = await supabase
               .from('subscriptions')
@@ -123,11 +140,12 @@ serve(async (req) => {
                 id: subscription.id,
                 user_id: clientReferenceId,
                 status: subscription.status,
-                price_lookup_key: price.lookup_key,
+                price_lookup_key: mainPrice?.lookup_key || null,
                 period_start: new Date(subscription.current_period_start * 1000).toISOString(),
                 period_end: new Date(subscription.current_period_end * 1000).toISOString(),
                 cancel_at_period_end: subscription.cancel_at_period_end,
                 trial_end: subscription.trial_end ? new Date(subscription.trial_end * 1000).toISOString() : null,
+                addons: addonLookupKeys,
               });
 
             if (subError) {
@@ -150,7 +168,23 @@ serve(async (req) => {
           .single();
 
         if (customerData) {
-          const price = await stripe.prices.retrieve(subscription.items.data[0].price.id);
+          // Get all subscription items with expanded prices
+          const fullSubscription = await stripe.subscriptions.retrieve(subscription.id, {
+            expand: ['items.data.price']
+          });
+          
+          // Extract addon lookup keys
+          const addonLookupKeys: string[] = [];
+          fullSubscription.items.data.forEach((item: any) => {
+            const lookupKey = item.price.lookup_key;
+            if (lookupKey && lookupKey.includes('fynk_')) {
+              addonLookupKeys.push(lookupKey);
+            }
+          });
+          
+          const mainPrice = fullSubscription.items.data.find((item: any) => 
+            item.price.lookup_key && !item.price.lookup_key.includes('fynk_')
+          )?.price;
           
           const { error } = await supabase
             .from('subscriptions')
@@ -158,11 +192,12 @@ serve(async (req) => {
               id: subscription.id,
               user_id: customerData.user_id,
               status: subscription.status,
-              price_lookup_key: price.lookup_key,
+              price_lookup_key: mainPrice?.lookup_key || null,
               period_start: new Date(subscription.current_period_start * 1000).toISOString(),
               period_end: new Date(subscription.current_period_end * 1000).toISOString(),
               cancel_at_period_end: subscription.cancel_at_period_end,
               trial_end: subscription.trial_end ? new Date(subscription.trial_end * 1000).toISOString() : null,
+              addons: addonLookupKeys,
             });
 
           if (error) {

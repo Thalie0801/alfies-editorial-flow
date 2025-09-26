@@ -270,6 +270,7 @@ export type Database = {
           articles: number
           carousels: number
           covers: number
+          fynk_interactions_max: number | null
           hero: number
           networks: number
           plan_key: string
@@ -281,6 +282,7 @@ export type Database = {
           articles?: number
           carousels?: number
           covers?: number
+          fynk_interactions_max?: number | null
           hero?: number
           networks?: number
           plan_key: string
@@ -292,6 +294,7 @@ export type Database = {
           articles?: number
           carousels?: number
           covers?: number
+          fynk_interactions_max?: number | null
           hero?: number
           networks?: number
           plan_key?: string
@@ -398,6 +401,7 @@ export type Database = {
       }
       subscriptions: {
         Row: {
+          addons: Json | null
           cancel_at_period_end: boolean | null
           created_at: string | null
           id: string
@@ -410,6 +414,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          addons?: Json | null
           cancel_at_period_end?: boolean | null
           created_at?: string | null
           id: string
@@ -422,6 +427,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          addons?: Json | null
           cancel_at_period_end?: boolean | null
           created_at?: string | null
           id?: string
@@ -441,6 +447,7 @@ export type Database = {
           carousels_used: number | null
           covers_used: number | null
           created_at: string | null
+          fynk_interactions_used: number | null
           hero_used: number | null
           id: string
           month_year: string
@@ -455,6 +462,7 @@ export type Database = {
           carousels_used?: number | null
           covers_used?: number | null
           created_at?: string | null
+          fynk_interactions_used?: number | null
           hero_used?: number | null
           id?: string
           month_year: string
@@ -469,6 +477,7 @@ export type Database = {
           carousels_used?: number | null
           covers_used?: number | null
           created_at?: string | null
+          fynk_interactions_used?: number | null
           hero_used?: number | null
           id?: string
           month_year?: string

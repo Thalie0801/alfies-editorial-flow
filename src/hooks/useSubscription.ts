@@ -13,6 +13,7 @@ export interface Subscription {
   trial_end: string | null;
   created_at: string;
   updated_at: string;
+  addons: string[] | null;
 }
 
 export interface PlanLimits {
@@ -25,6 +26,7 @@ export interface PlanLimits {
   stories: number;
   covers: number;
   posts: number;
+  fynk_interactions_max: number;
 }
 
 export interface UsageTracking {
@@ -38,6 +40,7 @@ export interface UsageTracking {
   stories_used: number;
   covers_used: number;
   posts_used: number;
+  fynk_interactions_used: number;
   created_at: string;
   updated_at: string;
 }
@@ -71,14 +74,19 @@ export function useSubscription(user: User | null) {
         if (subError) {
           console.error('Error fetching subscription:', subError);
         } else if (subData) {
-          setSubscription(subData);
+          // Convert JSON addons to string array
+          const subscription = {
+            ...subData,
+            addons: Array.isArray(subData.addons) ? subData.addons : []
+          } as Subscription;
+          setSubscription(subscription);
 
           // Fetch plan limits if we have a price lookup key
-          if (subData.price_lookup_key) {
+          if (subscription.price_lookup_key) {
             const { data: limitsData, error: limitsError } = await supabase
               .from('plan_limits')
               .select('*')
-              .eq('plan_key', subData.price_lookup_key)
+              .eq('plan_key', subscription.price_lookup_key)
               .single();
 
             if (limitsError) {

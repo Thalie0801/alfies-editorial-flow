@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import { BillingSettings } from "./pages/BillingSettings";
+import { EngagementSettings } from "./pages/EngagementSettings";
 import { ProtectedRoute } from "./components/dashboard/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,11 @@ const App = () => (
             <Route path="/settings/billing" element={
               <ProtectedRoute requiredRole="client">
                 <BillingSettings />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings/engagement" element={
+              <ProtectedRoute requiredRole="client">
+                <EngagementSettings />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

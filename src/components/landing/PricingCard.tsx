@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Sparkles, Crown, Zap } from "lucide-react";
 import { useStripeCheckout } from "@/hooks/useStripeCheckout";
+import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface PricingCardProps {
   name: string;
@@ -19,6 +23,7 @@ interface PricingCardProps {
   promotionCode?: string;
   prefilledPromo?: string;
   trialNote?: string;
+  supportsFynk?: boolean;
 }
 
 export function PricingCard({
@@ -36,20 +41,27 @@ export function PricingCard({
   lookupKey,
   promotionCode,
   prefilledPromo,
-  trialNote
+  trialNote,
+  supportsFynk = false
 }: PricingCardProps) {
   const { createCheckoutSession, loading } = useStripeCheckout();
   const cardVariant = isPremium ? "premium" : isPopular ? "hero" : "outline";
   const CardIcon = isPremium ? Crown : isPopular ? Zap : Sparkles;
 
+  const [fynkEnabled, setFynkEnabled] = useState(false);
+  const [fynkTier, setFynkTier] = useState<"basic" | "pro">("basic");
+
   const handleSubscribe = async () => {
     if (lookupKey) {
       const finalPromoCode = prefilledPromo || promotionCode;
+      const addons = fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined;
+      
       const { url } = await createCheckoutSession(
         lookupKey,
         finalPromoCode,
         `${window.location.origin}/dashboard`,
-        `${window.location.origin}/pricing`
+        `${window.location.origin}/pricing`,
+        addons
       ) || {};
       
       if (url) {
@@ -126,6 +138,50 @@ export function PricingCard({
           </div>
         ))}
       </div>
+
+      {/* Fynk Add-on */}
+      {supportsFynk && (
+        <div className="border-t pt-6 mb-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor={`fynk-${name}`} className="text-sm font-medium">
+                Ajouter Fynk
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Engagement automatisé
+              </p>
+            </div>
+            <Switch
+              id={`fynk-${name}`}
+              checked={fynkEnabled}
+              onCheckedChange={setFynkEnabled}
+            />
+          </div>
+
+          {fynkEnabled && (
+            <RadioGroup value={fynkTier} onValueChange={(value: "basic" | "pro") => setFynkTier(value)}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="basic" id={`fynk-basic-${name}`} />
+                <Label htmlFor={`fynk-basic-${name}`} className="text-sm">
+                  Basic - 29€/mois (~400 interactions)
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="pro" id={`fynk-pro-${name}`} />
+                <Label htmlFor={`fynk-pro-${name}`} className="text-sm">
+                  Pro - 69€/mois (~1 500 interactions)
+                </Label>
+              </div>
+            </RadioGroup>
+          )}
+
+          {name === "Essential" && fynkEnabled && (
+            <p className="text-xs text-orange-600 font-medium">
+              Fynk s'activera à l'issue de l'essai
+            </p>
+          )}
+        </div>
+      )}
 
       <Button 
         variant={cardVariant} 
