@@ -20,15 +20,19 @@ export function useUserRole(user: User | null) {
         const { data, error } = await supabase
           .from('user_roles')
           .select('role')
-          .eq('user_id', user.id)
-          .single();
+          .eq('user_id', user.id);
 
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error fetching user role:', error);
-          setRole('client'); // Default to client if error
+        if (error) {
+          console.error('Error fetching user roles:', error);
+          setRole('client'); // Default to client on error
         } else {
-          setRole(data?.role || 'client');
+          const roles = (data as Array<{ role: string }>) || [];
+          const isAdmin = roles.some(r => r.role === 'admin');
+          const candidate = isAdmin ? 'admin' : (roles[0]?.role ?? 'client');
+          const nextRole: UserRole = candidate === 'admin' ? 'admin' : 'client';
+          setRole(nextRole);
         }
+
       } catch (error) {
         console.error('Error:', error);
         setRole('client');
