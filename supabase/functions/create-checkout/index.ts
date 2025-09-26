@@ -1,252 +1,155 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import Stripe from "https://esm.sh/stripe@18.5.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+// Helper logging function for enhanced debugging
+const logStep = (step: string, details?: any) => {
+  const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
+  console.log(`[CREATE-CHECKOUT] ${step}${detailsStr}`);
 };
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const supabaseClient = createClient(
+    Deno.env.get("SUPABASE_URL") ?? "",
+    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+  );
+
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY')!;
+    logStep("Function started");
 
-    // Check for Authorization header
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.error('Unauthorized: Missing or invalid Authorization header');
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized: missing Authorization header' }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 401,
-        }
-      );
-    }
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
+    logStep("Stripe key verified");
 
-    // Use anon client with Authorization header for RLS
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) throw new Error("No authorization header provided");
+    logStep("Authorization header found");
 
-    // Get user from token (pass JWT explicitly to avoid AuthSessionMissingError)
-    const token = authHeader.replace('Bearer ', '');
-    let user: any = null;
-    let authError: any = null;
-
-    try {
-      const res = await supabase.auth.getUser(token);
-      user = res.data.user;
-      authError = res.error ?? null;
-    } catch (e) {
-      authError = e;
-    }
-
-    // Fallback: try without passing token but relying on global Authorization header
-    if (!user) {
-      try {
-        const res2 = await supabase.auth.getUser();
-        user = res2.data.user;
-        authError = res2.error ?? authError;
-      } catch (_) {}
-    }
+    const token = authHeader.replace("Bearer ", "");
+    logStep("Authenticating user with token");
     
-    if (!user) {
-      console.error('Unauthorized: could not resolve user from token', authError);
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 401 
-        }
-      );
-    }
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
+    if (userError) throw new Error(`Authentication error: ${userError.message}`);
+    const user = userData.user;
+    if (!user?.email) throw new Error("User not authenticated or email not available");
+    logStep("User authenticated", { userId: user.id, email: user.email });
 
-    console.log('Proceeding to checkout for user:', user.email, user.id);
+    // Parse request body
+    const body = await req.json();
+    const { lookup_key, promotion_code, success_url, cancel_url, addons } = body;
+    logStep("Request body parsed", { lookup_key, promotion_code, addons });
 
-    const { lookup_key, success_url, cancel_url, promotion_code, addons } = await req.json();
+    const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
-    const { Stripe } = await import('https://esm.sh/stripe@14.21.0');
-    const stripe = new Stripe(stripeSecretKey, {
-      apiVersion: '2023-10-16',
-    });
-
-    // Get or create customer
-    let customerId: string;
-    const { data: existingCustomer } = await supabase
-      .from('stripe_customers')
-      .select('customer_id')
-      .eq('user_id', user.id)
-      .single();
-
-    if (existingCustomer) {
-      customerId = existingCustomer.customer_id;
+    // Check if customer exists
+    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+    let customerId;
+    if (customers.data.length > 0) {
+      customerId = customers.data[0].id;
+      logStep("Found existing customer", { customerId });
     } else {
-      const customer = await stripe.customers.create({
-        email: user.email,
-        metadata: { user_id: user.id },
-      });
-      customerId = customer.id;
-      
-      await supabase
-        .from('stripe_customers')
-        .insert({ user_id: user.id, customer_id: customerId });
+      logStep("No customer found, will create during checkout");
     }
 
-    // Map lookup_keys to price_ids
+    // Map lookup_key to price_id
     const priceMapping: { [key: string]: string } = {
-      'aeditus_essential_m': 'price_1SBeW9JsCoQneASNUaKERe1V',
-      'aeditus_starter_m': 'price_1SBeWOJsCoQneASNQS5Nx5D5', 
-      'aeditus_pro_m': 'price_1SBeWiJsCoQneASNK3sNE2mZ',
-      'aeditus_amb_m': 'price_1SBeX0JsCoQneASNtGQ0LpIf',
-      'aeditus_boost_m': 'price_1SBeXIJsCoQneASNLkfZ7D80',
-      'fynk_basic_m': 'price_1SBeXYJsCoQneASNGAQ2F6lf',
-      'fynk_pro_m': 'price_1SBeXqJsCoQneASNOQzr6yja'
+      'aeditus_essential_m': 'price_1QQTCTRr5lOHcXj67Rjy6bAJ',
+      'aeditus_starter_m': 'price_1QQTDBRr5lOHcXj6LzxQq4gx',
+      'aeditus_pro_m': 'price_1QQTDVRr5lOHcXj6MqUgwUNN',
+      'fynk_basic_m': 'price_1QQTDhRr5lOHcXj6W0xQ8OLX',
+      'fynk_pro_m': 'price_1QQTDtRr5lOHcXj60kF6o0dZ'
     };
 
-    const priceId = priceMapping[lookup_key];
-    if (!priceId) {
-      return new Response(
-        JSON.stringify({ error: 'Price not found for lookup key: ' + lookup_key }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 404 
-        }
-      );
+    const price_id = priceMapping[lookup_key];
+    if (!price_id) {
+      throw new Error(`Invalid lookup_key: ${lookup_key}`);
     }
+    logStep("Price ID mapped", { lookup_key, price_id });
 
-    // Setup session params
-    const sessionParams: any = {
-      customer: customerId,
-      client_reference_id: user.id,
-      line_items: [{
-        price: priceId,
-        quantity: 1,
-      }],
-      mode: 'subscription',
-      success_url: success_url || `${req.headers.get('origin')}/signin?payment=success`,
-      cancel_url: cancel_url || `${req.headers.get('origin')}/signin?payment=cancelled`,
-      billing_address_collection: 'auto',
-      customer_update: {
-        address: 'auto',
-        name: 'auto',
-      },
-      metadata: {
-        user_id: user.id,
-        lookup_key: lookup_key,
-      },
-    };
+    // Build line items
+    const line_items = [{ price: price_id, quantity: 1 }];
 
-    if (Array.isArray(addons) && addons.length > 0) {
-      const addonLookupKeys = Array.from(
-        new Set(
-          addons.filter((addon): addon is string =>
-            typeof addon === 'string' && addon.trim().length > 0,
-          ),
-        ),
-      );
-
-      for (const addonLookupKey of addonLookupKeys) {
-        const addonPriceId = priceMapping[addonLookupKey];
-
-        if (!addonPriceId) {
-          return new Response(
-            JSON.stringify({ error: `Add-on price not found for ${addonLookupKey}` }),
-            {
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-              status: 404,
-            },
-          );
+    // Add addons if provided
+    if (addons && Array.isArray(addons)) {
+      for (const addon of addons) {
+        const addon_price_id = priceMapping[addon];
+        if (addon_price_id) {
+          line_items.push({ price: addon_price_id, quantity: 1 });
+          logStep("Added addon", { addon, addon_price_id });
         }
-
-        sessionParams.line_items.push({
-          price: addonPriceId,
-          quantity: 1,
-        });
       }
     }
 
-    // Add trial for Essential plan (7 days - publication blocked)
+    // Session parameters
+    const sessionParams: any = {
+      customer: customerId,
+      customer_email: customerId ? undefined : user.email,
+      line_items,
+      mode: "subscription",
+      success_url: success_url || `${req.headers.get("origin")}/dashboard`,
+      cancel_url: cancel_url || `${req.headers.get("origin")}/`,
+      metadata: {
+        user_id: user.id,
+        lookup_key: lookup_key
+      }
+    };
+
+    // Add trial for Essential plan
     if (lookup_key === 'aeditus_essential_m') {
       sessionParams.subscription_data = {
         trial_period_days: 7,
         metadata: {
           user_id: user.id,
-          lookup_key: lookup_key,
-        },
+          plan: 'essential'
+        }
       };
+      logStep("Added 7-day trial for Essential plan");
     }
 
-    // Handle promotion codes based on plan
-    let finalPromotionCode = promotion_code;
-    
-    // Pre-fill AMBASSADEURS49 for Ambassadors plan
-    if (lookup_key === 'aeditus_amb_m' && !finalPromotionCode) {
-      finalPromotionCode = 'AMBASSADEURS49';
-    }
-    
-    // Validate promotion codes per plan
-    if (finalPromotionCode) {
-      // LAUNCH25 only for Starter & Pro
-      if (finalPromotionCode === 'LAUNCH25' && !['aeditus_starter_m', 'aeditus_pro_m'].includes(lookup_key)) {
-        return new Response(
-          JSON.stringify({ error: 'Le code LAUNCH25 est uniquement valide pour les plans Starter et Pro' }),
-          { 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 400 
-          }
-        );
-      }
-      
-      // AMBASSADEURS49 only for Ambassadors
-      if (finalPromotionCode === 'AMBASSADEURS49' && lookup_key !== 'aeditus_amb_m') {
-        return new Response(
-          JSON.stringify({ error: 'Le code AMBASSADEURS49 est uniquement valide pour le plan Ambassadeurs' }),
-          { 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 400 
-          }
-        );
-      }
-      
-      // Find promotion code in Stripe
-      const promoCodes = await stripe.promotionCodes.list({
-        code: finalPromotionCode,
-        active: true,
-        limit: 1,
-      });
-      
-      if (promoCodes.data.length > 0) {
-        sessionParams.discounts = [{
-          promotion_code: promoCodes.data[0].id,
-        }];
+    // Apply promotion code if provided
+    if (promotion_code) {
+      try {
+        const promotionCodes = await stripe.promotionCodes.list({
+          code: promotion_code,
+          active: true,
+          limit: 1
+        });
+
+        if (promotionCodes.data.length > 0) {
+          sessionParams.discounts = [{ promotion_code: promotionCodes.data[0].id }];
+          logStep("Applied promotion code", { promotion_code });
+        } else {
+          logStep("Promotion code not found or inactive", { promotion_code });
+        }
+      } catch (promoError) {
+        logStep("Error applying promotion code", { error: promoError });
       }
     }
 
+    // Create checkout session
+    logStep("Creating checkout session", sessionParams);
     const session = await stripe.checkout.sessions.create(sessionParams);
+    logStep("Checkout session created", { sessionId: session.id, url: session.url });
 
-    return new Response(
-      JSON.stringify({ url: session.url }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      }
-    );
-
+    return new Response(JSON.stringify({ url: session.url }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
+    });
   } catch (error) {
-    console.error('Checkout creation error:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to create checkout session' }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500,
-      }
-    );
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logStep("ERROR in create-checkout", { message: errorMessage });
+    return new Response(JSON.stringify({ error: errorMessage }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
   }
 });
