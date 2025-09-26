@@ -15,6 +15,8 @@ export function useStripeCheckout() {
   ) => {
     setLoading(true);
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
           lookup_key: lookupKey,
@@ -23,6 +25,7 @@ export function useStripeCheckout() {
           cancel_url: cancelUrl,
           addons: addons,
         },
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
 
       if (error) {
@@ -57,10 +60,13 @@ export function useStripeCheckout() {
   const createPortalSession = async (returnUrl?: string) => {
     setLoading(true);
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
       const { data, error } = await supabase.functions.invoke('create-portal', {
         body: {
           return_url: returnUrl,
         },
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
 
       if (error) {
