@@ -11,6 +11,7 @@ import { AmbassadorApplication } from "./pages/AmbassadorApplication";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import AuthCallback from "./pages/AuthCallback";
+import AuthVerifyRedirect from "./pages/AuthVerifyRedirect";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -37,6 +38,7 @@ const App = () => {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/auth/v1/*" element={<AuthVerifyRedirect />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
