@@ -139,12 +139,12 @@ export default function SignIn() {
           <CardTitle className="text-2xl text-center">Connexion</CardTitle>
           <CardDescription className="text-center">
             Accédez à votre espace client Æditus
-            {searchParams.get('plan') && (
-              <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-950 rounded-md text-sm">
-                ⚠️ N'oubliez pas de confirmer votre email avant de vous connecter !
-              </div>
-            )}
           </CardDescription>
+          {searchParams.get('plan') && (
+            <div className="mx-6 -mt-2 mb-2 p-2 bg-blue-50 dark:bg-blue-950 rounded-md text-sm">
+              ⚠️ N'oubliez pas de confirmer votre email avant de vous connecter !
+            </div>
+          )}
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignIn} className="space-y-4">
