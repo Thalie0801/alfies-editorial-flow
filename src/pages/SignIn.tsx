@@ -56,6 +56,7 @@ export default function SignIn() {
   }, [navigate, searchParams]);
 
   const handlePostAuthFlow = async () => {
+    console.debug('[SignIn] handlePostAuthFlow start');
     // S'assurer que la session (token) est bien disponible avant d'appeler Stripe
     const ensureSession = async () => {
       for (let i = 0; i < 10; i++) {
@@ -66,16 +67,19 @@ export default function SignIn() {
       return null;
     };
 
-    await ensureSession();
+    const session = await ensureSession();
+    console.debug('[SignIn] ensureSession result', { hasSession: !!session });
 
     const planParam = searchParams.get('plan');
     const promoParam = searchParams.get('promo') || undefined;
     const addonParams = searchParams.getAll('addon').filter((addon) => addon && addon.trim().length > 0);
     const uniqueAddons = addonParams.length ? Array.from(new Set(addonParams)) : undefined;
+    console.debug('[SignIn] URL params', { planParam, promoParam, addons: uniqueAddons });
 
     if (planParam) {
       // Si plan dans l'URL, créer checkout session
       try {
+        console.debug('[SignIn] Calling createCheckoutSession');
         await createCheckoutSession(
           planParam,
           promoParam,
@@ -83,12 +87,14 @@ export default function SignIn() {
           `${window.location.origin}/`,
           uniqueAddons
         );
+        console.debug('[SignIn] createCheckoutSession returned');
       } catch (error) {
-        console.error('Error creating checkout session:', error);
+        console.error('[SignIn] Error creating checkout session:', error);
         navigate('/dashboard');
       }
     } else {
       // Sinon rediriger vers dashboard
+      console.debug('[SignIn] No planParam, navigate to /dashboard');
       navigate('/dashboard');
     }
   };

@@ -17,9 +17,11 @@ export function useStripeCheckout() {
     try {
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData.session?.access_token;
+      console.debug('[Checkout] start', { lookupKey, hasToken: !!accessToken, addons, hasPromo: !!promotionCode });
 
       // If not authenticated, redirect to auth with intended plan
       if (!accessToken) {
+        console.warn('[Checkout] No access token, redirect to /signup');
         toast({
           title: "Connexion requise",
           description: "Veuillez vous connecter pour continuer le paiement.",
@@ -29,6 +31,7 @@ export function useStripeCheckout() {
         return null;
       }
 
+      console.debug('[Checkout] invoking edge function create-checkout');
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
           lookup_key: lookupKey,
@@ -39,6 +42,7 @@ export function useStripeCheckout() {
         },
         headers: { Authorization: `Bearer ${accessToken}` },
       });
+      console.debug('[Checkout] function response', { hasUrl: !!data?.url, hasError: !!error });
 
       if (error) {
         console.error('Checkout error:', error);
@@ -51,7 +55,7 @@ export function useStripeCheckout() {
       }
 
       if (data?.url) {
-        window.location.href = data.url;
+        window.location.assign(data.url);
         return data.url;
       }
 
