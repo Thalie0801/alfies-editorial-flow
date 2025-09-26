@@ -35,8 +35,9 @@ serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
 
-    // Get user from token
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Get user from token (pass JWT explicitly to avoid AuthSessionMissingError)
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     
     if (authError || !user) {
       console.error('Unauthorized: invalid user token', authError);
