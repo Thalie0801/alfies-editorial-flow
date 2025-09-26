@@ -97,6 +97,7 @@ serve(async (req) => {
       mode: "subscription",
       success_url: success_url || `${req.headers.get("origin")}/dashboard`,
       cancel_url: cancel_url || `${req.headers.get("origin")}/`,
+      client_reference_id: user.id,
       metadata: {
         user_id: user.id,
         lookup_key: lookup_key
