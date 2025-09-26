@@ -54,66 +54,80 @@ export default function Dashboard() {
   };
 
 
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="max-w-md w-full">
+          <CardContent className="pt-6">
+            <div className="text-center">Chargement...</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <SidebarProvider>
-      <div className="min-h-screen w-full flex">
-        <ClientSidebar />
-        
-        <SidebarInset className="flex-1">
-          {/* Header */}
-          <header className="border-b bg-card/50 backdrop-blur-sm">
-            <div className="flex items-center justify-between px-4 py-3">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger />
+    <SubscriptionGate user={user} requiredForContent={true}>
+      <SidebarProvider>
+        <div className="min-h-screen w-full flex">
+          <ClientSidebar />
+          
+          <SidebarInset className="flex-1">
+            {/* Header */}
+            <header className="border-b bg-card/50 backdrop-blur-sm">
+              <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-4">
-                  <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                    Dashboard Client
-                  </h1>
+                  <SidebarTrigger />
+                  <div className="flex items-center gap-4">
+                    <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                      Dashboard Client
+                    </h1>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-muted-foreground">
+                    {user?.email}
+                  </span>
+                  {role === 'admin' && (
+                    <Button variant="secondary" size="sm" onClick={() => navigate('/admin')}>
+                      <Shield className="w-4 h-4 mr-2" />
+                      Admin
+                    </Button>
+                  )}
+                  <Button variant="outline" size="sm" onClick={handleSignOut}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Déconnexion
+                  </Button>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">
-                  {user?.email}
-                </span>
-                {role === 'admin' && (
-                  <Button variant="secondary" size="sm" onClick={() => navigate('/admin')}>
-                    <Shield className="w-4 h-4 mr-2" />
-                    Admin
-                  </Button>
-                )}
-                <Button variant="outline" size="sm" onClick={handleSignOut}>
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Déconnexion
-                </Button>
-              </div>
-            </div>
-          </header>
+            </header>
 
-          <main className="flex-1 p-6">
-            <Routes>
-              <Route path="/" element={<DashboardOverview />} />
-              <Route path="/alfie" element={<AlfiePage />} />
-              <Route path="/plan" element={<PlanPage />} />
-              <Route path="/generate" element={<GeneratePage />} />
-              <Route path="/assets" element={<AssetsPage />} />
-              <Route path="/publications" element={<PublicationsPage />} />
-              <Route path="/affiliation" element={<AffiliationPage />} />
-              <Route path="/gamification" element={<GamificationPage />} />
-              <Route path="/integrations" element={<IntegrationsPage />} />
-              <Route path="/billing" element={<BillingPage />} />
-              <Route path="/news" element={<NewsPage />} />
-              <Route path="/support" element={<SupportPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-            </Routes>
-          </main>
-        </SidebarInset>
-        
-        <AlfieChat 
-          isOpen={isAlfieOpen} 
-          onToggle={() => setIsAlfieOpen(!isAlfieOpen)} 
-        />
-      </div>
-    </SidebarProvider>
+            <main className="flex-1 p-6">
+              <Routes>
+                <Route path="/" element={<DashboardOverview />} />
+                <Route path="/alfie" element={<AlfiePage />} />
+                <Route path="/plan" element={<PlanPage />} />
+                <Route path="/generate" element={<GeneratePage />} />
+                <Route path="/assets" element={<AssetsPage />} />
+                <Route path="/publications" element={<PublicationsPage />} />
+                <Route path="/affiliation" element={<AffiliationPage />} />
+                <Route path="/gamification" element={<GamificationPage />} />
+                <Route path="/integrations" element={<IntegrationsPage />} />
+                <Route path="/billing" element={<BillingPage />} />
+                <Route path="/news" element={<NewsPage />} />
+                <Route path="/support" element={<SupportPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+              </Routes>
+            </main>
+          </SidebarInset>
+          
+          <AlfieChat 
+            isOpen={isAlfieOpen} 
+            onToggle={() => setIsAlfieOpen(!isAlfieOpen)} 
+          />
+        </div>
+      </SidebarProvider>
+    </SubscriptionGate>
   );
 }
 
