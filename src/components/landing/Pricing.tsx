@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { PricingToggle } from "./PricingToggle";
 import { PricingCard } from "./PricingCard";
 
 export function Pricing() {
-  const [isAnnual, setIsAnnual] = useState(false);
 
   const plans = [
     {
       name: "Essential",
-      price: isAnnual ? "63,20 €" : "79,00 €",
-      originalPrice: isAnnual ? "79,00 €" : undefined,
+      price: "79,00 €",
       description: "Parfait pour débuter votre présence digitale",
       features: [
         "1 réseau social au choix (12 posts/mois)",
@@ -21,16 +18,16 @@ export function Pricing() {
         "Essai 7 jours (sans publication)"
       ],
       ctaText: "Essayer 7 jours",
-      badge: "Essai gratuit"
+      badge: "Essai — publication verrouillée",
+      lookupKey: "aeditus_essential_m"
     },
     {
       name: "Starter",
-      price: isAnnual ? "143,20 €" : "179,00 €",
-      originalPrice: isAnnual ? "179,00 €" : undefined,
+      price: "179,00 €",
       description: "La solution complète pour une présence pro",
       features: [
         "Plan éditorial complet (jusqu'à 4 réseaux)",
-        "1 vidéo HÉRO + 10 courts/mois",
+        "1 vidéo HÉRO + 10 snacks/mois",
         "2 articles SEO (1 200–1 500 mots)",
         "Carrousels + stories + visuels dédiés",
         "KPI complet + Copilot Alfie",
@@ -39,16 +36,17 @@ export function Pricing() {
       ],
       isPopular: true,
       ctaText: "Choisir Starter",
-      discount: isAnnual ? "" : "−25% le 1er mois → 134,25 €"
+      discount: "−25% le 1er mois → 134,25 €",
+      lookupKey: "aeditus_starter_m",
+      promotionCode: "LAUNCH25"
     },
     {
       name: "Pro",
-      price: isAnnual ? "319,20 €" : "399,00 €",
-      originalPrice: isAnnual ? "399,00 €" : undefined,
+      price: "399,00 €",
       description: "Pour les entrepreneurs ambitieux",
       features: [
         "Présence étendue (jusqu'à 7 réseaux)",
-        "3–4 vidéos HÉRO + courts illimités",
+        "3–4 vidéos HÉRO + snacks illimités",
         "4 articles SEO (1 500–2 000 mots)",
         "Bilans hebdo + recalibrage automatique",
         "Accès prioritaire aux nouveautés",
@@ -57,7 +55,27 @@ export function Pricing() {
       ],
       isPremium: true,
       ctaText: "Choisir Pro",
-      discount: isAnnual ? "" : "−25% le 1er mois → 299,25 €"
+      discount: "−25% le 1er mois → 299,25 €",
+      lookupKey: "aeditus_pro_m",
+      promotionCode: "LAUNCH25"
+    },
+    {
+      name: "Ambassadeurs",
+      price: "149,00 €",
+      description: "Programme invité pour les créateurs",
+      features: [
+        "Jusqu'à 3 réseaux sociaux",
+        "2 vidéos HÉRO + 8 snacks/mois",
+        "2 articles SEO/mois (≈1 500–2 000 mots)",
+        "3 carrousels, 4 stories, 2 covers / mois",
+        "Support prioritaire",
+        "Programme communauté exclusive"
+      ],
+      ctaText: "Rejoindre le programme",
+      badge: "Programme invité (places limitées)",
+      discount: "49,90 € / 3 mois avec AMBASSADEURS49, puis 149 €",
+      lookupKey: "aeditus_amb_m",
+      promotionCode: "AMBASSADEURS49"
     }
   ];
 
@@ -73,9 +91,7 @@ export function Pricing() {
           </p>
         </div>
 
-        <PricingToggle isAnnual={isAnnual} onChange={setIsAnnual} />
-
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {plans.map((plan, index) => (
             <PricingCard key={index} {...plan} />
           ))}

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Sparkles, Crown, Zap } from "lucide-react";
+import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 
 interface PricingCardProps {
   name: string;
@@ -13,6 +14,8 @@ interface PricingCardProps {
   ctaText: string;
   badge?: string;
   discount?: string;
+  lookupKey?: string;
+  promotionCode?: string;
 }
 
 export function PricingCard({
@@ -25,10 +28,24 @@ export function PricingCard({
   isPremium,
   ctaText,
   badge,
-  discount
+  discount,
+  lookupKey,
+  promotionCode
 }: PricingCardProps) {
+  const { createCheckoutSession, loading } = useStripeCheckout();
   const cardVariant = isPremium ? "premium" : isPopular ? "hero" : "outline";
   const CardIcon = isPremium ? Crown : isPopular ? Zap : Sparkles;
+
+  const handleSubscribe = () => {
+    if (lookupKey) {
+      createCheckoutSession(
+        lookupKey,
+        promotionCode,
+        `${window.location.origin}/app/dashboard`,
+        `${window.location.origin}/pricing`
+      );
+    }
+  };
 
   return (
     <div className={`relative bg-gradient-card rounded-2xl border p-8 transition-all duration-300 hover:scale-105 ${
@@ -95,9 +112,10 @@ export function PricingCard({
         variant={cardVariant} 
         size="lg" 
         className="w-full"
-        asChild
+        onClick={handleSubscribe}
+        disabled={loading}
       >
-        <a href={name === "Pro" ? "https://calendar.app.google/sgbD2dYgxXXfJE9X6" : "#contact"}>{ctaText}</a>
+        {loading ? "Chargement..." : ctaText}
       </Button>
     </div>
   );
