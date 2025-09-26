@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Routes, Route } from 'react-router-dom';
+import { useNavigate, Routes, Route, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +9,7 @@ import { ClientSidebar } from '@/components/dashboard/ClientSidebar';
 import { AlfieChat } from '@/components/dashboard/AlfieChat';
 import { useToast } from '@/hooks/use-toast';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useStripeCheckout } from '@/hooks/useStripeCheckout';
 import { SubscriptionGate } from '@/components/dashboard/SubscriptionGate';
 import { 
   BarChart3, 
@@ -30,20 +31,69 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { role, loading: roleLoading } = useUserRole(user);
+  const [searchParams] = useSearchParams();
+  const { createCheckoutSession } = useStripeCheckout();
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
+      
+      // Gérer les paramètres de checkout après connexion
+      if (session?.user) {
+        handlePostAuthCheckout();
+      }
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user || null);
+      
+      if (event === 'SIGNED_IN' && session?.user) {
+        setTimeout(() => {
+          handlePostAuthCheckout();
+        }, 1000);
+      }
     });
 
     checkAuth();
     return () => subscription.unsubscribe();
   }, []);
+  
+  const handlePostAuthCheckout = async () => {
+    const planParam = searchParams.get('plan');
+    const promoParam = searchParams.get('promo') || undefined;
+    const addonParams = searchParams.getAll('addon').filter((addon) => addon && addon.trim().length > 0);
+    const uniqueAddons = addonParams.length ? Array.from(new Set(addonParams)) : undefined;
+
+    if (planParam) {
+      try {
+        // Attendre un peu pour que la session soit bien établie
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        await createCheckoutSession(
+          planParam,
+          promoParam,
+          `${window.location.origin}/dashboard`,
+          `${window.location.origin}/dashboard`,
+          uniqueAddons
+        );
+        
+        // Nettoyer les paramètres de l'URL après le checkout
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete('plan');
+        newUrl.searchParams.delete('promo');
+        newUrl.searchParams.delete('addon');
+        window.history.replaceState({}, '', newUrl.toString());
+      } catch (error) {
+        console.error('Error creating checkout session in dashboard:', error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de créer la session de paiement.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();

@@ -103,8 +103,8 @@ export default function Auth() {
 
       const redirectQuery = redirectParams.toString();
       const redirectUrl = redirectQuery
-        ? `${window.location.origin}/auth?${redirectQuery}`
-        : `${window.location.origin}/auth`;
+        ? `${window.location.origin}/dashboard?${redirectQuery}`
+        : `${window.location.origin}/dashboard`;
       const { error } = await supabase.auth.signUp({
         email,
         password,
