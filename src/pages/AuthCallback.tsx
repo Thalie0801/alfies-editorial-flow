@@ -23,9 +23,9 @@ export default function AuthCallback() {
 
     if (type === 'signup' || type === 'email_change') {
       toast({ title: 'Email confirmé', description: 'Vous pouvez maintenant vous connecter.' });
-      // Redirect to signin after email confirmation
+      // Redirect to signin with params after email confirmation
       setTimeout(() => {
-        navigate('/signin');
+        navigate(`/signin${search}`);
       }, 1500);
     }
     if (error || errorCode) {
@@ -35,7 +35,7 @@ export default function AuthCallback() {
         variant: 'destructive',
       });
     }
-  }, [hash, toast]);
+  }, [hash, toast, search, navigate]);
 
   useEffect(() => {
     if (!isError && search) {
