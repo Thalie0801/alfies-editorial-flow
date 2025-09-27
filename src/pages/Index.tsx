@@ -9,6 +9,7 @@ import { AmbassadorSection } from "@/components/landing/AmbassadorSection";
 import { AlfieChat } from "@/components/landing/AlfieChat";
 import { FAQ } from "@/components/landing/FAQ";
 import { Footer } from "@/components/landing/Footer";
+import '@/utils/autoSetupPromos';
 
 const Index = () => {
   return (
