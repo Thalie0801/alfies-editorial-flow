@@ -120,6 +120,7 @@ serve(async (req) => {
       mode: "subscription",
       success_url: success_url || `${req.headers.get("origin")}/dashboard`,
       cancel_url: cancel_url || `${req.headers.get("origin")}/`,
+      allow_promotion_codes: true,
       metadata: {
         price_id: price_id,
       },
