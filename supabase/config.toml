@@ -1,10 +1,1 @@
-project_id = "itjvvjzfqgnixqbxqhgq"
-
-[functions.stripe-webhooks]
-verify_jwt = false
-
-[functions.create-checkout]
-verify_jwt = true
-
-[functions.create-portal]
-verify_jwt = true
+project_id = "iqyivfvhsptwvihlhnwt"
