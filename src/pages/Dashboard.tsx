@@ -115,7 +115,7 @@ export default function Dashboard() {
                 <SidebarTrigger />
                 <div className="flex items-center gap-4">
                   <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                    Dashboard {userProfile?.display_name || 'Client'}
+                    Bonjour {userProfile?.display_name || "Client"}
                   </h1>
                 </div>
               </div>
