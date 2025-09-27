@@ -28,6 +28,7 @@ import dashboardMockup from '@/assets/dashboard-mockup.png';
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<{ display_name?: string } | null>(null);
   const [isAlfieOpen, setIsAlfieOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -40,14 +41,29 @@ export default function Dashboard() {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
       
-      // Gérer les paramètres de checkout après connexion
+      // Fetch user profile
       if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('display_name')
+          .eq('user_id', session.user.id)
+          .single();
+        setUserProfile(profile);
         handlePostAuthCheckout();
       }
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user || null);
+      
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('display_name')
+          .eq('user_id', session.user.id)
+          .single();
+        setUserProfile(profile);
+      }
       
       if (event === 'SIGNED_IN' && session?.user) {
         setTimeout(() => {
@@ -99,7 +115,7 @@ export default function Dashboard() {
                 <SidebarTrigger />
                 <div className="flex items-center gap-4">
                   <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                    Dashboard Client
+                    Dashboard {userProfile?.display_name || 'Client'}
                   </h1>
                 </div>
               </div>
