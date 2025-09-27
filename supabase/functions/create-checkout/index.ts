@@ -32,15 +32,27 @@ serve(async (req) => {
 
     const authHeader = req.headers.get("Authorization");
     let user: any = null;
-    if (authHeader) {
-      logStep("Authorization header found");
-      const token = authHeader.replace("Bearer ", "");
-      logStep("Authenticating user with token");
-      const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-      if (userError) throw new Error(`Authentication error: ${userError.message}`);
-      user = userData.user;
-      if (!user?.email) throw new Error("User not authenticated or email not available");
-      logStep("User authenticated", { userId: user.id, email: user.email });
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.replace("Bearer ", "").trim();
+      if (token && token.split('.').length === 3) {
+        try {
+          logStep("Authorization header found");
+          logStep("Authenticating user with token");
+          const { data: userData } = await supabaseClient.auth.getUser(token);
+          user = userData.user;
+          if (user?.email) {
+            logStep("User authenticated", { userId: user.id, email: user.email });
+          } else {
+            logStep("Token valid but no email on user; proceeding as guest");
+            user = null;
+          }
+        } catch (e) {
+          logStep("Invalid token; proceeding as guest");
+          user = null;
+        }
+      } else {
+        logStep("Auth header present but token is not a JWT; proceeding as guest");
+      }
     } else {
       logStep("No auth header, proceeding as guest");
     }
