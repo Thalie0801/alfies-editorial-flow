@@ -14,16 +14,196 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      plan_limits: {
+        Row: {
+          articles_max: number | null
+          carousels_max: number | null
+          created_at: string
+          fynk_interactions_max: number | null
+          hero_videos_max: number | null
+          id: string
+          plan_key: string
+          snacks_max: number | null
+        }
+        Insert: {
+          articles_max?: number | null
+          carousels_max?: number | null
+          created_at?: string
+          fynk_interactions_max?: number | null
+          hero_videos_max?: number | null
+          id?: string
+          plan_key: string
+          snacks_max?: number | null
+        }
+        Update: {
+          articles_max?: number | null
+          carousels_max?: number | null
+          created_at?: string
+          fynk_interactions_max?: number | null
+          hero_videos_max?: number | null
+          id?: string
+          plan_key?: string
+          snacks_max?: number | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          addons: string[] | null
+          cancel_at_period_end: boolean | null
+          created_at: string
+          id: string
+          period_end: string | null
+          period_start: string | null
+          price_lookup_key: string | null
+          status: string
+          trial_end: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          addons?: string[] | null
+          cancel_at_period_end?: boolean | null
+          created_at?: string
+          id: string
+          period_end?: string | null
+          period_start?: string | null
+          price_lookup_key?: string | null
+          status: string
+          trial_end?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          addons?: string[] | null
+          cancel_at_period_end?: boolean | null
+          created_at?: string
+          id?: string
+          period_end?: string | null
+          period_start?: string | null
+          price_lookup_key?: string | null
+          status?: string
+          trial_end?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      usage_tracking: {
+        Row: {
+          articles_used: number | null
+          carousels_used: number | null
+          created_at: string
+          fynk_interactions_used: number | null
+          hero_videos_used: number | null
+          id: string
+          month_year: string
+          snacks_used: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          articles_used?: number | null
+          carousels_used?: number | null
+          created_at?: string
+          fynk_interactions_used?: number | null
+          hero_videos_used?: number | null
+          id?: string
+          month_year: string
+          snacks_used?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          articles_used?: number | null
+          carousels_used?: number | null
+          created_at?: string
+          fynk_interactions_used?: number | null
+          hero_videos_used?: number | null
+          id?: string
+          month_year?: string
+          snacks_used?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_or_create_usage_tracking: {
+        Args: { user_id_param: string }
+        Returns: {
+          articles_used: number
+          carousels_used: number
+          fynk_interactions_used: number
+          hero_videos_used: number
+          id: string
+          month_year: string
+          snacks_used: number
+          user_id: string
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "client"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +330,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "client"],
+    },
   },
 } as const
