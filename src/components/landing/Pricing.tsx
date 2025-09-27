@@ -76,6 +76,28 @@ export function Pricing() {
       promotionCode: "LAUNCH25",
       supportsFynk: true,
       annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined
+    },
+    {
+      name: "Ambassadeur",
+      price: isAnnual ? "126 €" : "149 €",
+      originalPrice: isAnnual ? "149 €" : undefined,
+      billing: isAnnual ? "Facturé annuellement" : "Facturé mensuellement",
+      description: "Plan exclusif ambassadeurs",
+      features: [
+        "Jusqu'à 4 réseaux sociaux",
+        "1 vidéo HÉRO + 10 courts/mois",
+        "2 articles SEO (1 200–1 500 mots)",
+        "Carrousels + stories + visuels dédiés",
+        "KPI complet + Alfie Copilot",
+        "Commission ambassadeur 15%",
+        "🎁 Fynk Basic inclus 3 mois",
+        "Support prioritaire"
+      ],
+      ctaText: "Devenir Ambassadeur",
+      badge: "Exclusif",
+      priceId: "price_1SBeX0JsCoQneASNtGQ0LpIf", // 149€
+      supportsFynk: false, // Déjà inclus 3 mois
+      annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined
     }
   ];
 
@@ -95,7 +117,7 @@ export function Pricing() {
 
         <PricingToggle isAnnual={isAnnual} onChange={setIsAnnual} />
 
-        <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-1 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {plans.map((plan, index) => (
             <PricingCard key={index} {...plan} />
           ))}
