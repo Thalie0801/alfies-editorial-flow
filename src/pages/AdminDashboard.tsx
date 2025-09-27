@@ -22,6 +22,7 @@ import {
   Clock
 } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
+import { SecureRoleManager } from '@/components/admin/SecureRoleManager';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -95,6 +96,7 @@ export default function AdminDashboard() {
               <Route path="/alfie" element={<AlfieBrainPage />} />
               <Route path="/integrations" element={<AdminIntegrationsPage />} />
               <Route path="/security" element={<SecurityPage />} />
+              <Route path="/roles" element={<RoleManagementPage />} />
               <Route path="/monitoring" element={<MonitoringPage />} />
               <Route path="/settings" element={<AdminSettingsPage />} />
             </Routes>
@@ -725,6 +727,22 @@ function AdminSettingsPage() {
               </Card>
             </div>
           </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function RoleManagementPage() {
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Gestion des Rôles Utilisateurs</CardTitle>
+          <CardDescription>Administration sécurisée des rôles avec audit complet</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SecureRoleManager />
         </CardContent>
       </Card>
     </div>

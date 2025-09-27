@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Mail, Lock, User, Loader2 } from 'lucide-react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { signUpSchema, type SignUpFormData } from '@/lib/validationSchemas';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -38,33 +39,35 @@ export default function SignUp() {
   }, [navigate]);
 
   const validateForm = () => {
-    if (!email || !password || !confirmPassword) {
-      setError('Tous les champs sont requis');
+    try {
+      // Validate using schema
+      const formData: SignUpFormData = {
+        email: email.trim(),
+        password: password,
+        displayName: displayName.trim() || email.split('@')[0]
+      };
+      
+      signUpSchema.parse(formData);
+
+      if (password !== confirmPassword) {
+        setError('Les mots de passe ne correspondent pas');
+        return false;
+      }
+
+      if (!captchaToken) {
+        setError('Veuillez compléter le captcha');
+        return false;
+      }
+
+      return true;
+    } catch (error: any) {
+      if (error.errors && error.errors[0]) {
+        setError(error.errors[0].message);
+      } else {
+        setError('Données invalides');
+      }
       return false;
     }
-
-    if (password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères');
-      return false;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
-      return false;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('Veuillez entrer un email valide');
-      return false;
-    }
-
-    if (!captchaToken) {
-      setError('Veuillez compléter le captcha');
-      return false;
-    }
-
-    return true;
   };
 
   const handleSignUp = async (e: React.FormEvent) => {

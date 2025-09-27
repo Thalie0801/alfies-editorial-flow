@@ -13,7 +13,8 @@ import {
   Puzzle,
   AlertTriangle,
   DollarSign,
-  Gamepad2
+  Gamepad2,
+  UserCheck
 } from 'lucide-react';
 import {
   Sidebar,
@@ -32,6 +33,7 @@ import { Badge } from '@/components/ui/badge';
 const menuItems = [
   { title: 'Aperçu', url: '/admin', icon: BarChart3 },
   { title: 'Comptes', url: '/admin/accounts', icon: Users },
+  { title: 'Gestion des Rôles', url: '/admin/roles', icon: UserCheck },
   { title: 'Plans & Tarifs', url: '/admin/plans', icon: CreditCard },
   { title: 'Affiliation', url: '/admin/affiliation', icon: Crown },
   { title: 'Gamification', url: '/admin/gamification', icon: Gamepad2 },
