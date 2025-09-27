@@ -7,7 +7,7 @@ export function useStripeCheckout() {
   const { toast } = useToast();
 
   const createCheckoutSession = async (
-    lookupKey: string,
+    priceId: string,
     promotionCode?: string,
     successUrl?: string,
     cancelUrl?: string,
@@ -17,7 +17,7 @@ export function useStripeCheckout() {
     try {
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData.session?.access_token;
-      console.debug('[Checkout] start', { lookupKey, hasToken: !!accessToken, addons, hasPromo: !!promotionCode });
+      console.debug('[Checkout] start', { priceId, hasToken: !!accessToken, addons, hasPromo: !!promotionCode });
 
       // If not authenticated, redirect to auth with intended plan
       if (!accessToken) {
@@ -26,7 +26,7 @@ export function useStripeCheckout() {
           title: "Connexion requise",
           description: "Veuillez vous connecter pour continuer le paiement.",
         });
-        const params = new URLSearchParams({ plan: lookupKey });
+        const params = new URLSearchParams({ plan: priceId });
         if (promotionCode) params.set('promo', promotionCode);
         if (addons && addons.length) addons.forEach(a => a && params.append('addon', a));
         const authUrl = `${window.location.origin}/signin?${params.toString()}`;
@@ -37,7 +37,7 @@ export function useStripeCheckout() {
       console.debug('[Checkout] invoking edge function create-checkout');
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {
-          lookup_key: lookupKey,
+          price_id: priceId,
           promotion_code: promotionCode,
           success_url: successUrl,
           cancel_url: cancelUrl,

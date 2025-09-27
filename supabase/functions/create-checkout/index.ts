@@ -45,14 +45,14 @@ serve(async (req) => {
 
     // Parse request body
     const body = (await req.json()) as {
-      lookup_key: string;
+      price_id: string;
       promotion_code?: string;
       success_url?: string;
       cancel_url?: string;
       addons?: string[];
     };
-    const { lookup_key, promotion_code, success_url, cancel_url, addons } = body;
-    logStep("Request body parsed", { lookup_key, promotion_code, addons });
+    const { price_id, promotion_code, success_url, cancel_url, addons } = body;
+    logStep("Request body parsed", { price_id, promotion_code, addons });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
@@ -66,20 +66,19 @@ serve(async (req) => {
       logStep("No customer found, will create during checkout");
     }
 
-    // Map lookup_key to price_id
-    const priceMapping: { [key: string]: string } = {
-      'aeditus_essential_m': 'price_1QQTCTRr5lOHcXj67Rjy6bAJ',
-      'aeditus_starter_m': 'price_1QQTDBRr5lOHcXj6LzxQq4gx',
-      'aeditus_pro_m': 'price_1QQTDVRr5lOHcXj6MqUgwUNN',
-      'fynk_basic_m': 'price_1QQTDhRr5lOHcXj6W0xQ8OLX',
-      'fynk_pro_m': 'price_1QQTDtRr5lOHcXj60kF6o0dZ'
-    };
-
-    const price_id = priceMapping[lookup_key];
-    if (!price_id) {
-      throw new Error(`Invalid lookup_key: ${lookup_key}`);
+    // Validate price_id exists in Stripe
+    try {
+      await stripe.prices.retrieve(price_id);
+      logStep("Price ID validated", { price_id });
+    } catch (error) {
+      throw new Error(`Invalid price_id: ${price_id}`);
     }
-    logStep("Price ID mapped", { lookup_key, price_id });
+
+    // Map addon names to price_ids if needed
+    const addonPriceMapping: { [key: string]: string } = {
+      'fynk_basic_m': 'price_1SBeXYJsCoQneASNGAQ2F6lf', // 29€
+      'fynk_pro_m': 'price_1SBeXqJsCoQneASNOQzr6yja'  // 69€
+    };
 
     // Build line items
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
@@ -89,7 +88,7 @@ serve(async (req) => {
     // Add addons if provided
     if (addons && Array.isArray(addons)) {
       for (const addon of addons) {
-        const addon_price_id = priceMapping[addon];
+        const addon_price_id = addonPriceMapping[addon];
         if (addon_price_id) {
           line_items.push({ price: addon_price_id, quantity: 1 });
           logStep("Added addon", { addon, addon_price_id });
@@ -106,7 +105,7 @@ serve(async (req) => {
       client_reference_id: user.id,
       metadata: {
         user_id: user.id,
-        lookup_key: lookup_key
+        price_id: price_id
       }
     };
 
@@ -116,8 +115,8 @@ serve(async (req) => {
       sessionParams.customer_email = user.email;
     }
 
-    // Add trial for Essential plan
-    if (lookup_key === 'aeditus_essential_m') {
+    // Add trial for Essential plan (79€ price)
+    if (price_id === 'price_1SBeX0JsCoQneASNtGQ0LpIf') {
       sessionParams.subscription_data = {
         trial_period_days: 7,
         metadata: {

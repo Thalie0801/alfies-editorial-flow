@@ -21,7 +21,7 @@ interface PricingCardProps {
   ctaText: string;
   badge?: string;
   discount?: string;
-  lookupKey?: string;
+  priceId?: string;
   promotionCode?: string;
   prefilledPromo?: string;
   trialNote?: string;
@@ -40,7 +40,7 @@ export function PricingCard({
   ctaText,
   badge,
   discount,
-  lookupKey,
+  priceId,
   promotionCode,
   prefilledPromo,
   trialNote,
@@ -70,7 +70,7 @@ export function PricingCard({
   }, []);
 
   const handleSubscribe = async () => {
-    if (lookupKey) {
+    if (priceId) {
       const finalPromoCode = prefilledPromo || promotionCode;
       const addons = fynkEnabled && supportsFynk ? [`fynk_${fynkTier}_m`] : undefined;
 
@@ -79,7 +79,7 @@ export function PricingCard({
       
       if (!session) {
         // Pour les utilisateurs non connectés, rediriger vers auth avec intention d'achat et options sélectionnées
-        const params = new URLSearchParams({ plan: lookupKey });
+        const params = new URLSearchParams({ plan: priceId });
 
         if (finalPromoCode) {
           params.set('promo', finalPromoCode);
@@ -101,7 +101,7 @@ export function PricingCard({
       // Utilisateur connecté, procéder directement au checkout via Supabase Functions
       try {
         await createCheckoutSession(
-          lookupKey,
+          priceId,
           finalPromoCode,
           `${window.location.origin}/dashboard`,
           `${window.location.origin}/`,

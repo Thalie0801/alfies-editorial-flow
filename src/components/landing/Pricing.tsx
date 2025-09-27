@@ -19,7 +19,7 @@ export function Pricing() {
       ],
       ctaText: "Commencer l'essai 7 jours",
       badge: "Essai — publication verrouillée",
-      lookupKey: "aeditus_essential_m",
+      priceId: "price_1SBeX0JsCoQneASNtGQ0LpIf", // 79€
       trialNote: "Publication verrouillée pendant l'essai",
       supportsFynk: false // Pas de Fynk pendant l'essai
     },
@@ -39,7 +39,7 @@ export function Pricing() {
       ctaText: "Choisir Starter",
       isPopular: true,
       discount: "−25% le 1er mois avec LAUNCH25 → 134,25 €",
-      lookupKey: "aeditus_starter_m",
+      priceId: "price_1SBeWOJsCoQneASNQS5Nx5D5", // 179€
       promotionCode: "LAUNCH25",
       supportsFynk: true
     },
@@ -60,7 +60,7 @@ export function Pricing() {
       ctaText: "Choisir Pro",
       isPremium: true,
       discount: "−25% le 1er mois avec LAUNCH25 → 299,25 €",
-      lookupKey: "aeditus_pro_m",
+      priceId: "price_1SBeSdJsCoQneASNrW627hLX", // 399€
       promotionCode: "LAUNCH25",
       supportsFynk: true
     },
@@ -81,7 +81,7 @@ export function Pricing() {
       ctaText: "Obtenir l'offre ambassadeur",
       badge: "Programme ambassadeur",
       discount: "Code AMBASSADEURS49 pré-appliqué",
-      lookupKey: "aeditus_amb_m",
+      priceId: "price_1SBeRAJsCoQneASNWu0k8OlJ", // 99€ (pour la période ambassadeur)
       prefilledPromo: "AMBASSADEURS49",
       supportsFynk: true
     }
