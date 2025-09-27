@@ -141,7 +141,7 @@ export function Pricing() {
       ctaText: "Devenir Ambassadeur",
       badge: "Exclusif",
       priceId: "price_1SBwTLJsCoQneASNfkAjlOD7", // 149€ de base
-      discount: "Code AMBASSADEUR50 → 49,90 €",
+      discount: "Code AMBASSADEUR50 disponible → -99,10€",
       supportsFynk: false, // Déjà inclus 3 mois
       isPremium: true
     }
