@@ -106,7 +106,7 @@ serve(async (req) => {
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       line_items,
       mode: "subscription",
-      success_url: success_url || `${req.headers.get("origin")}/signup`,
+      success_url: success_url || `${req.headers.get("origin")}/dashboard`,
       cancel_url: cancel_url || `${req.headers.get("origin")}/`,
       metadata: {
         price_id: price_id,

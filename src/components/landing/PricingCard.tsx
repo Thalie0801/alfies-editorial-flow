@@ -78,23 +78,21 @@ export function PricingCard({
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
-        // Pour les utilisateurs non connectés, rediriger vers auth avec intention d'achat et options sélectionnées
+        // Utilisateur non connecté: lancer directement le paiement (guest)
         const params = new URLSearchParams({ plan: priceId });
-
-        if (finalPromoCode) {
-          params.set('promo', finalPromoCode);
+        if (finalPromoCode) params.set('promo', finalPromoCode);
+        if (addons?.length) addons.forEach((addon) => addon && params.append('addon', addon));
+        try {
+          await createCheckoutSession(
+            priceId,
+            finalPromoCode,
+            `${window.location.origin}/signup?${params.toString()}`,
+            `${window.location.origin}/`,
+            addons
+          );
+        } catch (error) {
+          console.error('Checkout error (guest):', error);
         }
-
-        if (addons?.length) {
-          addons.forEach((addon) => {
-            if (addon) {
-              params.append('addon', addon);
-            }
-          });
-        }
-
-        const returnUrl = `${window.location.origin}/signup?${params.toString()}`;
-        window.location.href = returnUrl;
         return;
       }
 
