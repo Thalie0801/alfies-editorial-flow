@@ -70,6 +70,7 @@ export function FynkCard() {
         <li>• Analytics d'engagement avancés</li>
         <li>• Alfie Copilot inclus</li>
         <li>• Accès au tableau de bord</li>
+        <li>• Programme ambassadeurs (15% commission)</li>
       </ul>
       <p className="text-xs text-muted-foreground">
         Fynk seul permet d'accéder au dashboard complet

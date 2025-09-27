@@ -225,7 +225,7 @@ export function PricingCard({
       )}
 
       <Button 
-        variant={cardVariant} 
+        variant={isPremium ? "accent" : cardVariant} 
         size="lg" 
         className="w-full"
         onClick={handleSubscribe}
