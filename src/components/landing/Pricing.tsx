@@ -1,105 +1,96 @@
 import { useState } from "react";
 import { PricingCard } from "./PricingCard";
+import { PricingToggle } from "./PricingToggle";
 
 export function Pricing() {
+  const [isAnnual, setIsAnnual] = useState(false);
 
-  const plans = [
+  const getPlans = (isAnnual: boolean) => [
     {
       name: "Essential",
-      price: "79 €",
-      billing: "Facturé mensuellement",
-      description: "Parfait pour débuter avec les outils IA",
+      price: isAnnual ? "67 €" : "79 €",
+      originalPrice: isAnnual ? "79 €" : undefined,
+      billing: isAnnual ? "Facturé annuellement" : "Facturé mensuellement",
+      description: "1 réseau social au choix",
       features: [
-        "3 posts par mois",
-        "1 story par mois", 
-        "1 cover par mois",
-        "Templates de base",
-        "Support email",
+        "12 posts par mois",
+        "1 visuel ou vidéo / semaine", 
+        "Bibliothèque tonale + briefs illimités",
+        "KPI Lite (impressions, abonnés)",
+        "Affiliation 10% (Ambassadeurs jusqu'à 15%)",
+        "Options : articles & Fynk activables",
         "✨ Essai gratuit 7 jours"
       ],
       ctaText: "Commencer l'essai 7 jours",
-      badge: "Essai — publication verrouillée",
+      badge: "Essai — sans publication",
       priceId: "price_1SBeX0JsCoQneASNtGQ0LpIf", // 79€
       trialNote: "Publication verrouillée pendant l'essai",
-      supportsFynk: false // Pas de Fynk pendant l'essai
+      supportsFynk: false,
+      annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined
     },
     {
       name: "Starter", 
-      price: "179 €",
-      billing: "Facturé mensuellement",
-      description: "Pour les créateurs qui veulent plus de contenus",
+      price: isAnnual ? "151 €" : "179 €",
+      originalPrice: isAnnual ? "179 €" : undefined,
+      billing: isAnnual ? "Facturé annuellement" : "Facturé mensuellement",
+      description: "Plan éditorial complet",
       features: [
-        "10 posts par mois",
-        "5 stories par mois",
-        "3 covers par mois", 
-        "2 carousels par mois",
-        "Templates premium",
-        "Support prioritaire"
+        "Jusqu'à 4 réseaux sociaux",
+        "1 vidéo HÉRO + 10 courts/mois",
+        "2 articles SEO (1 200–1 500 mots)", 
+        "Carrousels + stories + visuels dédiés",
+        "KPI complet + Alfie Copilot",
+        "✗ Pas d'essai"
       ],
       ctaText: "Choisir Starter",
       isPopular: true,
-      discount: "−25% le 1er mois avec LAUNCH25 → 134,25 €",
+      discount: "−25% le 1er mois → 134,25 €",
       priceId: "price_1SBeWOJsCoQneASNQS5Nx5D5", // 179€
       promotionCode: "LAUNCH25",
-      supportsFynk: true
+      supportsFynk: true,
+      annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined
     },
     {
       name: "Pro",
-      price: "399 €", 
-      billing: "Facturé mensuellement",
-      description: "Pour les professionnels exigeants",
+      price: isAnnual ? "336 €" : "399 €", 
+      originalPrice: isAnnual ? "399 €" : undefined,
+      billing: isAnnual ? "Facturé annuellement" : "Facturé mensuellement",
+      description: "Présence étendue",
       features: [
-        "Posts illimités",
-        "Stories illimitées",
-        "Covers illimitées",
-        "Carousels illimités",
-        "Snacks illimités",
-        "Templates exclusifs",
-        "Support VIP"
+        "Jusqu'à 7 réseaux sociaux",
+        "3–4 vidéos HÉRO + courts illimités",
+        "4 articles SEO (1 500–2 000 mots)",
+        "Bilans hebdo + recalibrage automatique",
+        "Accès prioritaire aux nouveautés",
+        "✗ Pas d'essai"
       ],
       ctaText: "Choisir Pro",
       isPremium: true,
-      discount: "−25% le 1er mois avec LAUNCH25 → 299,25 €",
+      discount: "−25% le 1er mois → 299,25 €",
       priceId: "price_1SBeSdJsCoQneASNrW627hLX", // 399€
       promotionCode: "LAUNCH25",
-      supportsFynk: true
-    },
-    {
-      name: "Ambassadeurs",
-      price: "49,90 €",
-      originalPrice: "149 €",
-      billing: "pendant 3 mois, puis 149 €",
-      description: "Offre spéciale pour nos ambassadeurs",
-      features: [
-        "2 HÉRO par mois",
-        "8 snacks par mois",
-        "2 articles par mois",
-        "3 réseaux sociaux",
-        "Templates ambassadeurs",
-        "Support dédié"
-      ],
-      ctaText: "Obtenir l'offre ambassadeur",
-      badge: "Programme ambassadeur",
-      discount: "Code AMBASSADEURS49 pré-appliqué",
-      priceId: "price_1SBeRAJsCoQneASNWu0k8OlJ", // 99€ (pour la période ambassadeur)
-      prefilledPromo: "AMBASSADEURS49",
-      supportsFynk: true
+      supportsFynk: true,
+      annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined
     }
   ];
+
+  const plans = getPlans(isAnnual);
 
   return (
     <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Choisissez votre <span className="bg-gradient-primary bg-clip-text text-transparent">croissance</span>
+            Plans <span className="bg-gradient-primary bg-clip-text text-transparent">Æditus</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Tous nos plans incluent l'affiliation (10-15%) et l'accès à Alfie, votre copilot éditorial
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        <PricingToggle isAnnual={isAnnual} onChange={setIsAnnual} />
+
+        <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <PricingCard key={index} {...plan} />
           ))}
@@ -151,6 +142,13 @@ export function Pricing() {
                </p>
              </div>
           </div>
+        </div>
+
+        {/* Terms Section */}
+        <div className="mt-12 text-center">
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+            <strong>Arrêt d'abonnement :</strong> à la prochaine date anniversaire. Pas de remboursement.
+          </p>
         </div>
       </div>
     </section>
