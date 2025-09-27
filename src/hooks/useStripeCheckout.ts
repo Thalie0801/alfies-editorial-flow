@@ -21,12 +21,15 @@ export function useStripeCheckout() {
 
       // If not authenticated, redirect to auth with intended plan
       if (!accessToken) {
-        console.warn('[Checkout] No access token, redirect to /signup');
+        console.warn('[Checkout] No access token, redirect to /signin');
         toast({
           title: "Connexion requise",
           description: "Veuillez vous connecter pour continuer le paiement.",
         });
-        const authUrl = `${window.location.origin}/signup?plan=${encodeURIComponent(lookupKey)}`;
+        const params = new URLSearchParams({ plan: lookupKey });
+        if (promotionCode) params.set('promo', promotionCode);
+        if (addons && addons.length) addons.forEach(a => a && params.append('addon', a));
+        const authUrl = `${window.location.origin}/signin?${params.toString()}`;
         window.location.href = authUrl;
         return null;
       }
