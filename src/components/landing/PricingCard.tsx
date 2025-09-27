@@ -236,20 +236,6 @@ export function PricingCard({
       >
         {loading ? "Chargement..." : ctaText}
       </Button>
-      
-      {promotionCode && (
-        <div className="text-center mt-3 space-y-2">
-          <input
-            value={promoInput}
-            onChange={(e) => setPromoInput(e.target.value)}
-            placeholder="Ajouter un code promo"
-            className="px-3 py-2 rounded-md border bg-background"
-          />
-          {discount && (
-            <div className="text-xs text-accent font-medium">{discount}</div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

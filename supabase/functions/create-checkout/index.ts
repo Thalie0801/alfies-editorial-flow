@@ -155,25 +155,8 @@ serve(async (req) => {
       logStep("Added 7-day trial for Essential plan");
     }
 
-    // Apply promotion code if provided
-    if (promotion_code) {
-      try {
-        const promotionCodes = await stripe.promotionCodes.list({
-          code: promotion_code,
-          active: true,
-          limit: 1
-        });
-
-        if (promotionCodes.data.length > 0) {
-          sessionParams.discounts = [{ promotion_code: promotionCodes.data[0].id }];
-          logStep("Applied promotion code", { promotion_code });
-        } else {
-          logStep("Promotion code not found or inactive", { promotion_code });
-        }
-      } catch (promoError) {
-        logStep("Error applying promotion code", { error: promoError });
-      }
-    }
+    // Note: Avec allow_promotion_codes: true, l'utilisateur peut saisir le code sur Stripe
+    // On ne peut pas combiner allow_promotion_codes avec discounts automatiques
 
     // Create checkout session
     logStep("Creating checkout session", sessionParams);

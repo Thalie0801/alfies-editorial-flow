@@ -65,7 +65,6 @@ export function Pricing() {
       isPopular: true,
       discount: "−25% le 1er mois → 134,25 €",
       priceId: isAnnual ? "price_starter_annual" : "price_1SBwT5JsCoQneASNq8NSEfT3", // 179€ mensuel
-      promotionCode: "LAUNCH25",
       supportsFynk: true,
       fynkVariants: [
         {
@@ -104,7 +103,6 @@ export function Pricing() {
       isPremium: true,
       discount: "−25% le 1er mois → 299,25 €",
       priceId: isAnnual ? "price_pro_annual" : "price_1SBwTDJsCoQneASNxDaRP2PC", // 399€ mensuel
-      promotionCode: "LAUNCH25",
       supportsFynk: true,
       fynkVariants: [
         {
@@ -143,7 +141,6 @@ export function Pricing() {
       ctaText: "Devenir Ambassadeur",
       badge: "Exclusif",
       priceId: "price_1SBwTLJsCoQneASNfkAjlOD7", // 149€ de base
-      promotionCode: "AMBASSADEUR50",
       discount: "Code AMBASSADEUR50 → 49,90 €",
       supportsFynk: false, // Déjà inclus 3 mois
       isPremium: true
