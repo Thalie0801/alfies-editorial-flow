@@ -13,8 +13,7 @@ import {
   Newspaper,
   HelpCircle,
   Settings,
-  BarChart3,
-  Kanban
+  BarChart3
 } from 'lucide-react';
 import {
   Sidebar,
@@ -33,7 +32,6 @@ import { Badge } from '@/components/ui/badge';
 const menuItems = [
   { title: 'Accueil', url: '/dashboard', icon: Home },
   { title: 'Alfie', url: '/dashboard/alfie', icon: MessageCircle },
-  { title: 'Plan', url: '/dashboard/plan', icon: Kanban },
   { title: 'Générer', url: '/dashboard/generate', icon: Sparkles },
   { title: 'Assets', url: '/dashboard/assets', icon: FileImage },
   { title: 'Publications', url: '/dashboard/publications', icon: Share2 },

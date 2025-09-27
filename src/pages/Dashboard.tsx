@@ -428,9 +428,6 @@ function AlfiePage() {
   return <div className="p-4">Page Alfie en développement</div>;
 }
 
-function PlanPage() {
-  return <div className="p-4">Page Plan (Kanban/Calendrier) en développement</div>;
-}
 
 function GeneratePage() {
   return <div className="p-4">Page Génération de contenu en développement</div>;
