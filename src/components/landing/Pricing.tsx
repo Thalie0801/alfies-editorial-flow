@@ -48,9 +48,9 @@ export function Pricing() {
     },
     {
       name: "Starter", 
-      price: isAnnual ? "151 €" : "179 €",
+      price: isAnnual ? "143.20 €" : "179 €",
       originalPrice: isAnnual ? "179 €" : undefined,
-      billing: isAnnual ? "Facturé annuellement" : "Facturé mensuellement",
+      billing: isAnnual ? "Facturé annuellement (-20% la 1ère année)" : "Facturé mensuellement",
       description: "Plan éditorial complet",
       features: [
         "Jusqu'à 4 réseaux sociaux",
@@ -63,8 +63,9 @@ export function Pricing() {
       ],
       ctaText: "Choisir Starter",
       isPopular: true,
-      discount: "−25% le 1er mois → 134,25 €",
-      priceId: isAnnual ? "price_starter_annual" : "price_1SBwT5JsCoQneASNq8NSEfT3", // 179€ mensuel
+      discount: isAnnual ? "-20% la 1ère année" : "Code promo STARTER25 → -25% le 1er mois",
+      priceId: isAnnual ? "price_starter_annual_discount" : "price_1SBwT5JsCoQneASNq8NSEfT3", // 179€ mensuel
+      promotionCode: isAnnual ? undefined : "STARTER25",
       supportsFynk: true,
       fynkVariants: [
         {
@@ -85,9 +86,9 @@ export function Pricing() {
     },
     {
       name: "Pro",
-      price: isAnnual ? "336 €" : "399 €", 
+      price: isAnnual ? "319.20 €" : "399 €", 
       originalPrice: isAnnual ? "399 €" : undefined,
-      billing: isAnnual ? "Facturé annuellement" : "Facturé mensuellement",
+      billing: isAnnual ? "Facturé annuellement (-20% la 1ère année)" : "Facturé mensuellement",
       description: "Présence étendue",
       features: [
         "Jusqu'à 7 réseaux sociaux",
@@ -101,8 +102,9 @@ export function Pricing() {
       ],
       ctaText: "Choisir Pro",
       isPremium: true,
-      discount: "−25% le 1er mois → 299,25 €",
-      priceId: isAnnual ? "price_pro_annual" : "price_1SBwTDJsCoQneASNxDaRP2PC", // 399€ mensuel
+      discount: isAnnual ? "-20% la 1ère année" : "Code promo PRO25 → -25% le 1er mois",
+      priceId: isAnnual ? "price_pro_annual_discount" : "price_1SBwTDJsCoQneASNxDaRP2PC", // 399€ mensuel
+      promotionCode: isAnnual ? undefined : "PRO25",
       supportsFynk: true,
       fynkVariants: [
         {

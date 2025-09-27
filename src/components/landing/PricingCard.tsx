@@ -203,8 +203,14 @@ export function PricingCard({
           <p className="text-sm text-muted-foreground mt-1">{billing}</p>
         )}
         
-        {discount && !promotionCode && (
+        {discount && (
           <p className="text-sm text-accent font-medium mt-2">{discount}</p>
+        )}
+
+        {promotionCode && (
+          <div className="mt-3 p-2 bg-accent/10 rounded-lg border border-accent/20">
+            <p className="text-xs text-accent font-medium">Code promo: {promotionCode}</p>
+          </div>
         )}
 
         {trialNote && (
