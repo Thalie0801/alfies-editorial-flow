@@ -7,7 +7,7 @@ export function FynkAddonCard() {
   const handleFynkBasic = async () => {
     try {
       await createCheckoutSession(
-        "price_fynk_basic_29", // Price ID pour Fynk Basic à 29€
+        "price_1SBwTUJsCoQneASNaHueZnOM", // Price ID pour Fynk Basic à 29€
         undefined,
         `${window.location.origin}/dashboard`,
         `${window.location.origin}/`
@@ -20,7 +20,7 @@ export function FynkAddonCard() {
   const handleFynkPro = async () => {
     try {
       await createCheckoutSession(
-        "price_fynk_pro_69", // Price ID pour Fynk Pro à 69€
+        "price_1SBwTcJsCoQneASNgQwUvg4P", // Price ID pour Fynk Pro à 69€
         undefined,
         `${window.location.origin}/dashboard`,
         `${window.location.origin}/`

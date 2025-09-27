@@ -25,21 +25,21 @@ export function Pricing() {
       ],
       ctaText: "Commencer l'essai 7 jours",
       badge: "Essai — sans publication",
-      priceId: isAnnual ? "price_essential_annual" : "price_essential_monthly", // 79€ mensuel
+      priceId: isAnnual ? "price_essential_annual" : "price_1SBwSvJsCoQneASNaDNsm22b", // 79€ mensuel
       trialNote: "Publication verrouillée pendant l'essai",
       supportsFynk: true,
       fynkVariants: [
         {
           name: "Essential + Fynk Basic",
           price: isAnnual ? "96 €" : "108 €", // 79 + 29
-          priceId: isAnnual ? "price_essential_fynk_basic_annual" : "price_essential_fynk_basic_monthly",
+          priceId: isAnnual ? "price_essential_fynk_basic_annual" : "price_1SBwTkJsCoQneASNpAwXW8K4",
           description: "Essential + Fynk Basic inclus",
           addedFeatures: ["🎁 Fynk Basic inclus (~400 interactions)"]
         },
         {
           name: "Essential + Fynk Pro", 
           price: isAnnual ? "126 €" : "148 €", // 79 + 69
-          priceId: isAnnual ? "price_essential_fynk_pro_annual" : "price_essential_fynk_pro_monthly",
+          priceId: isAnnual ? "price_essential_fynk_pro_annual" : "price_1SBwTsJsCoQneASNT4Dx43re",
           description: "Essential + Fynk Pro inclus",
           addedFeatures: ["🎁 Fynk Pro inclus (~1 500 interactions)"]
         }
@@ -63,21 +63,21 @@ export function Pricing() {
       ctaText: "Choisir Starter",
       isPopular: true,
       discount: "−25% le 1er mois → 134,25 €",
-      priceId: isAnnual ? "price_starter_annual" : "price_starter_monthly", // 179€ mensuel
+      priceId: isAnnual ? "price_starter_annual" : "price_1SBwT5JsCoQneASNq8NSEfT3", // 179€ mensuel
       promotionCode: "LAUNCH25",
       supportsFynk: true,
       fynkVariants: [
         {
           name: "Starter + Fynk Basic",
           price: isAnnual ? "176 €" : "208 €", // 179 + 29
-          priceId: isAnnual ? "price_starter_fynk_basic_annual" : "price_starter_fynk_basic_monthly",
+          priceId: isAnnual ? "price_starter_fynk_basic_annual" : "price_1SBwU1JsCoQneASN1WLAzdHw",
           description: "Starter + Fynk Basic inclus",
           addedFeatures: ["🎁 Fynk Basic inclus (~400 interactions)"]
         },
         {
           name: "Starter + Fynk Pro", 
           price: isAnnual ? "206 €" : "248 €", // 179 + 69
-          priceId: isAnnual ? "price_starter_fynk_pro_annual" : "price_starter_fynk_pro_monthly",
+          priceId: isAnnual ? "price_starter_fynk_pro_annual" : "price_1SBwUJJsCoQneASNKEa0RNzw",
           description: "Starter + Fynk Pro inclus",
           addedFeatures: ["🎁 Fynk Pro inclus (~1 500 interactions)"]
         }
@@ -102,21 +102,21 @@ export function Pricing() {
       ctaText: "Choisir Pro",
       isPremium: true,
       discount: "−25% le 1er mois → 299,25 €",
-      priceId: isAnnual ? "price_pro_annual" : "price_pro_monthly", // 399€ mensuel
+      priceId: isAnnual ? "price_pro_annual" : "price_1SBwTDJsCoQneASNxDaRP2PC", // 399€ mensuel
       promotionCode: "LAUNCH25",
       supportsFynk: true,
       fynkVariants: [
         {
           name: "Pro + Fynk Basic",
           price: isAnnual ? "361 €" : "428 €", // 399 + 29
-          priceId: isAnnual ? "price_pro_fynk_basic_annual" : "price_pro_fynk_basic_monthly",
+          priceId: isAnnual ? "price_pro_fynk_basic_annual" : "price_1SBwUSJsCoQneASNhzwWZKKB",
           description: "Pro + Fynk Basic inclus",
           addedFeatures: ["🎁 Fynk Basic inclus (~400 interactions)"]
         },
         {
           name: "Pro + Fynk Pro", 
           price: isAnnual ? "391 €" : "468 €", // 399 + 69
-          priceId: isAnnual ? "price_pro_fynk_pro_annual" : "price_pro_fynk_pro_monthly",
+          priceId: isAnnual ? "price_pro_fynk_pro_annual" : "price_1SBwUcJsCoQneASNYCVum0gF",
           description: "Pro + Fynk Pro inclus",
           addedFeatures: ["🎁 Fynk Pro inclus (~1 500 interactions)"]
         }
@@ -141,7 +141,7 @@ export function Pricing() {
       ],
       ctaText: "Devenir Ambassadeur",
       badge: "Exclusif",
-      priceId: "price_ambassador", // 49.90€ puis 149€
+      priceId: "price_1SBwTLJsCoQneASNfkAjlOD7", // 49.90€
       promotionCode: "AMBASSADEUR50",
       supportsFynk: false, // Déjà inclus 3 mois
       isPremium: true
