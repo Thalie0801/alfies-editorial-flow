@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import Index from "./pages/Index";
 import Contact from "./pages/Contact";
+import AmbassadorContact from "./pages/AmbassadorContact";
 import { Simulator } from "./pages/Simulator";
 import { AmbassadorApplication } from "./pages/AmbassadorApplication";
 import SignUp from "./pages/SignUp";
@@ -34,6 +35,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/ambassador-contact" element={<AmbassadorContact />} />
               <Route path="/simulator" element={<Simulator />} />
               <Route path="/ambassador-application" element={<AmbassadorApplication />} />
               <Route path="/signup" element={<SignUp />} />

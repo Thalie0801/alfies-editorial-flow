@@ -72,9 +72,14 @@ export function PricingCard({
   const handleSubscribe = async () => {
     if (priceId) {
       const finalPromoCode = prefilledPromo || promotionCode;
-      const addons = fynkEnabled && supportsFynk ? [`price_1SBeXYJsCoQneASNGAQ2F6lf`] : undefined; // Fynk Basic 29€
-      if (fynkTier === "pro" && fynkEnabled && supportsFynk) {
-        addons[0] = `price_1SBeXqJsCoQneASNOQzr6yja`; // Fynk Pro 69€
+      let addons: string[] | undefined = undefined;
+      
+      if (fynkEnabled && supportsFynk) {
+        if (fynkTier === "pro") {
+          addons = [`price_1SBeXqJsCoQneASNOQzr6yja`]; // Fynk Pro 69€
+        } else {
+          addons = [`price_1SBeXYJsCoQneASNGAQ2F6lf`]; // Fynk Basic 29€
+        }
       }
 
       // Vérifier la session utilisateur
