@@ -22,12 +22,13 @@ export const runPromoSetup = async () => {
 
 // Auto-exécution
 if (typeof window !== 'undefined') {
-  // Attendre 2 secondes puis configurer automatiquement
+  // Attendre 3 secondes puis configurer automatiquement
   setTimeout(() => {
     runPromoSetup().then(success => {
       if (success) {
-        console.log('🎉 Configuration terminée avec succès !');
+        console.log('🎉 Configuration avec bonnes durées terminée !');
+        console.log('📅 LAUNCH25: 1 mois | AMBASSADEUR50: 3 mois');
       }
     });
-  }, 2000);
+  }, 3000);
 }

@@ -28,18 +28,18 @@ serve(async (req) => {
     const coupons = await stripe.coupons.list();
     logStep("Fetched existing coupons", { count: coupons.data.length });
 
-    // Trouver les coupons pour nos codes promo
-    const launch25Coupon = coupons.data.find((c: any) => c.name === "LAUNCH25");
-    const ambassadeur50Coupon = coupons.data.find((c: any) => c.name === "AMBASSADEUR50");
+    // Trouver les coupons avec les bonnes durées
+    const launch25Coupon = coupons.data.find((c: any) => c.name === "LAUNCH25_1MONTH");
+    const ambassadeur50Coupon = coupons.data.find((c: any) => c.name === "AMBASSADEUR50_3MONTHS");
 
-    logStep("Found coupons", { 
+    logStep("Found coupons with correct durations", { 
       launch25: !!launch25Coupon, 
       ambassadeur50: !!ambassadeur50Coupon 
     });
 
     const results = [];
 
-    // Créer le code promo LAUNCH25 si le coupon existe
+    // Créer le code promo LAUNCH25 (1 mois) si le coupon existe
     if (launch25Coupon) {
       try {
         const promoCode = await stripe.promotionCodes.create({
@@ -47,19 +47,29 @@ serve(async (req) => {
           code: "LAUNCH25",
           active: true,
         });
-        results.push({ code: "LAUNCH25", status: "created", id: promoCode.id });
-        logStep("Created LAUNCH25 promotion code", { id: promoCode.id });
+        results.push({ code: "LAUNCH25", status: "created_with_1_month_duration", id: promoCode.id });
+        logStep("Created LAUNCH25 promotion code (1 month)", { id: promoCode.id });
       } catch (error: any) {
         if (error.code === 'resource_already_exists') {
-          results.push({ code: "LAUNCH25", status: "already_exists" });
-          logStep("LAUNCH25 promotion code already exists");
+          // Désactiver l'ancien et créer le nouveau
+          const existingCodes = await stripe.promotionCodes.list({ code: "LAUNCH25" });
+          if (existingCodes.data.length > 0) {
+            await stripe.promotionCodes.update(existingCodes.data[0].id, { active: false });
+            logStep("Deactivated old LAUNCH25");
+          }
+          const promoCode = await stripe.promotionCodes.create({
+            coupon: launch25Coupon.id,
+            code: "LAUNCH25_NEW",
+            active: true,
+          });
+          results.push({ code: "LAUNCH25_NEW", status: "created_with_new_name", id: promoCode.id });
         } else {
           throw error;
         }
       }
     }
 
-    // Créer le code promo AMBASSADEUR50 si le coupon existe
+    // Créer le code promo AMBASSADEUR50 (3 mois) si le coupon existe
     if (ambassadeur50Coupon) {
       try {
         const promoCode = await stripe.promotionCodes.create({
@@ -67,12 +77,22 @@ serve(async (req) => {
           code: "AMBASSADEUR50",
           active: true,
         });
-        results.push({ code: "AMBASSADEUR50", status: "created", id: promoCode.id });
-        logStep("Created AMBASSADEUR50 promotion code", { id: promoCode.id });
+        results.push({ code: "AMBASSADEUR50", status: "created_with_3_months_duration", id: promoCode.id });
+        logStep("Created AMBASSADEUR50 promotion code (3 months)", { id: promoCode.id });
       } catch (error: any) {
         if (error.code === 'resource_already_exists') {
-          results.push({ code: "AMBASSADEUR50", status: "already_exists" });
-          logStep("AMBASSADEUR50 promotion code already exists");
+          // Désactiver l'ancien et créer le nouveau
+          const existingCodes = await stripe.promotionCodes.list({ code: "AMBASSADEUR50" });
+          if (existingCodes.data.length > 0) {
+            await stripe.promotionCodes.update(existingCodes.data[0].id, { active: false });
+            logStep("Deactivated old AMBASSADEUR50");
+          }
+          const promoCode = await stripe.promotionCodes.create({
+            coupon: ambassadeur50Coupon.id,
+            code: "AMBASSADEUR50_NEW",
+            active: true,
+          });
+          results.push({ code: "AMBASSADEUR50_NEW", status: "created_with_new_name", id: promoCode.id });
         } else {
           throw error;
         }
