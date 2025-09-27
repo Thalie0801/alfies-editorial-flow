@@ -9,9 +9,9 @@ export function Pricing() {
   const getPlans = (isAnnual: boolean) => [
     {
       name: "Essential",
-      price: isAnnual ? "67 €" : "79 €",
+      price: isAnnual ? "63.20 €" : "79 €",
       originalPrice: isAnnual ? "79 €" : undefined,
-      billing: isAnnual ? "Facturé annuellement" : "Facturé mensuellement",
+      billing: isAnnual ? "Facturé annuellement (-20% la 1ère année)" : "Facturé mensuellement",
       description: "1 réseau social au choix",
       features: [
         "12 posts par mois",
@@ -25,7 +25,7 @@ export function Pricing() {
       ],
       ctaText: "Commencer l'essai 7 jours",
       badge: "Essai — sans publication",
-      priceId: isAnnual ? "price_essential_annual" : "price_1SBwSvJsCoQneASNaDNsm22b", // 79€ mensuel
+      priceId: isAnnual ? "price_1SByfGJsCoQneASNzefkb6yH" : "price_1SBwSvJsCoQneASNaDNsm22b", // 79€ mensuel
       trialNote: "Publication verrouillée pendant l'essai",
       trialDays: 7,
       supportsFynk: true,
@@ -64,7 +64,7 @@ export function Pricing() {
       ctaText: "Choisir Starter",
       isPopular: true,
       discount: isAnnual ? "-20% la 1ère année" : "Code promo LAUNCH25 → -25% le 1er mois",
-      priceId: isAnnual ? "price_starter_annual_discount" : "price_1SBwT5JsCoQneASNq8NSEfT3", // 179€ mensuel
+      priceId: isAnnual ? "price_1SByfOJsCoQneASNmDi83OPA" : "price_1SBwT5JsCoQneASNq8NSEfT3", // 179€ mensuel
       promotionCode: isAnnual ? undefined : "LAUNCH25",
       supportsFynk: true,
       fynkVariants: [
@@ -103,7 +103,7 @@ export function Pricing() {
       ctaText: "Choisir Pro",
       isPremium: true,
       discount: isAnnual ? "-20% la 1ère année" : "Code promo LAUNCH25 → -25% le 1er mois",
-      priceId: isAnnual ? "price_pro_annual_discount" : "price_1SBwTDJsCoQneASNxDaRP2PC", // 399€ mensuel
+      priceId: isAnnual ? "price_1SByfXJsCoQneASNwOgd0Lns" : "price_1SBwTDJsCoQneASNxDaRP2PC", // 399€ mensuel
       promotionCode: isAnnual ? undefined : "LAUNCH25",
       supportsFynk: true,
       fynkVariants: [
