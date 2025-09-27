@@ -123,7 +123,7 @@ export default function Dashboard() {
             </header>
 
             <main className="flex-1 p-6">
-              <WelcomeAndSubscriptionCheck user={user} />
+              <DashboardOverview />
             </main>
           </SidebarInset>
           
