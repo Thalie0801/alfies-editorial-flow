@@ -79,10 +79,10 @@ export function Pricing() {
     },
     {
       name: "Ambassadeur",
-      price: isAnnual ? "126 €" : "149 €",
-      originalPrice: isAnnual ? "149 €" : undefined,
-      billing: isAnnual ? "Facturé annuellement" : "Facturé mensuellement",
-      description: "Plan exclusif ambassadeurs",
+      price: "49,90 €",
+      originalPrice: "149 €",
+      billing: "3 mois puis 149 €/mois",
+      description: "Plan exclusif ambassadeurs - 50 places uniquement",
       features: [
         "Jusqu'à 4 réseaux sociaux",
         "1 vidéo HÉRO + 10 courts/mois",
@@ -91,13 +91,15 @@ export function Pricing() {
         "KPI complet + Alfie Copilot",
         "Commission ambassadeur 15%",
         "🎁 Fynk Basic inclus 3 mois",
-        "Support prioritaire"
+        "Support prioritaire",
+        "🏆 Statut exclusif Ambassadeur"
       ],
       ctaText: "Devenir Ambassadeur",
       badge: "Exclusif",
       priceId: "price_1SBeX0JsCoQneASNtGQ0LpIf", // 149€
+      promotionCode: "AMBASSADEURS49",
       supportsFynk: false, // Déjà inclus 3 mois
-      annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined
+      isPremium: true
     }
   ];
 
