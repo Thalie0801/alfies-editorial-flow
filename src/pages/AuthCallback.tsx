@@ -12,13 +12,23 @@ export default function AuthCallback() {
   // Preserve original search params (plan, promo, addon...)
   const search = location.search || '';
   const hash = location.hash || '';
+  const isError = (hash || '').includes('error=');
 
   useEffect(() => {
-    // Detect Supabase confirmation types in the hash
-    if (hash.includes('type=signup') || hash.includes('type=email_change')) {
+    const params = new URLSearchParams(hash.startsWith('#') ? hash.slice(1) : hash);
+    const type = params.get('type');
+    const error = params.get('error');
+    const errorCode = params.get('error_code');
+    const errorDescription = params.get('error_description');
+
+    if (type === 'signup' || type === 'email_change') {
+      toast({ title: 'Email confirmé', description: 'Votre email a été confirmé. Vous pouvez maintenant vous connecter.' });
+    }
+    if (error || errorCode) {
       toast({
-        title: 'Email confirmé',
-        description: 'Votre email a été confirmé avec succès. Vous pouvez maintenant vous connecter.',
+        title: 'Lien invalide ou expiré',
+        description: decodeURIComponent(errorDescription || 'Veuillez redemander un nouveau lien.'),
+        variant: 'destructive',
       });
     }
   }, [hash, toast]);
@@ -27,9 +37,11 @@ export default function AuthCallback() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-accent/10 p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">Confirmation</CardTitle>
+          <CardTitle className="text-2xl text-center">{isError ? 'Lien de confirmation invalide ou expiré' : 'Confirmation'}</CardTitle>
           <CardDescription className="text-center">
-            Votre email est confirmé. Continuez vers la connexion pour finaliser votre abonnement.
+            {isError
+              ? "Le lien est invalide ou expiré. Veuillez vous reconnecter pour recevoir un nouveau mail."
+              : "Votre email est confirmé. Continuez vers la connexion pour finaliser votre abonnement."}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">

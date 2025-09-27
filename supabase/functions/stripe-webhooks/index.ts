@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
-import Stripe from "https://esm.sh/stripe@14.21.0?target=deno&dts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import Stripe from "https://esm.sh/stripe@18.5.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -70,7 +70,7 @@ serve(async (req) => {
       return new Response('Webhook secret not configured', { status: 500 });
     }
 
-    const supabase = createClient<Database>(supabaseUrl, supabaseServiceRoleKey);
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
     const body = await req.text();
     const signature = req.headers.get('stripe-signature');
@@ -80,8 +80,8 @@ serve(async (req) => {
       return new Response('No stripe signature', { status: 400 });
     }
 
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
-      apiVersion: '2023-10-16',
+const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
+      apiVersion: "2025-08-27.basil",
     });
 
     let event: Stripe.Event;
@@ -172,8 +172,8 @@ serve(async (req) => {
 
           // Extract addon lookup keys
           const addonLookupKeys = fullSubscription.items.data
-            .map((item) => item.price?.lookup_key ?? null)
-            .filter((lookupKey): lookupKey is string => Boolean(lookupKey && lookupKey.includes('fynk_')));
+            .map((item: Stripe.SubscriptionItem) => item.price?.lookup_key ?? null)
+            .filter((lookupKey: string | null): lookupKey is string => Boolean(lookupKey && lookupKey.includes('fynk_')));
 
           const mainPrice = fullSubscription.items.data.find(
             (item: Stripe.SubscriptionItem) => item.price?.lookup_key && !item.price.lookup_key.includes('fynk_')
