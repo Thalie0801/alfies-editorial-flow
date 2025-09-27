@@ -25,10 +25,26 @@ export function Pricing() {
       ],
       ctaText: "Commencer l'essai 7 jours",
       badge: "Essai — sans publication",
-      priceId: "price_1SBeX0JsCoQneASNtGQ0LpIf", // 79€
+      priceId: "price_1SBeW9JsCoQneASNUaKERe1V", // 79€
       trialNote: "Publication verrouillée pendant l'essai",
       supportsFynk: false,
-      annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined
+      annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined,
+      fynkVariants: [
+        {
+          name: "Essential + Fynk Basic",
+          price: "108 €",
+          priceId: "price_1SBw8kJsCoQneASNpl2krBRO",
+          description: "Essential + Fynk Basic inclus",
+          addedFeatures: ["🎁 Fynk Basic inclus (~400 interactions)"]
+        },
+        {
+          name: "Essential + Fynk Pro", 
+          price: "148 €",
+          priceId: "price_1SBw8tJsCoQneASNRm7KOPpj",
+          description: "Essential + Fynk Pro inclus",
+          addedFeatures: ["🎁 Fynk Pro inclus (~1 500 interactions)"]
+        }
+      ]
     },
     {
       name: "Starter", 
