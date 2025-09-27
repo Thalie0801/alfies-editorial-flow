@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useStripeCheckout } from '@/hooks/useStripeCheckout';
-import { SubscriptionGate } from '@/components/dashboard/SubscriptionGate';
+
 import { 
   BarChart3, 
   FileText, 
@@ -33,7 +33,7 @@ export default function Dashboard() {
   const { toast } = useToast();
   const { role, loading: roleLoading } = useUserRole(user);
   const [searchParams] = useSearchParams();
-  const { createCheckoutSession } = useStripeCheckout();
+  
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -87,53 +87,51 @@ export default function Dashboard() {
   }
 
   return (
-    <SubscriptionGate user={user} requiredForContent={false}>
-      <SidebarProvider>
-        <div className="min-h-screen w-full flex">
-          <ClientSidebar />
-          
-          <SidebarInset className="flex-1">
-            {/* Header */}
-            <header className="border-b bg-card/50 backdrop-blur-sm">
-              <div className="flex items-center justify-between px-4 py-3">
+    <SidebarProvider>
+      <div className="min-h-screen w-full flex">
+        <ClientSidebar />
+        
+        <SidebarInset className="flex-1">
+          {/* Header */}
+          <header className="border-b bg-card/50 backdrop-blur-sm">
+            <div className="flex items-center justify-between px-4 py-3">
+              <div className="flex items-center gap-4">
+                <SidebarTrigger />
                 <div className="flex items-center gap-4">
-                  <SidebarTrigger />
-                  <div className="flex items-center gap-4">
-                    <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                      Dashboard Client
-                    </h1>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-muted-foreground">
-                    {user?.email}
-                  </span>
-                  {role === 'admin' && (
-                    <Button variant="secondary" size="sm" onClick={() => navigate('/admin')}>
-                      <Shield className="w-4 h-4 mr-2" />
-                      Admin
-                    </Button>
-                  )}
-                  <Button variant="outline" size="sm" onClick={handleSignOut}>
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Déconnexion
-                  </Button>
+                  <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                    Dashboard Client
+                  </h1>
                 </div>
               </div>
-            </header>
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">
+                  {user?.email}
+                </span>
+                {role === 'admin' && (
+                  <Button variant="secondary" size="sm" onClick={() => navigate('/admin')}>
+                    <Shield className="w-4 h-4 mr-2" />
+                    Admin
+                  </Button>
+                )}
+                <Button variant="outline" size="sm" onClick={handleSignOut}>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Déconnexion
+                </Button>
+              </div>
+            </div>
+          </header>
 
-            <main className="flex-1 p-6">
-              <DashboardOverview />
-            </main>
-          </SidebarInset>
-          
-          <AlfieChat 
-            isOpen={isAlfieOpen} 
-            onToggle={() => setIsAlfieOpen(!isAlfieOpen)} 
-          />
-        </div>
-      </SidebarProvider>
-    </SubscriptionGate>
+          <main className="flex-1 p-6">
+            <DashboardOverview />
+          </main>
+        </SidebarInset>
+        
+        <AlfieChat 
+          isOpen={isAlfieOpen} 
+          onToggle={() => setIsAlfieOpen(!isAlfieOpen)} 
+        />
+      </div>
+    </SidebarProvider>
   );
 }
 
