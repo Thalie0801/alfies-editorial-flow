@@ -140,27 +140,6 @@ export default function Dashboard() {
 function DashboardOverview() {
   return (
     <div className="space-y-6">
-      {/* Dashboard Mockup Reference */}
-      <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-primary" />
-            Dashboard Client - Référence Visuelle
-          </CardTitle>
-          <CardDescription>
-            Aperçu du design cible pour l'interface dashboard
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-lg overflow-hidden border border-border/50">
-            <img 
-              src={dashboardMockup} 
-              alt="Dashboard Client Mockup - Interface de référence avec métriques posts, engagement et portée" 
-              className="w-full h-auto"
-            />
-          </div>
-        </CardContent>
-      </Card>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card className="h-32">
