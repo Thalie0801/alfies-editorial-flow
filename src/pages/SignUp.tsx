@@ -1,37 +1,81 @@
-import { useState, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Loader2 } from 'lucide-react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 export default function SignUp() {
-  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const captchaRef = useRef<HCaptcha>(null);
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/dashboard');
+      }
+    };
+    checkUser();
+  }, [navigate]);
+
+  const validateForm = () => {
+    if (!email || !password || !confirmPassword) {
+      setError('Tous les champs sont requis');
+      return false;
+    }
+
+    if (password.length < 6) {
+      setError('Le mot de passe doit contenir au moins 6 caractères');
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Les mots de passe ne correspondent pas');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Veuillez entrer un email valide');
+      return false;
+    }
+
+    if (!captchaToken) {
+      setError('Veuillez compléter le captcha');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!captchaToken) {
-      toast({
-        title: "Vérification requise",
-        description: "Veuillez compléter le captcha pour continuer.",
-        variant: "destructive",
-      });
+    setLoading(true);
+    setError('');
+
+    if (!validateForm()) {
+      setLoading(false);
       return;
     }
-    
-    setLoading(true);
 
     try {
       const planParam = searchParams.get('plan');
@@ -59,15 +103,16 @@ export default function SignUp() {
         ? `${baseUrl}/auth/callback?${redirectQuery}`
         : `${baseUrl}/auth/callback`;
       
-      console.debug('[SignUp] Setting emailRedirectTo:', redirectUrl);
-        
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: redirectUrl,
-          captchaToken: captchaToken
-        }
+          captchaToken: captchaToken,
+          data: {
+            display_name: displayName || email.split('@')[0],
+          },
+        },
       });
 
       // Reset captcha after signup attempt
@@ -75,66 +120,240 @@ export default function SignUp() {
       setCaptchaToken(null);
 
       if (error) {
+        if (error.message.includes('User already registered')) {
+          setError('Un compte existe déjà avec cet email');
+        } else if (error.message.includes('Password should be at least 6 characters')) {
+          setError('Le mot de passe doit contenir au moins 6 caractères');
+        } else {
+          setError(error.message);
+        }
+        return;
+      }
+
+      if (data.user) {
+        setSuccess(true);
         toast({
-          title: "Erreur d'inscription",
-          description: error.message,
-          variant: "destructive",
+          title: "Inscription réussie !",
+          description: "Vérifiez votre email pour confirmer votre compte.",
         });
-      } else {
-        toast({
-          title: "Inscription réussie",
-          description: "Vérifiez votre email et cliquez sur le lien de confirmation pour activer votre compte et procéder au paiement.",
-        });
-        // Rediriger vers signin avec les paramètres après inscription
-        const currentParams = searchParams.toString();
-        navigate(`/signin${currentParams ? `?${currentParams}` : ''}`);
+
+        // Store intended plan for after confirmation
+        const plan = searchParams.get('plan');
+        const promo = searchParams.get('promo');
+        const addons = searchParams.getAll('addon');
+        
+        if (plan) {
+          const params = new URLSearchParams({ plan });
+          if (promo) params.set('promo', promo);
+          addons.forEach(addon => addon && params.append('addon', addon));
+          localStorage.setItem('pendingCheckout', params.toString());
+        }
       }
     } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Une erreur inattendue s'est produite.",
-        variant: "destructive",
-      });
+      console.error('Sign up error:', error);
+      setError('Une erreur est survenue lors de l\'inscription');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleGoogleSignUp = async () => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+
+      if (error) {
+        setError('Erreur lors de l\'inscription avec Google');
+        console.error('Google sign up error:', error);
+      }
+    } catch (error) {
+      console.error('Google sign up error:', error);
+      setError('Une erreur est survenue');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background/50 to-primary/5 px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold text-primary">
+              Vérifiez votre email
+            </CardTitle>
+            <CardDescription>
+              Nous avons envoyé un lien de confirmation à <strong>{email}</strong>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Cliquez sur le lien dans votre email pour activer votre compte.
+            </p>
+            <div className="space-y-2">
+              <Button variant="outline" className="w-full" asChild>
+                <Link to="/signin">Se connecter</Link>
+              </Button>
+              <Button variant="ghost" className="w-full" asChild>
+                <Link to="/">Retour à l'accueil</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-accent/10 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background/50 to-primary/5 px-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl text-center">Inscription</CardTitle>
-          <CardDescription className="text-center">
-            Créez votre compte Æditus
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-2xl font-bold">Créer un compte</CardTitle>
+          <CardDescription>
+            Rejoignez Aeditus et commencez votre essai gratuit
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleGoogleSignUp}
+            disabled={loading}
+          >
+            <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                fill="currentColor"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                fill="currentColor"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+              />
+              <path
+                fill="currentColor"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              />
+            </svg>
+            Continuer avec Google
+          </Button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Ou continuer avec
+              </span>
+            </div>
+          </div>
+
           <form onSubmit={handleSignUp} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="votre@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+              <Label htmlFor="displayName">Nom d'affichage (optionnel)</Label>
+              <div className="relative">
+                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="displayName"
+                  type="text"
+                  placeholder="Votre nom"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Minimum 6 caractères"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
+              <Label htmlFor="email">Email *</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="votre@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pl-10"
+                  required
+                />
+              </div>
             </div>
-            
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Mot de passe *</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pl-10 pr-10"
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirmer le mot de passe *</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="pl-10 pr-10"
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label>Vérification anti-robot</Label>
               <HCaptcha
@@ -145,31 +364,45 @@ export default function SignUp() {
                 onError={() => setCaptchaToken(null)}
               />
             </div>
-            
+
             <Button type="submit" className="w-full" disabled={loading || !captchaToken}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Inscription...
+                  Création du compte...
                 </>
               ) : (
-                "S'inscrire"
+                'Créer mon compte'
               )}
             </Button>
           </form>
-          
-          <div className="mt-4 text-center">
+
+          <div className="text-center space-y-2">
             <p className="text-sm text-muted-foreground">
               Déjà un compte ?{' '}
-              <Button
-                variant="link"
-                className="p-0 h-auto font-normal"
-                onClick={() => navigate('/signin')}
+              <Link
+                to="/signin"
+                className="font-medium text-primary underline-offset-4 hover:underline"
               >
                 Se connecter
-              </Button>
+              </Link>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              <Link
+                to="/"
+                className="font-medium text-primary underline-offset-4 hover:underline"
+              >
+                Retour à l'accueil
+              </Link>
             </p>
           </div>
+
+          <p className="text-xs text-muted-foreground text-center">
+            En créant un compte, vous acceptez nos{' '}
+            <Link to="/terms" className="underline">conditions d'utilisation</Link>{' '}
+            et notre{' '}
+            <Link to="/privacy" className="underline">politique de confidentialité</Link>.
+          </p>
         </CardContent>
       </Card>
     </div>
