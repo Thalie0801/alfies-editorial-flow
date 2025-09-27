@@ -248,14 +248,9 @@ export function PricingCard({
             />
             <Badge variant="secondary">Optionnel</Badge>
           </div>
-          <div className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground">
-              Code suggéré: <strong>{promotionCode}</strong>
-            </span>
-            {discount && (
-              <span className="text-xs text-accent font-medium">{discount}</span>
-            )}
-          </div>
+          {discount && (
+            <div className="text-xs text-accent font-medium">{discount}</div>
+          )}
         </div>
       )}
     </div>

@@ -138,8 +138,12 @@ serve(async (req) => {
       }
     }
 
-    // Add trial for Essential plan (79€ price)
-    if (price_id === 'price_1SBeX0JsCoQneASNtGQ0LpIf') {
+    // Add trial for Essential plan
+    const essentialPriceIds = new Set<string>([
+      'price_1SBwSvJsCoQneASNaDNsm22b', // Essential mensuel (79€)
+      'price_1SBeX0JsCoQneASNtGQ0LpIf'   // Ancien ID (compat)
+    ]);
+    if (essentialPriceIds.has(price_id)) {
       sessionParams.subscription_data = {
         trial_period_days: 7,
         metadata: {
