@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PricingCard } from "./PricingCard";
 import { PricingToggle } from "./PricingToggle";
+import { FynkCard } from "./FynkCard";
 
 export function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false);
@@ -17,6 +18,7 @@ export function Pricing() {
         "1 visuel ou vidéo / semaine", 
         "Bibliothèque tonale + briefs illimités",
         "KPI Lite (impressions, abonnés)",
+        "Alfie Copilot",
         "Affiliation 10% (Ambassadeurs jusqu'à 15%)",
         "Options : articles & Fynk activables",
         "✨ Essai gratuit 7 jours"
@@ -61,6 +63,7 @@ export function Pricing() {
         "3–4 vidéos HÉRO + courts illimités",
         "4 articles SEO (1 500–2 000 mots)",
         "Bilans hebdo + recalibrage automatique",
+        "Alfie Copilot",
         "Accès prioritaire aux nouveautés",
         "✗ Pas d'essai"
       ],
@@ -104,27 +107,7 @@ export function Pricing() {
           </div>
           
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-gradient-card rounded-xl border p-6 text-center">
-              <div className="text-2xl font-bold mb-2">Fynk</div>
-              <p className="text-muted-foreground mb-4">Amplifiez votre engagement automatisé</p>
-              <div className="space-y-2 mb-4">
-                 <div className="text-lg font-semibold text-primary">
-                   Basic: 29€/mois (~400 interactions)
-                 </div>
-                 <div className="text-lg font-semibold text-accent">
-                   Pro: 69€/mois (~1 500 interactions)
-                 </div>
-              </div>
-              <ul className="text-sm space-y-2 mb-6">
-                <li>• Routines d'engagement automatisées</li>
-                <li>• Modèles de commentaires adaptatifs</li>
-                <li>• Analytics d'engagement avancés</li>
-                <li>• Disponible avec tous les plans (sauf essai)</li>
-              </ul>
-              <p className="text-xs text-muted-foreground">
-                Ajoutez Fynk lors de la souscription ou depuis votre espace client
-              </p>
-            </div>
+            <FynkCard />
             
              <div className="bg-gradient-card rounded-xl border p-6 text-center">
                <div className="text-2xl font-bold mb-2">Boost</div>
