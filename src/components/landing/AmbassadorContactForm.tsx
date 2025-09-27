@@ -203,7 +203,7 @@ export function AmbassadorContactForm() {
               <div className="bg-accent/10 p-4 rounded-lg">
                 <h3 className="font-medium text-accent mb-2">Avantages du Programme Ambassadeur :</h3>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Commission 15% sur tous vos parrainages</li>
+                  <li>• Commission 10% puis 15% après 20 clients actifs</li>
                   <li>• 3 mois de Fynk Basic offerts</li>
                   <li>• Support prioritaire et accès aux nouveautés</li>
                   <li>• Statut exclusif et reconnaissance communautaire</li>
