@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PricingCard } from "./PricingCard";
 import { PricingToggle } from "./PricingToggle";
-import { FynkCard } from "./FynkCard";
+import { FynkAddonCard } from "./FynkAddonCard";
 
 export function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false);
@@ -107,7 +107,7 @@ export function Pricing() {
           </div>
           
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <FynkCard />
+            <FynkAddonCard />
             
              <div className="bg-gradient-card rounded-xl border p-6 text-center">
                <div className="text-2xl font-bold mb-2">Boost</div>
