@@ -33,24 +33,52 @@ export default function AuthCallback() {
     }
   }, [hash, toast]);
 
+  useEffect(() => {
+    if (!isError && search) {
+      // Auto-redirect to signin with params after 2 seconds
+      const timer = setTimeout(() => {
+        navigate(`/signin${search}`);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [isError, search, navigate]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-accent/10 p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl text-center">{isError ? 'Lien de confirmation invalide ou expiré' : 'Confirmation'}</CardTitle>
+          <CardTitle className="text-2xl text-center">{isError ? 'Lien de confirmation invalide ou expiré' : 'Email confirmé !'}</CardTitle>
           <CardDescription className="text-center">
             {isError
               ? "Le lien est invalide ou expiré. Veuillez vous reconnecter pour recevoir un nouveau mail."
-              : "Votre email est confirmé. Continuez vers la connexion pour finaliser votre abonnement."}
+              : search 
+                ? "Redirection automatique vers le paiement..."
+                : "Votre email est confirmé. Vous pouvez maintenant vous connecter."}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          <Button className="w-full" onClick={() => navigate(`/signin${search}`)}>
-            Continuer vers la connexion
-          </Button>
-          <Button variant="ghost" className="w-full" onClick={() => navigate(`/signin`)}>
-            Aller à la connexion (sans paramètres)
-          </Button>
+          {isError ? (
+            <>
+              <Button className="w-full" onClick={() => navigate(`/signin${search}`)}>
+                Continuer vers la connexion
+              </Button>
+              <Button variant="ghost" className="w-full" onClick={() => navigate(`/signin`)}>
+                Aller à la connexion (sans paramètres)
+              </Button>
+            </>
+          ) : search ? (
+            <div className="text-center space-y-2">
+              <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full mx-auto"></div>
+              <p className="text-sm text-muted-foreground">Redirection vers le paiement en cours...</p>
+              <Button variant="ghost" className="w-full" onClick={() => navigate(`/signin${search}`)}>
+                Continuer manuellement
+              </Button>
+            </div>
+          ) : (
+            <Button className="w-full" onClick={() => navigate('/signin')}>
+              Se connecter
+            </Button>
+          )}
         </CardContent>
       </Card>
     </div>

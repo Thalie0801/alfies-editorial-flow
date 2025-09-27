@@ -83,12 +83,16 @@ export default function SignIn() {
         const addons = searchParams.getAll('addon');
         
         if (plan) {
-          // Redirect to checkout
-          setTimeout(async () => {
-            const successUrl = `${window.location.origin}/dashboard?payment=success`;
-            const cancelUrl = `${window.location.origin}/signin?payment=cancelled&plan=${plan}`;
-            await createCheckoutSession(plan, promo || undefined, successUrl, cancelUrl, addons.length ? addons : undefined);
-          }, 500);
+          // Show success message and redirect to checkout immediately
+          toast({
+            title: "Connexion réussie !",
+            description: "Redirection vers le paiement...",
+          });
+          
+          // Auto-redirect to checkout without delay
+          const successUrl = `${window.location.origin}/dashboard?payment=success`;
+          const cancelUrl = `${window.location.origin}/`;
+          await createCheckoutSession(plan, promo || undefined, successUrl, cancelUrl, addons.length ? addons : undefined);
         } else {
           navigate('/dashboard');
         }
