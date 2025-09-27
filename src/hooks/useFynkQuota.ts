@@ -37,7 +37,8 @@ export function useFynkQuota() {
         .limit(1)
         .maybeSingle();
 
-      const addons = Array.isArray(subscription?.addons) ? subscription.addons as string[] : null;
+      const addonsData = subscription?.addons;
+      const addons = Array.isArray(addonsData) ? (addonsData as string[]) : null;
       if (!addons) {
         toast({
           title: "Fynk non activé",
@@ -65,8 +66,8 @@ export function useFynkQuota() {
         .eq('plan_key', fynkAddon as string)
         .single();
 
-      const currentUsage = usage?.fynk_interactions_used || 0;
-      const quota = limits?.fynk_interactions_max || 0;
+      const currentUsage = Number(usage?.fynk_interactions_used ?? 0);
+      const quota = Number(limits?.fynk_interactions_max ?? 0);
 
       if (currentUsage >= quota) {
         const tierName = fynkAddon.includes('basic') ? 'Basic' : 'Pro';
@@ -122,7 +123,8 @@ export function useFynkQuota() {
         .limit(1)
         .maybeSingle();
 
-      const addons = Array.isArray(subscription?.addons) ? subscription.addons as string[] : null;
+      const addonsData = subscription?.addons;
+      const addons = Array.isArray(addonsData) ? (addonsData as string[]) : null;
       if (!addons) {
         return { canUse: false, remaining: 0, quota: 0 };
       }
@@ -139,8 +141,8 @@ export function useFynkQuota() {
         .eq('plan_key', fynkAddon as string)
         .single();
 
-      const currentUsage = usage?.fynk_interactions_used || 0;
-      const quota = limits?.fynk_interactions_max || 0;
+      const currentUsage = Number(usage?.fynk_interactions_used ?? 0);
+      const quota = Number(limits?.fynk_interactions_max ?? 0);
       const remaining = Math.max(0, quota - currentUsage);
 
       return {
