@@ -27,6 +27,7 @@ export function Pricing() {
       badge: "Essai — sans publication",
       priceId: isAnnual ? "price_essential_annual" : "price_1SBwSvJsCoQneASNaDNsm22b", // 79€ mensuel
       trialNote: "Publication verrouillée pendant l'essai",
+      trialDays: 7,
       supportsFynk: true,
       fynkVariants: [
         {
@@ -124,9 +125,9 @@ export function Pricing() {
     },
     {
       name: "Ambassadeur",
-      price: "49,90 €",
-      originalPrice: "149 €",
-      billing: "3 mois puis 149 €/mois",
+      price: "149 €",
+      originalPrice: undefined,
+      billing: "Facturé mensuellement",
       description: "Plan exclusif ambassadeurs - 50 places uniquement",
       features: [
         "Jusqu'à 4 réseaux sociaux",
@@ -141,8 +142,9 @@ export function Pricing() {
       ],
       ctaText: "Devenir Ambassadeur",
       badge: "Exclusif",
-      priceId: "price_1SBwTLJsCoQneASNfkAjlOD7", // 49.90€
+      priceId: "price_1SBwTLJsCoQneASNfkAjlOD7", // 149€ de base
       promotionCode: "AMBASSADEUR50",
+      discount: "Code AMBASSADEUR50 → 49,90 €",
       supportsFynk: false, // Déjà inclus 3 mois
       isPremium: true
     }

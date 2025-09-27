@@ -1,8 +1,37 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Target, TrendingUp, Shield } from "lucide-react";
+import { useStripeCheckout } from "@/hooks/useStripeCheckout";
 
 export function FynkSection() {
+  const { createCheckoutSession, loading } = useStripeCheckout();
+
+  const handleFynkBasic = async () => {
+    try {
+      await createCheckoutSession(
+        "price_1SBwTUJsCoQneASNaHueZnOM", // Price ID pour Fynk Basic à 29€
+        undefined,
+        `${window.location.origin}/dashboard`,
+        `${window.location.origin}/`
+      );
+    } catch (error) {
+      console.error('Checkout error for Fynk Basic:', error);
+    }
+  };
+
+  const handleFynkPro = async () => {
+    try {
+      await createCheckoutSession(
+        "price_1SBwTcJsCoQneASNgQwUvg4P", // Price ID pour Fynk Pro à 69€
+        undefined,
+        `${window.location.origin}/dashboard`,
+        `${window.location.origin}/`
+      );
+    } catch (error) {
+      console.error('Checkout error for Fynk Pro:', error);
+    }
+  };
+
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto">
@@ -128,8 +157,14 @@ export function FynkSection() {
                   </div>
                   <div className="text-3xl font-bold text-accent mb-2">29€</div>
                   <div className="text-sm text-muted-foreground mb-4">par mois</div>
-                  <Button variant="default" size="sm" className="w-full">
-                    Choisir Basic
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="w-full"
+                    onClick={handleFynkBasic}
+                    disabled={loading}
+                  >
+                    {loading ? "Chargement..." : "Choisir Basic"}
                   </Button>
                 </div>
                 
@@ -140,8 +175,14 @@ export function FynkSection() {
                   </div>
                   <div className="text-3xl font-bold text-accent mb-2">69€</div>
                   <div className="text-sm text-muted-foreground mb-4">par mois</div>
-                  <Button variant="default" size="sm" className="w-full">
-                    Choisir Pro
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="w-full"
+                    onClick={handleFynkPro}
+                    disabled={loading}
+                  >
+                    {loading ? "Chargement..." : "Choisir Pro"}
                   </Button>
                 </div>
               </div>
