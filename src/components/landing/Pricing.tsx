@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PricingCard } from "./PricingCard";
 import { PricingToggle } from "./PricingToggle";
-import { FynkAddonCard } from "./FynkAddonCard";
+
 
 export function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false);
@@ -19,7 +19,7 @@ export function Pricing() {
         "Bibliothèque tonale + briefs illimités",
         "KPI Lite (impressions, abonnés)",
         "Alfie Copilot",
-        "Affiliation 10% (Ambassadeurs jusqu'à 15%)",
+        "Programme ambassadeurs (10-15% commission)",
         "Options : articles & Fynk activables",
         "✨ Essai gratuit 7 jours"
       ],
@@ -42,6 +42,7 @@ export function Pricing() {
         "2 articles SEO (1 200–1 500 mots)", 
         "Carrousels + stories + visuels dédiés",
         "KPI complet + Alfie Copilot",
+        "Programme ambassadeurs (10-15% commission)",
         "✗ Pas d'essai"
       ],
       ctaText: "Choisir Starter",
@@ -64,6 +65,7 @@ export function Pricing() {
         "4 articles SEO (1 500–2 000 mots)",
         "Bilans hebdo + recalibrage automatique",
         "Alfie Copilot",
+        "Programme ambassadeurs (10-15% commission)",
         "Accès prioritaire aux nouveautés",
         "✗ Pas d'essai"
       ],
@@ -87,7 +89,7 @@ export function Pricing() {
             Plans <span className="bg-gradient-primary bg-clip-text text-transparent">Æditus</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Tous nos plans incluent l'affiliation (10-15%) et l'accès à Alfie, votre copilot éditorial
+            Tous nos plans incluent Alfie Copilot et l'affiliation (10-15%) pour devenir ambassadeur
           </p>
         </div>
 
@@ -99,33 +101,6 @@ export function Pricing() {
           ))}
         </div>
 
-        {/* Add-ons Section */}
-        <div className="mt-16 pt-16 border-t border-border">
-          <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold mb-4">Add-ons & Bundles</h3>
-            <p className="text-muted-foreground">Boostez votre performance avec nos extensions</p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <FynkAddonCard />
-            
-             <div className="bg-gradient-card rounded-xl border p-6 text-center">
-               <div className="text-2xl font-bold mb-2">Boost</div>
-               <p className="text-muted-foreground mb-4">Plus de contenus vidéos</p>
-               <div className="text-lg font-semibold text-primary mb-4">
-                 79€/mois - +10 vidéos
-               </div>
-               <ul className="text-sm space-y-2 mb-6">
-                 <li>• Vidéos HÉRO supplémentaires</li>
-                 <li>• Courts-métrages illimités</li>
-                 <li>• Formats personnalisés</li>
-               </ul>
-               <p className="text-xs text-muted-foreground">
-                 Ajoutez Boost lors de la souscription
-               </p>
-             </div>
-          </div>
-        </div>
 
         {/* Terms Section */}
         <div className="mt-12 text-center">
