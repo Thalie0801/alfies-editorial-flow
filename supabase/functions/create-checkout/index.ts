@@ -31,17 +31,19 @@ serve(async (req) => {
     logStep("Stripe key verified");
 
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) throw new Error("No authorization header provided");
-    logStep("Authorization header found");
-
-    const token = authHeader.replace("Bearer ", "");
-    logStep("Authenticating user with token");
-    
-    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    if (userError) throw new Error(`Authentication error: ${userError.message}`);
-    const user = userData.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
-    logStep("User authenticated", { userId: user.id, email: user.email });
+    let user: any = null;
+    if (authHeader) {
+      logStep("Authorization header found");
+      const token = authHeader.replace("Bearer ", "");
+      logStep("Authenticating user with token");
+      const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
+      if (userError) throw new Error(`Authentication error: ${userError.message}`);
+      user = userData.user;
+      if (!user?.email) throw new Error("User not authenticated or email not available");
+      logStep("User authenticated", { userId: user.id, email: user.email });
+    } else {
+      logStep("No auth header, proceeding as guest");
+    }
 
     // Parse request body
     const body = (await req.json()) as {
@@ -56,14 +58,18 @@ serve(async (req) => {
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
-    // Check if customer exists
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    let customerId;
-    if (customers.data.length > 0) {
-      customerId = customers.data[0].id;
-      logStep("Found existing customer", { customerId });
+    // Check if customer exists for authenticated user
+    let customerId: string | undefined;
+    if (user?.email) {
+      const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+      if (customers.data.length > 0) {
+        customerId = customers.data[0].id;
+        logStep("Found existing customer", { customerId });
+      } else {
+        logStep("No customer found, will create during checkout");
+      }
     } else {
-      logStep("No customer found, will create during checkout");
+      logStep("Guest checkout - customer will be created by Stripe Checkout");
     }
 
     // Validate price_id exists in Stripe
@@ -100,19 +106,24 @@ serve(async (req) => {
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       line_items,
       mode: "subscription",
-      success_url: success_url || `${req.headers.get("origin")}/dashboard`,
+      success_url: success_url || `${req.headers.get("origin")}/signup`,
       cancel_url: cancel_url || `${req.headers.get("origin")}/`,
-      client_reference_id: user.id,
       metadata: {
-        user_id: user.id,
-        price_id: price_id
-      }
+        price_id: price_id,
+      },
     };
 
-    if (customerId) {
-      sessionParams.customer = customerId;
-    } else {
-      sessionParams.customer_email = user.email;
+    if (user?.id) {
+      sessionParams.client_reference_id = user.id;
+      sessionParams.metadata = { ...sessionParams.metadata, user_id: user.id };
+    }
+
+    if (user?.email) {
+      if (customerId) {
+        sessionParams.customer = customerId;
+      } else {
+        sessionParams.customer_email = user.email;
+      }
     }
 
     // Add trial for Essential plan (79€ price)
@@ -120,7 +131,7 @@ serve(async (req) => {
       sessionParams.subscription_data = {
         trial_period_days: 7,
         metadata: {
-          user_id: user.id,
+          ...(user?.id ? { user_id: user.id } : {}),
           plan: 'essential'
         }
       };

@@ -19,20 +19,8 @@ export function useStripeCheckout() {
       const accessToken = sessionData.session?.access_token;
       console.debug('[Checkout] start', { priceId, hasToken: !!accessToken, addons, hasPromo: !!promotionCode });
 
-      // If not authenticated, redirect to signup with intended plan
-      if (!accessToken) {
-        console.warn('[Checkout] No access token, redirect to /signup');
-        toast({
-          title: "Inscription requise",
-          description: "Veuillez vous inscrire pour continuer le paiement.",
-        });
-        const params = new URLSearchParams({ plan: priceId });
-        if (promotionCode) params.set('promo', promotionCode);
-        if (addons && addons.length) addons.forEach(a => a && params.append('addon', a));
-        const authUrl = `${window.location.origin}/signup?${params.toString()}`;
-        window.location.href = authUrl;
-        return null;
-      }
+      // Allow checkout without authentication; proceed to create guest session if needed
+
 
       console.debug('[Checkout] invoking edge function create-checkout');
       const { data, error } = await supabase.functions.invoke('create-checkout', {
@@ -43,7 +31,7 @@ export function useStripeCheckout() {
           cancel_url: cancelUrl,
           addons: addons,
         },
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : undefined,
       });
       console.debug('[Checkout] function response', { hasUrl: !!data?.url, hasError: !!error });
 
