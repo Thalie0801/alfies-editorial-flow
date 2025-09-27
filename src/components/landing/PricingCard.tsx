@@ -129,7 +129,7 @@ export function PricingCard({
         <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
           <Badge className="bg-gradient-accent text-accent-foreground px-4 py-1">
             <Crown className="w-4 h-4 mr-1" />
-            Premium
+            Exclusivité
           </Badge>
         </div>
       )}
