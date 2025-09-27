@@ -203,7 +203,7 @@ export function PricingCard({
           <p className="text-sm text-muted-foreground mt-1">{billing}</p>
         )}
         
-        {discount && (
+        {discount && !promotionCode && (
           <p className="text-sm text-accent font-medium mt-2">{discount}</p>
         )}
 
@@ -248,11 +248,14 @@ export function PricingCard({
             />
             <Badge variant="secondary">Optionnel</Badge>
           </div>
-          {promotionCode && (
+          <div className="flex flex-col gap-1">
             <span className="text-xs text-muted-foreground">
-              Suggestion: <strong>{promotionCode}</strong>
+              Code suggéré: <strong>{promotionCode}</strong>
             </span>
-          )}
+            {discount && (
+              <span className="text-xs text-accent font-medium">{discount}</span>
+            )}
+          </div>
         </div>
       )}
     </div>
