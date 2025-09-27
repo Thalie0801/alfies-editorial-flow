@@ -27,7 +27,7 @@ export function Pricing() {
       badge: "Essai — sans publication",
       priceId: "price_1SBeW9JsCoQneASNUaKERe1V", // 79€
       trialNote: "Publication verrouillée pendant l'essai",
-      supportsFynk: false,
+      supportsFynk: true,
       annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined,
       fynkVariants: [
         {
@@ -67,7 +67,23 @@ export function Pricing() {
       priceId: "price_1SBeWOJsCoQneASNQS5Nx5D5", // 179€
       promotionCode: "LAUNCH25",
       supportsFynk: true,
-      annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined
+      annualSavings: isAnnual ? "≈ 2 mois offerts" : undefined,
+      fynkVariants: [
+        {
+          name: "Starter + Fynk Basic",
+          price: "208 €",
+          priceId: "price_1SBwFaJsCoQneASNzPOfAh3A",
+          description: "Starter + Fynk Basic inclus",
+          addedFeatures: ["🎁 Fynk Basic inclus (~400 interactions)"]
+        },
+        {
+          name: "Starter + Fynk Pro", 
+          price: "248 €",
+          priceId: "price_1SBwFiJsCoQneASNSmFWBL9B",
+          description: "Starter + Fynk Pro inclus",
+          addedFeatures: ["🎁 Fynk Pro inclus (~1 500 interactions)"]
+        }
+      ]
     },
     {
       name: "Pro",
