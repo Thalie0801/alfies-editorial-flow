@@ -56,6 +56,7 @@ export function PricingCard({
   const { createCheckoutSession, loading } = useStripeCheckout();
   const [user, setUser] = useState<User | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<"base" | number>("base");
+  const [promoInput, setPromoInput] = useState<string>(prefilledPromo || promotionCode || "");
   const cardVariant = isPremium ? "premium" : isPopular ? "hero" : "outline";
   const CardIcon = isPremium ? Crown : isPopular ? Zap : Sparkles;
   const showMonthlySuffix = !billing || billing.toLowerCase().includes("mensuel");
@@ -88,7 +89,8 @@ export function PricingCard({
   const handleSubscribe = async () => {
     const currentPrice = currentPricing.priceId;
     if (currentPrice) {
-      const finalPromoCode = prefilledPromo || promotionCode;
+      const trimmed = (promoInput || "").trim();
+      const finalPromoCode = trimmed.length > 0 ? trimmed : undefined;
 
       // Vérifier la session utilisateur
       const { data: { session } } = await supabase.auth.getSession();
@@ -204,11 +206,11 @@ export function PricingCard({
         {discount && (
           <p className="text-sm text-accent font-medium mt-2">{discount}</p>
         )}
-        
+
         {trialNote && (
           <p className="text-xs text-orange-600 font-medium mt-2">{trialNote}</p>
         )}
-        
+
         {badge && (
           <Badge variant="secondary" className="mt-2">
             {badge}
@@ -235,11 +237,22 @@ export function PricingCard({
         {loading ? "Chargement..." : ctaText}
       </Button>
       
-      {promotionCode && !prefilledPromo && (
-        <div className="text-center mt-3">
-          <span className="text-xs text-muted-foreground">
-            Code promo disponible : <strong>{promotionCode}</strong>
-          </span>
+      {promotionCode && (
+        <div className="text-center mt-3 space-y-2">
+          <div className="flex items-center gap-2 justify-center">
+            <input
+              value={promoInput}
+              onChange={(e) => setPromoInput(e.target.value)}
+              placeholder="Code promo"
+              className="px-3 py-2 rounded-md border bg-background"
+            />
+            <Badge variant="secondary">Optionnel</Badge>
+          </div>
+          {promotionCode && (
+            <span className="text-xs text-muted-foreground">
+              Suggestion: <strong>{promotionCode}</strong>
+            </span>
+          )}
         </div>
       )}
     </div>
