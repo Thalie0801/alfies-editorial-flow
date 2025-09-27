@@ -33,14 +33,14 @@ export function Pricing() {
         {
           name: "Essential + Fynk Basic",
           price: isAnnual ? "96 €" : "108 €", // 79 + 29
-          priceId: isAnnual ? "price_essential_fynk_basic_annual" : "price_1SBwTkJsCoQneASNpAwXW8K4",
+          priceId: isAnnual ? "price_1SByiFJsCoQneASNm8riSoWS" : "price_1SBwTkJsCoQneASNpAwXW8K4",
           description: "Essential + Fynk Basic inclus",
           addedFeatures: ["🎁 Fynk Basic inclus (~400 interactions)"]
         },
         {
           name: "Essential + Fynk Pro", 
           price: isAnnual ? "126 €" : "148 €", // 79 + 69
-          priceId: isAnnual ? "price_essential_fynk_pro_annual" : "price_1SBwTsJsCoQneASNT4Dx43re",
+          priceId: isAnnual ? "price_1SByiTJsCoQneASNmn12NHSF" : "price_1SBwTsJsCoQneASNT4Dx43re",
           description: "Essential + Fynk Pro inclus",
           addedFeatures: ["🎁 Fynk Pro inclus (~1 500 interactions)"]
         }
@@ -71,14 +71,14 @@ export function Pricing() {
         {
           name: "Starter + Fynk Basic",
           price: isAnnual ? "176 €" : "208 €", // 179 + 29
-          priceId: isAnnual ? "price_starter_fynk_basic_annual" : "price_1SBwU1JsCoQneASN1WLAzdHw",
+          priceId: isAnnual ? "price_1SByibJsCoQneASNggQeODbn" : "price_1SBwU1JsCoQneASN1WLAzdHw",
           description: "Starter + Fynk Basic inclus",
           addedFeatures: ["🎁 Fynk Basic inclus (~400 interactions)"]
         },
         {
           name: "Starter + Fynk Pro", 
           price: isAnnual ? "206 €" : "248 €", // 179 + 69
-          priceId: isAnnual ? "price_starter_fynk_pro_annual" : "price_1SBwUJJsCoQneASNKEa0RNzw",
+          priceId: isAnnual ? "price_1SByilJsCoQneASNcLI0liRN" : "price_1SBwUJJsCoQneASNKEa0RNzw",
           description: "Starter + Fynk Pro inclus",
           addedFeatures: ["🎁 Fynk Pro inclus (~1 500 interactions)"]
         }
@@ -110,14 +110,14 @@ export function Pricing() {
         {
           name: "Pro + Fynk Basic",
           price: isAnnual ? "361 €" : "428 €", // 399 + 29
-          priceId: isAnnual ? "price_pro_fynk_basic_annual" : "price_1SBwUSJsCoQneASNhzwWZKKB",
+          priceId: isAnnual ? "price_1SByiwJsCoQneASNnYdS1CL3" : "price_1SBwUSJsCoQneASNhzwWZKKB",
           description: "Pro + Fynk Basic inclus",
           addedFeatures: ["🎁 Fynk Basic inclus (~400 interactions)"]
         },
         {
           name: "Pro + Fynk Pro", 
           price: isAnnual ? "391 €" : "468 €", // 399 + 69
-          priceId: isAnnual ? "price_pro_fynk_pro_annual" : "price_1SBwUcJsCoQneASNYCVum0gF",
+          priceId: isAnnual ? "price_1SByj6JsCoQneASNRPtHxdnh" : "price_1SBwUcJsCoQneASNYCVum0gF",
           description: "Pro + Fynk Pro inclus",
           addedFeatures: ["🎁 Fynk Pro inclus (~1 500 interactions)"]
         }
