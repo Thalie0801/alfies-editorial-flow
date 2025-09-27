@@ -25,14 +25,16 @@ export function Hero() {
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge Ambassadeurs */}
           <div className="mb-8 animate-fade-in">
-            <Badge 
-              variant="secondary" 
-              className="bg-gradient-accent text-accent-foreground px-4 py-2 text-sm font-medium shadow-accent/20 shadow-lg"
-            >
-              <Users className="w-4 h-4 mr-2" />
-              Programme Ambassadeurs • 50 places limitées
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Badge>
+            <a href="#pricing">
+              <Badge 
+                variant="secondary" 
+                className="bg-gradient-accent text-accent-foreground px-4 py-2 text-sm font-medium shadow-accent/20 shadow-lg cursor-pointer hover:scale-105 transition-transform"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Programme Ambassadeurs • 50 places limitées
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Badge>
+            </a>
           </div>
 
           {/* Main Headline */}
