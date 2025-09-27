@@ -84,10 +84,21 @@ serve(async (req) => {
       logStep("Guest checkout - customer will be created by Stripe Checkout");
     }
 
-    // Validate and normalize price_id (handle legacy IDs)
+    // Validate and normalize price_id (handle legacy IDs and placeholders from older builds)
     const legacyPriceMap: Record<string, string> = {
-      // Ambassadeur ancien prix 49,90€ -> nouveau 149€
+      // Ambassadeur 49,90€ -> 149€
       'price_1SBwTLJsCoQneASNfkAjlOD7': 'price_1SByRBJsCoQneASN8ouw2Zrt',
+      // Annual placeholders -> real Stripe price IDs
+      'price_essential_annual': 'price_1SByfGJsCoQneASNzefkb6yH',
+      'price_starter_annual': 'price_1SByfOJsCoQneASNmDi83OPA',
+      'price_pro_annual': 'price_1SByfXJsCoQneASNwOgd0Lns',
+      // Annual Fynk bundles placeholders -> real IDs
+      'price_essential_fynk_basic_annual': 'price_1SByiFJsCoQneASNm8riSoWS',
+      'price_essential_fynk_pro_annual': 'price_1SByiTJsCoQneASNmn12NHSF',
+      'price_starter_fynk_basic_annual': 'price_1SByibJsCoQneASNggQeODbn',
+      'price_starter_fynk_pro_annual': 'price_1SByilJsCoQneASNcLI0liRN',
+      'price_pro_fynk_basic_annual': 'price_1SByiwJsCoQneASNnYdS1CL3',
+      'price_pro_fynk_pro_annual': 'price_1SByj6JsCoQneASNRPtHxdnh',
     };
     const normalized_price_id = legacyPriceMap[price_id] || price_id;
 
