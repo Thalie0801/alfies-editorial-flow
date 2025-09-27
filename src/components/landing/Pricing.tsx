@@ -63,9 +63,9 @@ export function Pricing() {
       ],
       ctaText: "Choisir Starter",
       isPopular: true,
-      discount: isAnnual ? "-20% la 1ère année" : "Code promo STARTER25 → -25% le 1er mois",
+      discount: isAnnual ? "-20% la 1ère année" : "Code promo LAUNCH25 → -25% le 1er mois",
       priceId: isAnnual ? "price_starter_annual_discount" : "price_1SBwT5JsCoQneASNq8NSEfT3", // 179€ mensuel
-      promotionCode: isAnnual ? undefined : "STARTER25",
+      promotionCode: isAnnual ? undefined : "LAUNCH25",
       supportsFynk: true,
       fynkVariants: [
         {
@@ -102,9 +102,9 @@ export function Pricing() {
       ],
       ctaText: "Choisir Pro",
       isPremium: true,
-      discount: isAnnual ? "-20% la 1ère année" : "Code promo PRO25 → -25% le 1er mois",
+      discount: isAnnual ? "-20% la 1ère année" : "Code promo LAUNCH25 → -25% le 1er mois",
       priceId: isAnnual ? "price_pro_annual_discount" : "price_1SBwTDJsCoQneASNxDaRP2PC", // 399€ mensuel
-      promotionCode: isAnnual ? undefined : "PRO25",
+      promotionCode: isAnnual ? undefined : "LAUNCH25",
       supportsFynk: true,
       fynkVariants: [
         {
