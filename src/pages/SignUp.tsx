@@ -160,6 +160,35 @@ export default function SignUp() {
     }
   };
 
+  const handleResend = async () => {
+    try {
+      const planParam = searchParams.get('plan');
+      const promoParam = searchParams.get('promo');
+      const addonParams = searchParams.getAll('addon');
+      const redirectParams = new URLSearchParams();
+      if (planParam) redirectParams.set('plan', planParam);
+      if (promoParam) redirectParams.set('promo', promoParam);
+      addonParams.forEach((addon) => addon && redirectParams.append('addon', addon));
+
+      const redirectQuery = redirectParams.toString();
+      const baseUrl = window.location.origin;
+      const redirectUrl = redirectQuery
+        ? `${baseUrl}/auth/callback?${redirectQuery}`
+        : `${baseUrl}/auth/callback`;
+
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: { emailRedirectTo: redirectUrl }
+      });
+
+      if (error) throw error;
+      toast({ title: 'Email renvoyé', description: 'Vérifiez votre boîte de réception.' });
+    } catch (e: any) {
+      toast({ title: 'Erreur', description: e.message, variant: 'destructive' });
+    }
+  };
+
   const handleGoogleSignUp = async () => {
     setLoading(true);
     try {
@@ -171,7 +200,7 @@ export default function SignUp() {
       });
 
       if (error) {
-        setError('Erreur lors de l\'inscription avec Google');
+        setError("Erreur lors de l'inscription avec Google");
         console.error('Google sign up error:', error);
       }
     } catch (error) {
