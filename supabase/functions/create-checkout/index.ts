@@ -84,10 +84,17 @@ serve(async (req) => {
       logStep("Guest checkout - customer will be created by Stripe Checkout");
     }
 
-    // Validate price_id exists in Stripe
+    // Validate and normalize price_id (handle legacy IDs)
+    const legacyPriceMap: Record<string, string> = {
+      // Ambassadeur ancien prix 49,90€ -> nouveau 149€
+      'price_1SBwTLJsCoQneASNfkAjlOD7': 'price_1SByRBJsCoQneASN8ouw2Zrt',
+    };
+    const normalized_price_id = legacyPriceMap[price_id] || price_id;
+
+    // Validate price exists in Stripe
     try {
-      await stripe.prices.retrieve(price_id);
-      logStep("Price ID validated", { price_id });
+      await stripe.prices.retrieve(normalized_price_id);
+      logStep("Price ID validated", { requested: price_id, normalized: normalized_price_id });
     } catch (error) {
       throw new Error(`Invalid price_id: ${price_id}`);
     }
@@ -100,7 +107,7 @@ serve(async (req) => {
 
     // Build line items
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
-      { price: price_id, quantity: 1 }
+      { price: normalized_price_id, quantity: 1 }
     ];
 
     // Add addons if provided
@@ -122,7 +129,8 @@ serve(async (req) => {
       cancel_url: cancel_url || `${req.headers.get("origin")}/`,
       allow_promotion_codes: true,
       metadata: {
-        price_id: price_id,
+        price_id: normalized_price_id,
+        requested_price_id: price_id,
       },
     };
 
