@@ -9,5 +9,8 @@ verify_jwt = false
 [functions.create-portal]
 verify_jwt = true
 
+[functions.setup-promo-codes]
+verify_jwt = false
+
 [functions.stripe-webhooks]
 verify_jwt = false
