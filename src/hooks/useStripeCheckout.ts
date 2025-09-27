@@ -19,17 +19,17 @@ export function useStripeCheckout() {
       const accessToken = sessionData.session?.access_token;
       console.debug('[Checkout] start', { priceId, hasToken: !!accessToken, addons, hasPromo: !!promotionCode });
 
-      // If not authenticated, redirect to auth with intended plan
+      // If not authenticated, redirect to signup with intended plan
       if (!accessToken) {
-        console.warn('[Checkout] No access token, redirect to /signin');
+        console.warn('[Checkout] No access token, redirect to /signup');
         toast({
-          title: "Connexion requise",
-          description: "Veuillez vous connecter pour continuer le paiement.",
+          title: "Inscription requise",
+          description: "Veuillez vous inscrire pour continuer le paiement.",
         });
         const params = new URLSearchParams({ plan: priceId });
         if (promotionCode) params.set('promo', promotionCode);
         if (addons && addons.length) addons.forEach(a => a && params.append('addon', a));
-        const authUrl = `${window.location.origin}/signin?${params.toString()}`;
+        const authUrl = `${window.location.origin}/signup?${params.toString()}`;
         window.location.href = authUrl;
         return null;
       }
