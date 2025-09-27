@@ -62,13 +62,9 @@ export function useSubscription(user: User | null) {
       }
 
       try {
-        // Sync subscription state from Stripe before reading DB
-        const { data: syncData, error: syncError } = await supabase.functions.invoke('check-subscription');
-        if (syncError) {
-          console.error('Error invoking check-subscription:', syncError);
-        } else {
-          console.log('check-subscription sync result:', syncData);
-        }
+        // Skip the failing check-subscription function for now
+        // and directly fetch from local database
+        console.log('[useSubscription] Fetching subscription data directly from DB...');
 
         // Fetch subscription
         const { data: subData, error: subError } = await supabase

@@ -9,6 +9,7 @@ import { ClientSidebar } from '@/components/dashboard/ClientSidebar';
 import { AlfieChat } from '@/components/dashboard/AlfieChat';
 import { useToast } from '@/hooks/use-toast';
 import { useUserRole } from '@/hooks/useUserRole';
+import { useSubscription } from '@/hooks/useSubscription';
 import { useStripeCheckout } from '@/hooks/useStripeCheckout';
 import { SubscriptionGate } from '@/components/dashboard/SubscriptionGate';
 import { 
@@ -86,7 +87,7 @@ export default function Dashboard() {
   }
 
   return (
-    <SubscriptionGate user={user} requiredForContent={true}>
+    <SubscriptionGate user={user} requiredForContent={false}>
       <SidebarProvider>
         <div className="min-h-screen w-full flex">
           <ClientSidebar />
@@ -122,21 +123,7 @@ export default function Dashboard() {
             </header>
 
             <main className="flex-1 p-6">
-              <Routes>
-                <Route path="/" element={<DashboardOverview />} />
-                <Route path="/alfie" element={<AlfiePage />} />
-                <Route path="/plan" element={<PlanPage />} />
-                <Route path="/generate" element={<GeneratePage />} />
-                <Route path="/assets" element={<AssetsPage />} />
-                <Route path="/publications" element={<PublicationsPage />} />
-                <Route path="/affiliation" element={<AffiliationPage />} />
-                <Route path="/gamification" element={<GamificationPage />} />
-                <Route path="/integrations" element={<IntegrationsPage />} />
-                <Route path="/billing" element={<BillingPage />} />
-                <Route path="/news" element={<NewsPage />} />
-                <Route path="/support" element={<SupportPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-              </Routes>
+              <WelcomeAndSubscriptionCheck user={user} />
             </main>
           </SidebarInset>
           
@@ -148,6 +135,123 @@ export default function Dashboard() {
       </SidebarProvider>
     </SubscriptionGate>
   );
+}
+
+// Welcome and subscription check component
+function WelcomeAndSubscriptionCheck({ user }: { user: User }) {
+  const { subscription, loading, hasActiveSubscription } = useSubscription(user);
+  const { createCheckoutSession } = useStripeCheckout();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // If no subscription, show pricing options
+  if (!hasActiveSubscription()) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <Card className="text-center">
+          <CardHeader>
+            <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+              <Crown className="w-8 h-8 text-primary" />
+            </div>
+            <CardTitle className="text-2xl">Bienvenue sur Aeditus !</CardTitle>
+            <CardDescription className="text-lg">
+              Choisissez votre plan pour commencer à créer du contenu incroyable
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid md:grid-cols-3 gap-4">
+              {/* Essential Plan */}
+              <Card className="relative">
+                <CardHeader>
+                  <Badge className="w-fit">Essai 7 jours</Badge>
+                  <CardTitle className="text-xl">Essential</CardTitle>
+                  <div className="text-2xl font-bold">79€<span className="text-sm font-normal">/mois</span></div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <ul className="text-sm space-y-2">
+                    <li>✓ 3 posts par mois</li>
+                    <li>✓ 1 story par mois</li>
+                    <li>✓ 1 cover par mois</li>
+                    <li>✓ Support email</li>
+                  </ul>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => createCheckoutSession('price_1SBeX0JsCoQneASNtGQ0LpIf')}
+                  >
+                    Essai 7 jours gratuit
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Starter Plan */}
+              <Card className="relative border-primary">
+                <CardHeader>
+                  <Badge className="w-fit bg-primary">Populaire</Badge>
+                  <CardTitle className="text-xl">Starter</CardTitle>
+                  <div className="text-2xl font-bold">179€<span className="text-sm font-normal">/mois</span></div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <ul className="text-sm space-y-2">
+                    <li>✓ 10 posts par mois</li>
+                    <li>✓ 5 stories par mois</li>
+                    <li>✓ 3 covers par mois</li>
+                    <li>✓ 2 carousels par mois</li>
+                    <li>✓ Support prioritaire</li>
+                  </ul>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => createCheckoutSession('price_1SBeWOJsCoQneASNQS5Nx5D5', 'LAUNCH25')}
+                  >
+                    Choisir Starter
+                  </Button>
+                  <p className="text-xs text-muted-foreground">-25% le 1er mois avec LAUNCH25</p>
+                </CardContent>
+              </Card>
+
+              {/* Pro Plan */}
+              <Card className="relative">
+                <CardHeader>
+                  <Badge className="w-fit bg-accent">Premium</Badge>
+                  <CardTitle className="text-xl">Pro</CardTitle>
+                  <div className="text-2xl font-bold">399€<span className="text-sm font-normal">/mois</span></div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <ul className="text-sm space-y-2">
+                    <li>✓ Contenus illimités</li>
+                    <li>✓ Templates exclusifs</li>
+                    <li>✓ Support VIP</li>
+                    <li>✓ Analytics avancées</li>
+                  </ul>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => createCheckoutSession('price_1SBeSdJsCoQneASNrW627hLX', 'LAUNCH25')}
+                  >
+                    Choisir Pro
+                  </Button>
+                  <p className="text-xs text-muted-foreground">-25% le 1er mois avec LAUNCH25</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">
+                Tous nos plans incluent l'affiliation (10-15%) et l'accès à Alfie, votre copilot éditorial
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // If has subscription, show normal dashboard
+  return <DashboardOverview />;
 }
 
 // Dashboard Overview Component
