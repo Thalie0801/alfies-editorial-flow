@@ -89,11 +89,15 @@ export default function SignIn() {
       // Si plan dans l'URL, créer checkout session
       try {
         console.debug('[SignIn] Calling createCheckoutSession');
+        const successUrl = `${window.location.origin}/dashboard?payment=success`;
+        const cancelUrl = `${window.location.origin}/signin?payment=cancelled&plan=${planParam}`
+          + `${promoParam ? `&promo=${promoParam}` : ''}`
+          + `${uniqueAddons ? uniqueAddons.map(a => `&addon=${encodeURIComponent(a)}`).join('') : ''}`;
         const url = await createCheckoutSession(
           planParam,
           promoParam,
-          `${window.location.origin}/dashboard`,
-          `${window.location.origin}/`,
+          successUrl,
+          cancelUrl,
           uniqueAddons
         );
         console.debug('[SignIn] createCheckoutSession returned', { hasUrl: !!url });
