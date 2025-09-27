@@ -22,10 +22,10 @@ export default function AuthCallback() {
     const errorDescription = params.get('error_description');
 
     if (type === 'signup' || type === 'email_change') {
-      toast({ title: 'Email confirmé', description: 'Redirection vers votre dashboard...' });
-      // Redirect directly to dashboard after email confirmation
+      toast({ title: 'Email confirmé', description: 'Vous pouvez maintenant vous connecter.' });
+      // Redirect to signin after email confirmation
       setTimeout(() => {
-        navigate('/dashboard');
+        navigate('/signin');
       }, 1500);
     }
     if (error || errorCode) {
@@ -79,8 +79,8 @@ export default function AuthCallback() {
               </Button>
             </div>
           ) : (
-            <Button className="w-full" onClick={() => navigate('/dashboard')}>
-              Accéder au dashboard
+            <Button className="w-full" onClick={() => navigate('/signin')}>
+              Se connecter
             </Button>
           )}
         </CardContent>
